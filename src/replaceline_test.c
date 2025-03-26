@@ -3,34 +3,31 @@
 int main(void) {
     char *input;
 	char	*username;
-	// char	*hostname;
-	// char	*currentpwd;
+	char	*sessionmanager;
+	char	*hostname;
+	char	*home;
+	char	*currentpwd;
+
 
 	username = getenv("USER");
-	//currentpwd = getenv("PWD");
+	sessionmanager = getenv("SESSION_MANAGER");
+	char	*start = ft_strchr(sessionmanager, '/');
+	char	*end = ft_strchr(sessionmanager, '.');
+	hostname = ft_substr(start + 1, 0, (end - start) - 1);
+	home = getenv("HOME");
+	currentpwd = ft_strjoin("~", getenv("PWD") + ft_strlen(home));
 
-    while (1) {
-        // Leer la línea de entrada
-        input = readline(username);
+	while (1)
+	{
+		input = readline(ft_strjoin(username, ft_strjoin("@", ft_strjoin(hostname, currentpwd))));
+		if (*input) add_history(input);
 
-        // Si el usuario escribe "listar", lo corregimos a "ls"
-        if (strcmp(input, "listar") == 0) {
-            rl_replace_line("ls", 1);
-            rl_redisplay(); // Actualiza la línea en pantalla
-            printf("\nAutocorrección aplicada: 'listar' -> 'ls'\n");
-        }
-
-        // Agregamos el comando al historial (si no está vacío)
-        if (*input) add_history(input);
-
-        // Salir con "exit"
-        if (strcmp(input, "exit") == 0) {
-            free(input);
-            break;
-        }
-
-        free(input);
-    }
-
-    return 0;
+		if (strcmp(input, "exit") == 0)
+		{
+			free(input);
+			break;
+		}
+		free(input);
+	}
+	return 0;
 }

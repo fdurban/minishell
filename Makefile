@@ -24,6 +24,9 @@ $(NAME): $(OBJ)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS)  -c $< -o $@
 
+norminette:
+	norminette $(SRC_FILES) minishell.h
+
 clean:
 	make clean -C $(LIBFT_DIR)
 	rm -f $(OBJ)
