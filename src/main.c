@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-int main(int argc, char **argv, char **env)
+int main(int argc, char **argv)
 {
 	char *input;
 	char	*username;
@@ -8,6 +8,7 @@ int main(int argc, char **argv, char **env)
 	char	*hostname;
 	char	*home;
 	char	*currentpwd;
+	char	**tokens;
 
 
 	username = getenv("USER");
@@ -19,26 +20,14 @@ int main(int argc, char **argv, char **env)
 	currentpwd = ft_strjoin("~", getenv("PWD") + ft_strlen(home));
 	printf("%d\n", argc);
 	printf("%s\n", argv[0]);
-	char *arguments[] = {"ls", "-la", NULL};
 
 	while (1)
 	{
 		input = readline(ft_strjoin(username, ft_strjoin("@", ft_strjoin(hostname, currentpwd))));
-		if (*input) add_history(input);
-
-		if (strcmp(input, "exit") == 0)
-		{
-			free(input);
-			break;
-		}
-		if (strcmp(input, "ls") == 0)
-		{
-			execve("/bin/ls", arguments, env);
-		}
-		if (strcmp(input, "clear") == 0)
-		{
-			rl_clear_history();
-		}
+		tokens = ft_split(input, '|');
+		printf("%s\n", tokens[0]);
+		if (*input)
+			add_history(input);
 		free(input);
 	}
 	return 0;
