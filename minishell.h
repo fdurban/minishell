@@ -9,4 +9,13 @@
 # include <readline/history.h>
 # include "libft/standard/libft.h"
 
+typedef enum estate
+{
+    STATE_START,
+    STATE_IN_QUOTE,
+    STATE_END,
+    STATE_ERROR,
+    NUM_STATES
+} t_state;
+
 #endif
