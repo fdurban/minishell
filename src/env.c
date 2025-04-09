@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 19:33:14 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/09 19:49:54 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/09 20:11:33 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ char	*get_env_var(t_env *env, const char *key)
 
 void	free_env(t_env *env)
 {
-	int i;
+	int	i;
 
 	if (!env)
 		return ;
