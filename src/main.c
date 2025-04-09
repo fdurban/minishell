@@ -1,34 +1,18 @@
-#include "../minishell.h"
+#include "../includes/minishell.h"
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv, char **envp)
 {
-	char *input;
-	char	*username;
-	char	*sessionmanager;
-	char	*hostname;
-	char	*home;
-	char	*currentpwd;
-	char	**tokens;
+	t_env	*env_copy;
 
-
-	username = getenv("USER");
-	sessionmanager = getenv("SESSION_MANAGER");
-	char	*start = ft_strchr(sessionmanager, '/');
-	char	*end = ft_strchr(sessionmanager, '.');
-	hostname = ft_substr(start + 1, 0, (end - start) - 1);
-	home = getenv("HOME");
-	currentpwd = ft_strjoin("~", getenv("PWD") + ft_strlen(home));
-	printf("%d\n", argc);
-	printf("%s\n", argv[0]);
-
-	while (1)
+	(void)argc;
+	(void)argv;
+	env_copy = copy_env(envp);
+	if (!env_copy)
 	{
-		input = readline(ft_strjoin(username, ft_strjoin("@", ft_strjoin(hostname, currentpwd))));
-		tokens = ft_split(input, '|');
-		printf("%s\n", tokens[0]);
-		if (*input)
-			add_history(input);
-		free(input);
+		fprintf(stderr, "Failed to copy environment\n");
+		return (1);
 	}
-	return 0;
+	shell_loop(env_copy);
+	free_env(env_copy);
+	return (0);
 }
