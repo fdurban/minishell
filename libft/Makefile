@@ -6,7 +6,7 @@ PRINTF_DIR = printf
 GNL_DIR = get_next_line
 
 CFILES = $(STANDARD_DIR)/ft_isalpha.c $(STANDARD_DIR)/ft_isdigit.c $(STANDARD_DIR)/ft_isalnum.c $(STANDARD_DIR)/ft_isascii.c \
-         $(STANDARD_DIR)/ft_isprint.c $(STANDARD_DIR)/ft_strlen.c $(STANDARD_DIR)/ft_memset.c $(STANDARD_DIR)/ft_bzero.c \
+				 $(STANDARD_DIR)/ft_isprint.c $(STANDARD_DIR)/ft_strlen.c $(STANDARD_DIR)/ft_memset.c $(STANDARD_DIR)/ft_bzero.c \
          $(STANDARD_DIR)/ft_memcpy.c $(STANDARD_DIR)/ft_memmove.c $(STANDARD_DIR)/ft_strlcpy.c $(STANDARD_DIR)/ft_strlcat.c \
          $(STANDARD_DIR)/ft_toupper.c $(STANDARD_DIR)/ft_tolower.c $(STANDARD_DIR)/ft_strchr.c $(STANDARD_DIR)/ft_strrchr.c \
          $(STANDARD_DIR)/ft_strncmp.c $(STANDARD_DIR)/ft_memchr.c $(STANDARD_DIR)/ft_memcmp.c $(STANDARD_DIR)/ft_strnstr.c \
@@ -20,7 +20,6 @@ BONUSFILES = $(STANDARD_DIR)/ft_lstnew_bonus.c $(STANDARD_DIR)/ft_lstadd_front_b
              $(STANDARD_DIR)/ft_lstclear_bonus.c $(STANDARD_DIR)/ft_lstiter_bonus.c $(STANDARD_DIR)/ft_lstmap_bonus.c
 
 PRINTF_FILES = $(PRINTF_DIR)/ft_printf_utils.c $(PRINTF_DIR)/ft_printf.c
-
 GNL_FILES = $(GNL_DIR)/get_next_line.c $(GNL_DIR)/get_next_line_utils.c
 
 # Archivos objeto

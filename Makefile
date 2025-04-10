@@ -7,7 +7,7 @@ LIBFT_DIR = ./libft
 LIBFT_PATH= $(LIBFT_DIR)/libft.a
 
 SRC_DIR = ./src
-SRC_FILES = $(SRC_DIR)/main.c
+SRC_FILES = $(SRC_DIR)/main.c $(SRC_DIR)/shell_loop.c $(SRC_DIR)/env.c
 
 OBJ_DIR = ./obj
 OBJ = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
