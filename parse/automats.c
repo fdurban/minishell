@@ -3,26 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   automats.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:59:56 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/10 16:58:00 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/10 17:52:33 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./includes/minishell.h"
 
-void    parse()
+void    parse(char **readline)
 {
-    int i;
-    int c;
+    char    c;
+    int     i;
     t_state state;
 
     i = 0;
     state = STATE_START;
-    while ()
+    while (readline[i])
     {
-        
+        c = readline[i];
+        i++;
     }
     
 }
