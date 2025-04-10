@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/10 15:43:24 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:49:19 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,13 @@ typedef enum einput
 {
     INPUT_LETTER,
     INPUT_SPACE,
-    INPUT_END
-}
+    INPUT_END,
+    INPUT_IN_SINGLE_QUOTE,
+    INPUT_IN_DOUBLE_QUOTE,
+    INPUT_PIPE,
+    INPUT_REDIRECT,
+    
+} t_input;
 
 void	shell_loop(t_env *env);
 #endif

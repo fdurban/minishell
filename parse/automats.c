@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:59:56 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/10 14:00:50 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/10 16:58:00 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,5 +14,15 @@
 
 void    parse()
 {
+    int i;
+    int c;
+    t_state state;
+
+    i = 0;
+    state = STATE_START;
+    while ()
+    {
+        
+    }
     
 }
