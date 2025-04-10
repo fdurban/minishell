@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/09 20:10:40 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/10 15:43:24 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,26 @@
 
 /* Libft (if you use it) */
 # include "../libft/standard/libft.h"
-# include <stdio.h>
+# include <stdio.h>`
 # include <string.h>
+
+typedef enum estate
+{
+    STATE_START,
+    STATE_IN_SINGLE_QUOTE,
+    STATE_IN_DOUBLE_QUOTE,
+    STATE_PIPE,
+    STATE_REDIR,
+    STATE_END,
+    STATE_ERROR,
+    NUM_STATES
+} t_state;
+typedef enum einput
+{
+    INPUT_LETTER,
+    INPUT_SPACE,
+    INPUT_END
+}
 
 void	shell_loop(t_env *env);
 #endif
