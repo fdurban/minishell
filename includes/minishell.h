@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/14 11:07:23 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/14 17:00:23 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef enum estate
 	STATE_REDIR,
 	STATE_END,
 	STATE_ERROR,
+	STATE_SPACE_AFTER_WORD,
 	NUM_STATES
 }	t_state;
 typedef enum einput

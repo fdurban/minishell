@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:59:56 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/14 15:46:29 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/14 17:05:22 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,12 @@ void	parse(char *readline)
 	t_input		input;
 	const int	state_matrix[NUM_STATES][NUM_INPUT] = {
 	{STATE_ERROR, STATE_START, STATE_WORD, STATE_END, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_REDIR}, //STATE_START
-	{STATE_PIPE, STATE_START, STATE_WORD, STATE_END, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_END}, // STATE WORD
+	{STATE_PIPE, STATE_SPACE_AFTER_WORD, STATE_WORD, STATE_END, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_END}, // STATE WORD
 	{STATE_IN_SINGLE_QUOTE, STATE_IN_SINGLE_QUOTE, STATE_IN_SINGLE_QUOTE, STATE_ERROR, STATE_START, STATE_IN_SINGLE_QUOTE, STATE_IN_SINGLE_QUOTE}, // STATE IN SINGLE QUOTE
 	{STATE_IN_DOUBLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_ERROR, STATE_IN_DOUBLE_QUOTE, STATE_START, STATE_IN_DOUBLE_QUOTE}, // STATE IN DOUBLE QUOTE
 	{STATE_ERROR, STATE_PIPE, STATE_PIPE, STATE_END, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_REDIR}, // STATE PIPE
 	{STATE_ERROR, STATE_REDIR, STATE_REDIR, STATE_ERROR, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_REDIR}, // STATE REDIR
-	{STATE_END, STATE_END, STATE_END, STATE_END, STATE_END, STATE_END, STATE_END} // STATE ERROR
+	{STATE_PIPE, STATE_END, STATE_END, STATE_END, STATE_END, STATE_END, STATE_END} // SPACE AFTER WORD
 	};
 
 	i = 0;
@@ -57,9 +57,14 @@ void	parse(char *readline)
 		input = get_input_type(c);
 		state = state_matrix[state][input];
 		//printf("%c\n", input);
-		if (state == STATE_ERROR || state == STATE_END)
+		if (state == STATE_ERROR)
 		{
 			printf("Syntax Error\n");
+			break;
+		}
+		if (state == STATE_END)
+		{
+			printf("Valid command\n");
 			break;
 		}
 		i++;
