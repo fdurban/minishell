@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:19:11 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/14 10:22:08 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/14 11:36:07 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,9 @@ int	main(int argc, char **argv, char **envp)
 	char *test3[] = {"echo", NULL};
 	char *test4[] = {"cd", "/home/yakul/Developer/pipex", NULL};
 	char *test5[] = {"cd", "includes", NULL};
-	char *reset[] = {"cd", NULL};
+	char *test6[] = {"cd", ".", NULL};
+	char *test7[] = {"cd", "..", NULL};
+	char *reset[] = {"cd", "/home/yakul/Developer/minishell", NULL};
 
 	(void)argc;
 	(void)argv;
@@ -68,6 +70,28 @@ int	main(int argc, char **argv, char **envp)
 	printf("pwd: %s\n", result);
 	if (is_builtin(test5[0]))
 		exec_builtin(test5, &shell);
+	result = get_env_var(shell.env, "PWD");
+	printf("the shell: %s\n", result);
+	printf("\n\n");
+
+	exec_builtin(reset, &shell);
+
+	printf("Test 6:\n");
+	result = get_env_var(shell.env, "PWD");
+	printf("pwd: %s\n", result);
+	if (is_builtin(test6[0]))
+		exec_builtin(test6, &shell);
+	result = get_env_var(shell.env, "PWD");
+	printf("the shell: %s\n", result);
+	printf("\n\n");
+
+	exec_builtin(reset, &shell);
+
+	printf("Test 7:\n");
+	result = get_env_var(shell.env, "PWD");
+	printf("pwd: %s\n", result);
+	if (is_builtin(test7[0]))
+		exec_builtin(test7, &shell);
 	result = get_env_var(shell.env, "PWD");
 	printf("the shell: %s\n", result);
 	printf("\n\n");

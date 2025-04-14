@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/11 18:27:24 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/14 11:11:30 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,11 @@ static char	*get_abs_path(const char *arg, t_shell *shell)
 {
 	char	*abs_path;
 	char	*pwd;
+	char	*special;
 
+	special = handle_dot_paths(arg, shell);
+	if (special)
+		return (special);
 	if (arg[0] == '/')
 		abs_path = duplicate_str(arg);
 	else
