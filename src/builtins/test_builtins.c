@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:19:11 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/14 11:36:07 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/14 12:22:42 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	main(int argc, char **argv, char **envp)
 	char *test5[] = {"cd", "includes", NULL};
 	char *test6[] = {"cd", ".", NULL};
 	char *test7[] = {"cd", "..", NULL};
+	char *test8[] = {"pwd", NULL};
 	char *reset[] = {"cd", "/home/yakul/Developer/minishell", NULL};
 
 	(void)argc;
@@ -94,6 +95,15 @@ int	main(int argc, char **argv, char **envp)
 		exec_builtin(test7, &shell);
 	result = get_env_var(shell.env, "PWD");
 	printf("the shell: %s\n", result);
+	printf("\n\n");
+
+	exec_builtin(reset, &shell);
+
+	printf("Test 8:\n");
+	result = get_env_var(shell.env, "PWD");
+	printf("pwd: %s\n", result);
+	if (is_builtin(test8[0]))
+		exec_builtin(test8, &shell);
 	printf("\n\n");
 
 	free_env(env);

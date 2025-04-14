@@ -11,17 +11,24 @@ SRC_FILES = $(SRC_DIR)/main.c \
 						$(SRC_DIR)/shell_loop.c \
 						$(SRC_DIR)/env/env.c \
 						$(SRC_DIR)/env/env_utils.c \
+						$(SRC_DIR)/builtins/pwd.c \
 						$(SRC_DIR)/builtins/echo.c \
 						$(SRC_DIR)/builtins/cd.c \
+						$(SRC_DIR)/builtins/cd_utils.c \
 						$(SRC_DIR)/builtins/builtin_dispatch.c
 
 OBJ_DIR = ./obj
 OBJ = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-
 TEST_SRC = $(SRC_DIR)/test_builtins.c
 TEST_OBJ = $(TEST_SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/builtins/%.o)
-TEST_DEPS = $(OBJ_DIR)/env/env.o $(OBJ_DIR)/env/env_utils.o $(OBJ_DIR)/builtins/echo.o $(OBJ_DIR)/builtins/builtin_dispatch.o $(OBJ_DIR)/builtins/cd.o $(OBJ_DIR)/builtins/cd_utils.o
+TEST_DEPS = $(OBJ_DIR)/env/env.o \
+						$(OBJ_DIR)/env/env_utils.o \
+						$(OBJ_DIR)/builtins/echo.o \
+						$(OBJ_DIR)/builtins/builtin_dispatch.o \
+						$(OBJ_DIR)/builtins/cd.o \
+						$(OBJ_DIR)/builtins/cd_utils.o \
+						$(OBJ_DIR)/builtins/pwd.o
 TEST_EXE = test_builtins
 
 all: $(OBJ_DIR) $(NAME)
