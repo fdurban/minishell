@@ -1,34 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/10 12:31:29 by igngonza         ###   ########.fr       */
+/*   Created: 2025/04/10 12:29:56 by igngonza          #+#    #+#             */
+/*   Updated: 2025/04/10 20:45:30 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "../../includes/builtins.h"
 
-# include "builtins.h"
-# include "env.h"
+int	builtin_echo(char **args, t_shell *shell)
+{
+	int	i;
+	int	newline;
 
-/* Standard libraries */
-# include <signal.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include <unistd.h>
-
-/* Readline for input */
-# include <readline/history.h>
-# include <readline/readline.h>
-
-/* Libft (if you use it) */
-# include "../libft/standard/libft.h"
-
-void	shell_loop(t_env *env);
-#endif
+	(void)shell;
+	i = 1;
+	newline = 1;
+	if (args[1] && strcmp(args[1], "-n") == 0)
+	{
+		newline = 0;
+		i++;
+	}
+	while (args[i])
+	{
+		write(1, args[i], strlen(args[i]));
+		if (args[i + 1])
+			write(1, " ", 1);
+		i++;
+	}
+	if (newline)
+		write(1, "\n", 1);
+	return (0);
+}

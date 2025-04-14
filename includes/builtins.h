@@ -1,34 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/10 12:31:29 by igngonza         ###   ########.fr       */
+/*   Created: 2025/04/10 12:17:40 by igngonza          #+#    #+#             */
+/*   Updated: 2025/04/11 12:14:36 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#ifndef BUILTINS_H
+# define BUILTINS_H
 
-# include "builtins.h"
 # include "env.h"
-
-/* Standard libraries */
-# include <signal.h>
 # include <stdio.h>
-# include <stdlib.h>
 # include <string.h>
-# include <unistd.h>
 
-/* Readline for input */
-# include <readline/history.h>
-# include <readline/readline.h>
+typedef struct s_shell
+{
+	t_env			*env;
+	int				exit_status;
+}					t_shell;
 
-/* Libft (if you use it) */
-# include "../libft/standard/libft.h"
+typedef int			(*t_builtin_fn)(char **args, t_shell *shell);
 
-void	shell_loop(t_env *env);
+typedef struct s_builtin
+{
+	char			*name;
+	t_builtin_fn	func;
+}					t_builtin;
+
+int					exec_builtin(char **args, t_shell *shell);
+int					is_builtin(const char *cmd);
+
+int					builtin_echo(char **args, t_shell *shell);
+int					builtin_cd(char **argv, t_shell *shell);
+
 #endif

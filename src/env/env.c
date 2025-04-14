@@ -6,11 +6,11 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 19:33:14 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/09 20:11:33 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/11 13:33:29 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
 t_env	*copy_env(char **envp)
 {
@@ -58,20 +58,4 @@ char	*get_env_var(t_env *env, const char *key)
 		i++;
 	}
 	return (NULL);
-}
-
-void	free_env(t_env *env)
-{
-	int	i;
-
-	if (!env)
-		return ;
-	i = 0;
-	while (i < env->count)
-	{
-		free(env->vars[i]);
-		i++;
-	}
-	free(env->vars);
-	free(env);
 }
