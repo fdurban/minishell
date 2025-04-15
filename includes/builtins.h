@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 12:17:40 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/15 15:19:17 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/15 15:42:14 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,5 +41,6 @@ int					builtin_pwd(char **args, t_shell *shell);
 int					builtin_export(char **args, t_shell *shell);
 void				print_exported_env(t_env *env);
 int					builtin_unset(char **args, t_shell *shell);
+int					builtin_env(char **args, t_shell *shell);
 
 #endif

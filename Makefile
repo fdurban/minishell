@@ -19,6 +19,8 @@ SRC_FILES = $(SRC_DIR)/main.c \
 						$(SRC_DIR)/builtins/export.c \
 						$(SRC_DIR)/builtins/export_print.c \
 						$(SRC_DIR)/builtins/unset.c \
+						$(OBJ_DIR)/builtins/env_builtin.c \
+
 
 OBJ_DIR = ./obj
 OBJ = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
@@ -35,6 +37,8 @@ TEST_DEPS = $(OBJ_DIR)/env/env.o \
 						$(OBJ_DIR)/builtins/export.o \
 						$(OBJ_DIR)/builtins/export_print.o \
 						$(OBJ_DIR)/builtins/unset.o \
+						$(OBJ_DIR)/builtins/env_builtin.o \
+
 
 TEST_EXE = test_builtins
 
