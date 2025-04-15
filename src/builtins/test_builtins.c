@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:19:11 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/15 15:47:43 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:26:58 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int	main(int argc, char **argv, char **envp)
 	char *test14[] = {"export", "Astro", NULL};
 	char *test15[] = {"unset", "Astro", NULL};
 	char *test16[] = {"env", NULL};
+	char *test17[] = {"exit", "44", NULL};
+	char *test18[] = {"exit", "1", "5", NULL};
 	char *reset[] = {"cd", "/home/yakul/Developer/minishell", NULL};
 	char *result;
 
@@ -161,6 +163,16 @@ int	main(int argc, char **argv, char **envp)
 		exec_builtin(test15, &shell);
 		exec_builtin(test9, &shell);
 	}
+	printf("\n\n");
+
+	printf("Test 18:\n");
+	if (is_builtin(test18[0]))
+		exec_builtin(test18, &shell);
+	printf("\n\n");
+
+	printf("Test 17:\n");
+	if (is_builtin(test17[0]))
+		exec_builtin(test17, &shell);
 	printf("\n\n");
 
 	free_env(env);
