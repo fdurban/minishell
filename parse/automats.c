@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:59:56 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/15 15:35:01 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/15 17:00:07 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,20 +53,18 @@ void	parse(char *readline)
 	input = 0;
 	while (state != STATE_END || state != STATE_ERROR || readline[i] != '\0')
 	{
-		printf("[%d, %d]\n", state, input);
 		c = readline[i];
 		input = get_input_type(c);
 		state = state_matrix[state][input];
-		//printf("%c\n", input);
 		if (state == STATE_ERROR)
 		{
 			printf("Syntax Error\n");
-			break;
+			break ;
 		}
 		if (state == STATE_END)
 		{
 			printf("Valid command\n");
-			break;
+			break ;
 		}
 		i++;
 	}
