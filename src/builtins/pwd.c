@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 11:42:16 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/14 12:21:07 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/15 13:25:56 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 int	builtin_pwd(char **args, t_shell *shell)
 {
-	int length;
-	int i;
-	char *pwd;
-	(void)args;
+	int		length;
+	int		i;
+	char	*pwd;
 
+	(void)args;
 	i = 0;
 	length = ft_strlen(get_env_var(shell->env, "PWD"));
 	pwd = ft_strdup(get_env_var(shell->env, "PWD"));
