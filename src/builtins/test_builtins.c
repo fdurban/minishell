@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:19:11 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/15 13:23:16 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/15 15:20:28 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int	main(int argc, char **argv, char **envp)
 	char *test12[] = {"export", "GOODKEY", NULL};
 	char *test13[] = {"export", "GOODKEY=changed", NULL};
 	char *test14[] = {"export", "Astro", NULL};
+	char *test15[] = {"unset", "Astro", NULL};
 	char *reset[] = {"cd", "/home/yakul/Developer/minishell", NULL};
 	char *result;
 
@@ -142,6 +143,14 @@ int	main(int argc, char **argv, char **envp)
 	if (is_builtin(test14[0]))
 	{
 		exec_builtin(test14, &shell);
+		exec_builtin(test9, &shell);
+	}
+	printf("\n\n");
+
+	printf("Test 15:\n");
+	if (is_builtin(test15[0]))
+	{
+		exec_builtin(test15, &shell);
 		exec_builtin(test9, &shell);
 	}
 	printf("\n\n");
