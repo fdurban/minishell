@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 12:17:40 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/14 11:51:12 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/15 16:21:32 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,12 @@ int					is_builtin(const char *cmd);
 
 int					builtin_echo(char **args, t_shell *shell);
 int					builtin_cd(char **argv, t_shell *shell);
-int					builtin_pwd(char **args, t_shell *shell);
 char				*handle_dot_paths(const char *arg, t_shell *shell);
+int					builtin_pwd(char **args, t_shell *shell);
+int					builtin_export(char **args, t_shell *shell);
+void				print_exported_env(t_env *env);
+int					builtin_unset(char **args, t_shell *shell);
+int					builtin_env(char **args, t_shell *shell);
+int					builtin_exit(char **args, t_shell *shell);
 
 #endif

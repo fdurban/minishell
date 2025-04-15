@@ -1,32 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   env_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/14 11:42:16 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/15 13:25:56 by igngonza         ###   ########.fr       */
+/*   Created: 2025/04/15 15:31:10 by igngonza          #+#    #+#             */
+/*   Updated: 2025/04/15 15:44:53 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	builtin_pwd(char **args, t_shell *shell)
+int	builtin_env(char **args, t_shell *shell)
 {
-	int		length;
-	int		i;
-	char	*pwd;
+	int i;
 
 	(void)args;
 	i = 0;
-	length = ft_strlen(get_env_var(shell->env, "PWD"));
-	pwd = ft_strdup(get_env_var(shell->env, "PWD"));
-	while (i < length)
+	while (i < shell->env->count)
 	{
-		write(1, &pwd[i], 1);
+		if (ft_strchr(shell->env->vars[i], '='))
+			printf("%s\n", shell->env->vars[i]);
 		i++;
 	}
-	write(1, "\n", 1);
 	return (0);
 }
