@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:59:56 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/14 17:41:24 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/15 12:46:15 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,12 @@ void	parse(char *readline)
 	{STATE_IN_DOUBLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_ERROR, STATE_IN_DOUBLE_QUOTE, STATE_SPACE_AFTER_WORD, STATE_IN_DOUBLE_QUOTE}, // STATE IN DOUBLE QUOTE
 	{STATE_ERROR, STATE_PIPE, STATE_PIPE, STATE_END, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_REDIR}, // STATE PIPE
 	{STATE_ERROR, STATE_REDIR, STATE_REDIR, STATE_ERROR, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_REDIR}, // STATE REDIR
-	{STATE_PIPE, STATE_END, STATE_END, STATE_END, STATE_END, STATE_END, STATE_END} // SPACE AFTER WORD	
+	{STATE_PIPE, STATE_SPACE_AFTER_WORD, STATE_END, STATE_END, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_END} // SPACE AFTER WORD	
 	};
 
 	i = 0;
 	state = STATE_START;
+	input = 0;
 	while (state != STATE_END || state != STATE_ERROR || readline[i] != '\0')
 	{
 		printf("[%d, %d]\n", state, input);
