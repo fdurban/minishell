@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/11 17:23:56 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/16 13:34:12 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,8 @@ void	shell_loop(t_env *env)
 	{
 		prompt = build_prompt(env);
 		input = readline(prompt);
-		parse(input);
+		if (!parse(input))
+			break;
 		free(prompt);
 		if (!input)
 			break ;
@@ -101,7 +102,7 @@ void	shell_loop(t_env *env)
 			add_history(input);
 		tokens = ft_split(input, '|');
 		if (tokens && tokens[0])
-			printf("%s\n", tokens[0]);
+			printf("%s\n %s\n",tokens[0] , tokens[1]);
 		i = 0;
 		while (tokens && tokens[i])
 			free(tokens[i++]);

@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/14 17:45:55 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/16 13:33:50 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,5 @@ typedef enum einput
 }	t_input;
 
 void	shell_loop(t_env *env);
-void	parse(char *readline);
+int	parse(char *readline);
 #endif

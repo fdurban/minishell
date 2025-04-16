@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:59:56 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/15 17:00:07 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/16 13:34:15 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	get_input_type(char c)
 		return (0);
 }
 
-void	parse(char *readline)
+int	parse(char *readline)
 {
 	char		c;
 	int			i;
@@ -59,13 +59,14 @@ void	parse(char *readline)
 		if (state == STATE_ERROR)
 		{
 			printf("Syntax Error\n");
-			break ;
+			return (0);
 		}
 		if (state == STATE_END)
 		{
 			printf("Valid command\n");
-			break ;
+			return (1) ;
 		}
 		i++;
 	}
+	return (0);
 }
