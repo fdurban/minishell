@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:59:56 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/16 13:34:15 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/16 13:42:05 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,7 @@ int	parse(char *readline)
 			return (0);
 		}
 		if (state == STATE_END)
-		{
-			printf("Valid command\n");
 			return (1) ;
-		}
 		i++;
 	}
 	return (0);

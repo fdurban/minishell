@@ -1,0 +1,30 @@
+ARCHIVO PARA LISTAR LAS DIFERENTES COMBINACIONES DE COMANDOS PARA PROBAR EN BASH
+
+
+// COMPROBACION DE COMANDOS DE REDIRECCIONES FUNCIONALES
+
+echo hola > archivo.txt
+echo hola>archivo.txt
+cat < archivo.txt
+cat<archivo.txt
+echo hola >> archivo.txt
+echo hola>>archivo.txt
+echo hola > archivo1.txt > archivo2.txt  # solo redirige a archivo2
+cat < archivo.txt | grep hola
+
+// COMPROBACION DE COMANDOS DE REDIRECCIONES NO FUNCIONALES
+
+echo hola >   # error: falta archivo
+>             # error: redirección sin comando
+echo < >      # error de sintaxis
+echo >>><<    # error por combinación inválida
+cat <<        # error: falta delimitador para heredoc
+cat <<EOF     # válido solo si sigues con `EOF` después (heredoc)
+
+// IGNORA LAS REDIRECCIONES DENTRO DE LAS COMILLAS
+echo "hola > archivo.txt"
+echo 'hola > archivo.txt'
+
+
+// COMPROBACION DE COMANDOS CON COMILLAS
+
