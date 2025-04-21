@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/18 12:27:44 by fernando         ###   ########.fr       */
+/*   Updated: 2025/04/21 15:44:19 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,21 +87,22 @@ void	shell_loop(t_env *env)
 	char	*input;
 	char	*prompt;
 	int		i;
+	char	**tokens;
+	int		token_num;
 
 	while (1)
 	{
 		prompt = build_prompt(env);
 		input = readline(prompt);
-		if (!parse(input))
+		token_num = parse(input);
+		if (!token_num)
 			break;
 		free(prompt);
 		if (!input)
 			break ;
 		if (*input)
 			add_history(input);
-		tokenize(input, parse(input));
-		if (tokens && tokens[0])
-			printf("%s\n %s\n",tokens[0] , tokens[1]);
+		tokens = tokenize(input, token_num);
 		i = 0;
 		while (tokens && tokens[i])
 			free(tokens[i++]);

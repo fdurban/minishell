@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   automats.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:59:56 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/18 12:13:49 by fernando         ###   ########.fr       */
+/*   Updated: 2025/04/21 15:39:39 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,18 @@ int	parse(char *readline)
 		c = readline[i];
 		input = get_input_type(c);
 		state = state_matrix[state][input];
+		if(state == STATE_START)
+			printf("STATE START\n");
+		if(state == STATE_WORD)
+			printf("STATE WORD\n");
+		if(state == STATE_IN_SINGLE_QUOTE)
+			printf("STATE SINGLE QUOATE\n");	
+		if(state == STATE_IN_DOUBLE_QUOTE)
+			printf("STATE DOUBLE\n");	
+		if(state == STATE_REDIR)
+			printf("STATE REDIR\n");	
+		if(state == STATE_SPACE_AFTER_WORD)
+			printf("STATE SPACE AFTER WORD\n");	
 		if (state == STATE_ERROR)
 		{
 			printf("Syntax Error\n");
@@ -65,6 +77,8 @@ int	parse(char *readline)
 		}
 		if (state == STATE_PIPE)
 			tokens++;
+		if (state ==  STATE_END)
+			return (tokens);
 		i++;
 	}
 	return (tokens);

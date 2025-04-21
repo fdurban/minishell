@@ -25,7 +25,7 @@ all: $(OBJ_DIR) $(NAME)
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-$(NAME): $(SRC_OBJ) $(PARSE_OBJ)
+$(NAME): $(SRC_OBJ) $(PARSE_OBJ) $(TOKEN_OBJ)
 	make -C $(LIBFT_DIR)
 	$(CC) $(CFLAGS) $(SRC_OBJ) $(PARSE_OBJ) $(TOKEN_OBJ) $(LIBFT_PATH) -lreadline -o $(NAME)
 

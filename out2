@@ -1,0 +1,10 @@
+includes
+libft
+Makefile
+out
+out2
+parse
+README.md
+src
+test.txt
+tokenize
