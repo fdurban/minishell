@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/11 17:23:56 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/21 13:18:48 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,10 @@ void	shell_loop(t_env *env)
 			add_history(input);
 		tokens = ft_split(input, '|');
 		if (tokens && tokens[0])
+		{
+			pipex_implementation(tokens, env);
 			printf("%s\n", tokens[0]);
+		}
 		i = 0;
 		while (tokens && tokens[i])
 			free(tokens[i++]);

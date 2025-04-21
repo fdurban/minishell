@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/14 17:45:55 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/21 13:32:44 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "env.h"
+# include "pipex.h"
 
 /* Standard libraries */
 # include <signal.h>
@@ -41,7 +42,7 @@ typedef enum estate
 	STATE_END,
 	STATE_ERROR,
 	NUM_STATES
-}	t_state;
+}		t_state;
 typedef enum einput
 {
 	INPUT_PIPE,
@@ -52,7 +53,7 @@ typedef enum einput
 	INPUT_IN_DOUBLE_QUOTE,
 	INPUT_REDIRECT,
 	NUM_INPUT
-}	t_input;
+}		t_input;
 
 void	shell_loop(t_env *env);
 void	parse(char *readline);
