@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/16 13:33:50 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/18 12:23:53 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,7 @@ typedef enum einput
 }	t_input;
 
 void	shell_loop(t_env *env);
-int	parse(char *readline);
+int		parse(char *readline);
+void	tokenize(char *valid_input, int num_tokens);
+
 #endif

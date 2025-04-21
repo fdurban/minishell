@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   automats.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:59:56 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/16 13:42:05 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/18 12:13:49 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int	parse(char *readline)
 	int			i;
 	t_state		state;
 	t_input		input;
+	int			tokens;
 	const int	state_matrix[NUM_STATES][NUM_INPUT] = {
 	{STATE_ERROR, STATE_START, STATE_WORD, STATE_END, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_ERROR}, //STATE_START
 	{STATE_PIPE, STATE_SPACE_AFTER_WORD, STATE_WORD, STATE_END, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_END}, // STATE WORD
@@ -51,6 +52,7 @@ int	parse(char *readline)
 	i = 0;
 	state = STATE_START;
 	input = 0;
+	tokens = 1;
 	while (state != STATE_END || state != STATE_ERROR || readline[i] != '\0')
 	{
 		c = readline[i];
@@ -61,9 +63,9 @@ int	parse(char *readline)
 			printf("Syntax Error\n");
 			return (0);
 		}
-		if (state == STATE_END)
-			return (1) ;
+		if (state == STATE_PIPE)
+			tokens++;
 		i++;
 	}
-	return (0);
+	return (tokens);
 }

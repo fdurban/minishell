@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/16 13:34:12 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/18 12:27:44 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,6 @@ static char	*build_prompt(t_env *env)
 void	shell_loop(t_env *env)
 {
 	char	*input;
-	char	**tokens;
 	char	*prompt;
 	int		i;
 
@@ -100,7 +99,7 @@ void	shell_loop(t_env *env)
 			break ;
 		if (*input)
 			add_history(input);
-		tokens = ft_split(input, '|');
+		tokenize(input, parse(input));
 		if (tokens && tokens[0])
 			printf("%s\n %s\n",tokens[0] , tokens[1]);
 		i = 0;
