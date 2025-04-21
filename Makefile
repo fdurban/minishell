@@ -21,9 +21,8 @@ PIPEX_FILES = $(PIPEX_DIR)/pipex_implementation.c \
               $(PIPEX_DIR)/init_files.c \
               $(PIPEX_DIR)/here_doc.c \
               $(PIPEX_DIR)/exec.c \
-              $(PIPEX_DIR)/pipes.c \
               $(PIPEX_DIR)/errors.c \
-              $(PIPEX_DIR)/cleanup.c \
+              $(PIPEX_DIR)/cleanup.c
 
 PARSE_FILES = $(PARSE_DIR)/automats.c
 
@@ -33,10 +32,13 @@ PARSE_OBJ = $(PARSE_FILES:$(PARSE_DIR)/%.c=$(OBJ_DIR)/%.o)
 
 OBJS = $(SRC_OBJ) $(PIPEX_OBJ) $(PARSE_OBJ)
 
-all: $(NAME)
+all: $(LIBFT_PATH) $(NAME)
 
-$(NAME): $(OBJS) $(LIBFT_PATH)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_PATH)
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT_PATH) -lreadline
+
+$(LIBFT_PATH):
+	$(MAKE) -C $(LIBFT_DIR)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	mkdir -p $(OBJ_DIR)
@@ -50,17 +52,13 @@ $(OBJ_DIR)/%.o: $(PARSE_DIR)/%.c
 	mkdir -p $(OBJ_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-norminette:
-	norminette $(SRC_FILES) minishell.h
-
 clean:
-	make clean -C $(LIBFT_DIR)
 	rm -rf $(OBJ_DIR)
+	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	make fclean -C $(LIBFT_DIR)
-	rm -rf $(OBJ_DIR)
 	rm -f $(NAME)
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
