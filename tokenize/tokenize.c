@@ -6,58 +6,82 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/21 16:45:10 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:37:53 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	print_tokens_by_space(char ***parsed_tokens, int token_number)
+int	is_special(char letter)
 {
-	int i = 0;
-	while (i < token_number)
-	{
-		int j = 0;
-		while(parsed_tokens[i][j])
-		{
-			printf("[%s]\n", parsed_tokens[i][j]);
-			j++;
-		}
-		i++;
-	}
+	if(letter == '>' || letter == '<' || letter == '|')
+		return (1);
+	else
+		return (0);
 }
 
 char	*extract_word(char *str, int *i)
 {
 	int start = *i;
-	while (str)
+	while (str[*i] && !isspace(str[*i]) && !is_special(str[*i]))
+		(*i)++;
+	return (ft_substr(str, start, *i - start));
+}
+
+char	*extract_quoted_string(char *str, int *i)
+{
+	int		start;
+	char	quote;
+
+	(*i)++;
+	start = *i;
+	quote = str[*i];
+	while (str[*i] && str[*i] != quote)
+		(*i)++;
+	return (ft_substr(str, start, *i - start));
+}
+
+void	add_command_part_to_list(t_command_part **lst, t_command_part *new)
+{
+	t_command_part	*last;
+
+	last = *lst;
+	if (!new)
+		return ;
+	if (*lst == NULL)
 	{
-		
+		*lst = new;
+		return ;
+	}
+	if (lst != NULL)
+	{
+		while (last->next != NULL)
+			last = last->next;
+		last->next = new;
 	}
 }
 
+t_command_part		*create_command_part(char *value, t_input type)
+{
+	t_command_part *new;
+	
+	new = malloc(sizeof(t_command_part));
+	new->value = value;
+	new->type = type;
+	return (new);
+}
+//char command
 char	**tokenize(char *valid_input, int token_number)
 {
-	int		i;
-	char	**tokens;
+	int				*i;
+	char			**tokens;
+	//t_command_part	**command_list;
+	char			***parsed_tokens;
+	//char			*token;
+
 	tokens = ft_split(valid_input, '|');
 	i = 0;
-	char	***parsed_tokens;	
-
 	parsed_tokens =  malloc(sizeof(char **) * token_number + 1);
-	printf("This is the number of tokens %d\n", token_number);
 	//sustituir por funciones que partan las diferentes partes del pipe y lo ponga en una lista enlazada
-	while(i < token_number)
-	{
-		parsed_tokens[i] = ft_split(tokens[i], ' ');
-		i++;
-	}
-	print_tokens_by_space(parsed_tokens, token_number);
-	// i = 0;
-	// while (tokens[i])
-	// {
-	// 	printf("%s\n", tokens[i]);
-	// 	i++;
-	// }
 	return (tokens);
 }

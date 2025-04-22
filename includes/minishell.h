@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/21 16:27:39 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:21:46 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,17 @@
 
 typedef enum estate
 {
-	STATE_START,
-	STATE_WORD,
-	STATE_IN_SINGLE_QUOTE,
-	STATE_IN_DOUBLE_QUOTE,
-	STATE_PIPE,
-	STATE_REDIR,
-	STATE_SPACE_AFTER_WORD,
-	STATE_END,
-	STATE_ERROR,
+	START,
+	WORD,
+	IN_SINGLE_QUOTE,
+	IN_DOUBLE_QUOTE,
+	PIPE,
+	REDIR,
+	SPACE_AFTER_WORD,
+	END_OF_SINGLE_QUOTE,
+	END_OF_DOUBLE_QUOTE,
+	END,
+	ERROR,
 	NUM_STATES
 }	t_state;
 typedef enum einput
@@ -54,12 +56,12 @@ typedef enum einput
 	NUM_INPUT
 }	t_input;
 
-typedef struct s_token
+typedef struct s_command_part
 {
 	char	*value;
-	int		type;
-	struct s_token	*next;
-} t_token;
+	t_input	type;
+	struct s_command_part	*next;
+} t_command_part;
 
 void	shell_loop(t_env *env);
 int		parse(char *readline);

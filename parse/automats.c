@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:59:56 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/21 15:39:39 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/22 17:30:36 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,47 +39,54 @@ int	parse(char *readline)
 	t_state		state;
 	t_input		input;
 	int			tokens;
-	const int	state_matrix[NUM_STATES][NUM_INPUT] = {
-	{STATE_ERROR, STATE_START, STATE_WORD, STATE_END, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_ERROR}, //STATE_START
-	{STATE_PIPE, STATE_SPACE_AFTER_WORD, STATE_WORD, STATE_END, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_END}, // STATE WORD
-	{STATE_IN_SINGLE_QUOTE, STATE_IN_SINGLE_QUOTE, STATE_IN_SINGLE_QUOTE, STATE_ERROR, STATE_START, STATE_IN_SINGLE_QUOTE, STATE_IN_SINGLE_QUOTE}, // STATE IN SINGLE QUOTE
-	{STATE_IN_DOUBLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_ERROR, STATE_IN_DOUBLE_QUOTE, STATE_SPACE_AFTER_WORD, STATE_IN_DOUBLE_QUOTE}, // STATE IN DOUBLE QUOTE
-	{STATE_ERROR, STATE_SPACE_AFTER_WORD, STATE_PIPE, STATE_ERROR, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_REDIR}, // STATE PIPE
-	{STATE_ERROR, STATE_REDIR, STATE_REDIR, STATE_END, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_REDIR}, // STATE REDIR
-	{STATE_PIPE, STATE_SPACE_AFTER_WORD, STATE_WORD, STATE_END, STATE_IN_SINGLE_QUOTE, STATE_IN_DOUBLE_QUOTE, STATE_REDIR} // SPACE AFTER WORD	
+	const int	matrix[NUM_STATES][NUM_INPUT] = {
+	{ERROR, START, WORD, END, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, ERROR}, //START
+	{PIPE, SPACE_AFTER_WORD, WORD, END, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, END}, // STATE WORD
+	{IN_SINGLE_QUOTE, IN_SINGLE_QUOTE, IN_SINGLE_QUOTE, ERROR, END_OF_SINGLE_QUOTE, IN_SINGLE_QUOTE, IN_SINGLE_QUOTE}, // STATE IN SINGLE QUOTE
+	{IN_DOUBLE_QUOTE, IN_DOUBLE_QUOTE, IN_DOUBLE_QUOTE, ERROR, IN_DOUBLE_QUOTE, END_OF_DOUBLE_QUOTE, IN_DOUBLE_QUOTE}, // STATE IN DOUBLE QUOTE
+	{ERROR, SPACE_AFTER_WORD, PIPE, ERROR, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, REDIR}, // STATE PIPE
+	{ERROR, REDIR, REDIR, END, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, REDIR}, // STATE REDIR
+	{PIPE, SPACE_AFTER_WORD, WORD, END, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, REDIR}, // SPACE AFTER WORD
+	{PIPE, SPACE_AFTER_WORD, WORD, END, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, REDIR}, // END OF SINGLE QUOTE
+	{PIPE, SPACE_AFTER_WORD, WORD, END, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, REDIR} // END OF DOUBLE QUOTE
 	};
 
 	i = 0;
-	state = STATE_START;
+	state = START;
 	input = 0;
 	tokens = 1;
-	while (state != STATE_END || state != STATE_ERROR || readline[i] != '\0')
+	while (1)
 	{
 		c = readline[i];
 		input = get_input_type(c);
-		state = state_matrix[state][input];
-		if(state == STATE_START)
-			printf("STATE START\n");
-		if(state == STATE_WORD)
-			printf("STATE WORD\n");
-		if(state == STATE_IN_SINGLE_QUOTE)
-			printf("STATE SINGLE QUOATE\n");	
-		if(state == STATE_IN_DOUBLE_QUOTE)
-			printf("STATE DOUBLE\n");	
-		if(state == STATE_REDIR)
-			printf("STATE REDIR\n");	
-		if(state == STATE_SPACE_AFTER_WORD)
-			printf("STATE SPACE AFTER WORD\n");	
-		if (state == STATE_ERROR)
+		state = matrix[state][input];
+		if (state == ERROR)
 		{
 			printf("Syntax Error\n");
 			return (0);
 		}
-		if (state == STATE_PIPE)
+		if (state == PIPE)
 			tokens++;
-		if (state ==  STATE_END)
+		if (state ==  END)
 			return (tokens);
 		i++;
 	}
 	return (tokens);
 }
+
+// if(state == START)
+// 	printf("STATE START\n");
+// if(state == WORD)
+// 	printf("STATE WORD\n");
+// if(state == IN_SINGLE_QUOTE)
+// 	printf("STATE SINGLE QUOTE\n");	
+// if(state == IN_DOUBLE_QUOTE)
+// 	printf("STATE DOUBLE\n");	
+// if(state == REDIR)
+// 	printf("STATE REDIR\n");	
+// if(state == SPACE_AFTER_WORD)
+// 	printf("STATE SPACE AFTER WORD\n");
+// if(state == END_OF_SINGLE_QUOTE)
+// 	printf("STATE END OF SINGLE QUOTE\n");
+// if(state == END_OF_DOUBLE_QUOTE)
+// 	printf("STATE END OF DOUBLE QUOTE\n");
