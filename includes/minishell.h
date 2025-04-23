@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/22 17:21:46 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/23 14:06:59 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # include <stdio.h>
 # include <string.h>
 
-typedef enum estate
+typedef enum e_state
 {
 	START,
 	WORD,
@@ -44,7 +44,8 @@ typedef enum estate
 	ERROR,
 	NUM_STATES
 }	t_state;
-typedef enum einput
+
+typedef enum e_input
 {
 	INPUT_PIPE,
 	INPUT_SPACE,
@@ -56,6 +57,7 @@ typedef enum einput
 	NUM_INPUT
 }	t_input;
 
+
 typedef struct s_command_part
 {
 	char	*value;
@@ -65,6 +67,7 @@ typedef struct s_command_part
 
 void	shell_loop(t_env *env);
 int		parse(char *readline);
+int		get_input_type(char c);
 char**	tokenize(char *valid_input, int token_number);
 
 #endif
