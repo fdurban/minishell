@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   automats.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:59:56 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/23 16:28:55 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/24 00:25:06 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	parse(char *readline)
 	{IN_SINGLE_QUOTE, IN_SINGLE_QUOTE, IN_SINGLE_QUOTE, ERROR, END_OF_SINGLE_QUOTE, IN_SINGLE_QUOTE, IN_SINGLE_QUOTE}, // STATE IN SINGLE QUOTE
 	{IN_DOUBLE_QUOTE, IN_DOUBLE_QUOTE, IN_DOUBLE_QUOTE, ERROR, IN_DOUBLE_QUOTE, END_OF_DOUBLE_QUOTE, IN_DOUBLE_QUOTE}, // STATE IN DOUBLE QUOTE
 	{ERROR, SPACE_AFTER_WORD, PIPE, ERROR, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, REDIR}, // STATE PIPE
-	{ERROR, REDIR, REDIR, ERROR, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, REDIR}, // STATE REDIR
+	{ERROR, REDIR, REDIR, END, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, REDIR}, // STATE REDIR
 	{PIPE, SPACE_AFTER_WORD, WORD, END, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, REDIR}, // SPACE AFTER WORD
 	{PIPE, SPACE_AFTER_WORD, WORD, END, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, REDIR}, // END OF SINGLE QUOTE
 	{PIPE, SPACE_AFTER_WORD, WORD, END, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, REDIR} // END OF DOUBLE QUOTE
