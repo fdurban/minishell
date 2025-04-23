@@ -6,13 +6,14 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/23 14:07:10 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:33:26 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
 
+// "state"
 typedef enum e_word_type
 {
 	WORD_START,
@@ -24,6 +25,7 @@ typedef enum e_word_type
 	WORD_REDIRECT_APPEND,
 	WORD_HEREDOC,
 	WORD_SPACE,
+	WORD_SPACE_AFTER_REDIRECT,
 	WORD_END_OF_SINGLE_QUOTE,
 	WORD_END_OF_DOUBLE_QUOTE,
 	WORD_END,
@@ -31,16 +33,25 @@ typedef enum e_word_type
 	NUM_WORDS
 } t_word_type;
 
-typedef enum e_input
+typedef enum e_input_tokenizer
 {
-	INPUT_PIPE,
-	INPUT_SPACE,
-	INPUT_LETTER,
-	INPUT_END,
-	INPUT_IN_SINGLE_QUOTE,
-	INPUT_IN_DOUBLE_QUOTE,
-	INPUT_REDIRECT,
-	NUM_INPUT
-}	t_input;
+	TOKEN_SPACE,
+	TOKEN_LETTER,
+	TOKEN_END,
+	TOKEN_IN_SINGLE_QUOTE,
+	TOKEN_IN_DOUBLE_QUOTE,
+	TOKEN_REDIRECT_IN,
+	TOKEN_REDIRECT_OUT,
+	TOKEN_NUM_INPUT
+}	t_input_tokenizer;
+
+typedef struct s_command_part
+{
+	char	*value;
+	t_word_type	type;
+	struct s_command_part	*next;
+} t_command_part;
+
+char**	tokenize(char *valid_input);
 
 #endif

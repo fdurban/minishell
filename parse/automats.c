@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 13:59:56 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/23 13:10:41 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:28:55 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,12 +34,12 @@ int	get_input_type(char c)
 //TODO: Añadir estados de espacios despues de pipes y redirecciones
 int	parse(char *readline)
 {
-	char		c;
-	int			i;
-	t_state		state;
-	t_input		input;
-	int			tokens;
-	const int	matrix[NUM_STATES][NUM_INPUT] = {
+	char			c;
+	int				i;
+	t_state			state;
+	t_input_parse	input;
+	int				tokens;
+	const int		matrix[NUM_STATES][NUM_INPUT] = {
 	{ERROR, START, WORD, END, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, ERROR}, //START
 	{PIPE, SPACE_AFTER_WORD, WORD, END, IN_SINGLE_QUOTE, IN_DOUBLE_QUOTE, END}, // STATE WORD
 	{IN_SINGLE_QUOTE, IN_SINGLE_QUOTE, IN_SINGLE_QUOTE, ERROR, END_OF_SINGLE_QUOTE, IN_SINGLE_QUOTE, IN_SINGLE_QUOTE}, // STATE IN SINGLE QUOTE
@@ -58,22 +58,6 @@ int	parse(char *readline)
 	{
 		c = readline[i];
 		input = get_input_type(c);
-		if(state == START)
-			printf("STATE START\n");
-		if(state == WORD)
-			printf("STATE WORD\n");
-		if(state == IN_SINGLE_QUOTE)
-			printf("STATE SINGLE QUOTE\n");	
-		if(state == IN_DOUBLE_QUOTE)
-			printf("STATE DOUBLE\n");	
-		if(state == REDIR)
-			printf("STATE REDIR\n");	
-		if(state == SPACE_AFTER_WORD)
-			printf("STATE SPACE AFTER WORD\n");
-		if(state == END_OF_SINGLE_QUOTE)
-			printf("STATE END OF SINGLE QUOTE\n");
-		if(state == END_OF_DOUBLE_QUOTE)
-			printf("STATE END OF DOUBLE QUOTE\n");
 		state = matrix[state][input];
 		if (state == ERROR)
 		{
@@ -88,3 +72,20 @@ int	parse(char *readline)
 	}
 	return (tokens);
 }
+
+		// if(state == START)
+		// 	printf("STATE START\n");
+		// if(state == WORD)
+		// 	printf("STATE WORD\n");
+		// if(state == IN_SINGLE_QUOTE)
+		// 	printf("STATE SINGLE QUOTE\n");	
+		// if(state == IN_DOUBLE_QUOTE)
+		// 	printf("STATE DOUBLE\n");	
+		// if(state == REDIR)
+		// 	printf("STATE REDIR\n");	
+		// if(state == SPACE_AFTER_WORD)
+		// 	printf("STATE SPACE AFTER WORD\n");
+		// if(state == END_OF_SINGLE_QUOTE)
+		// 	printf("STATE END OF SINGLE QUOTE\n");
+		// if(state == END_OF_DOUBLE_QUOTE)
+		// 	printf("STATE END OF DOUBLE QUOTE\n");

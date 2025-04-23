@@ -6,23 +6,27 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/23 13:20:16 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:53:13 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../includes/tokenizer.h"
 #include "../includes/minishell.h"
 
+//modificar en funcion de los estados
 int	is_special(char letter)
 {
-	if(letter == '>' || letter == '<' || letter == '|')
+	if (letter == '>' || letter == '<' || letter == '|')
 		return (1);
 	else
 		return (0);
 }
-
+//modificar en funcion de los estados
 char	*extract_word(char *str, int *i)
 {
-	int start = *i;
+	int start;
+
+	start = *i;
 	while (str[*i] && !isspace(str[*i]) && !is_special(str[*i]))
 		(*i)++;
 	return (ft_substr(str, start, *i - start));
@@ -61,7 +65,7 @@ void	add_command_part_to_list(t_command_part **lst, t_command_part *new)
 	}
 }
 
-t_command_part		*create_command_part(char *value, t_input type)
+t_command_part		*create_command_part(char *value, t_word_type type)
 {
 	t_command_part *new;
 	
@@ -71,39 +75,58 @@ t_command_part		*create_command_part(char *value, t_input type)
 	return (new);
 }
 //char command
-char	**tokenize(char *valid_command, int token_number)
+char	**tokenize(char *valid_command)
 {
-	char	**tokens;
-	t_input	input;
-	int		i;
-	t_word_type word_type;
+	char				**tokens;
+	t_input_tokenizer	input;
+	int					i;
+	t_word_type 		word_type;
 
 	i = 0;
 	tokens = ft_split(valid_command, '|');
 	//char			***parsed_tokens;
-	//pipe // space //letter // end // single quote //double quote //redirect
+	// space //letter // end // single quote //double quote //redirect IN // redirect out
 	const int	matrix[NUM_WORDS][NUM_INPUT] = {
-	{WORD_ERROR, WORD_START, WORD_STANDARD, WORD_END, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_REDIRECT_IN}, //WORD_START
-	{WORD_ERROR, WORD_SPACE, WORD_STANDARD, WORD_END, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_REDIRECT_IN}, // WORD_STANDARD
-	{WORD_ERROR, WORD_SINGLE_QUOTE, WORD_SINGLE_QUOTE, WORD_ERROR, WORD_END_OF_SINGLE_QUOTE,WORD_SINGLE_QUOTE, WORD_SINGLE_QUOTE}, // WORD_SINGLE QUOTE
-	{WORD_ERROR, WORD_DOUBLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_ERROR, WORD_DOUBLE_QUOTE, WORD, END_OF_DOUBLE_QUOTE, WORD_DOUBLE_QUOTE}, // WORD_DOUBLE QUOTE
-	{WORD_ERROR, WORD_SPACE, WORD_STANDARD, WORD_ERROR, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_HEREDOC}, // REDIRECT_IN
-	{WORD_ERROR, WORD_REDIRECT_OUT, WORD_REDIRECT_OUT, WORD_END, WORD_REDIRECT_OUT, WORD_REDIRECT_OUT, WORD_REDIRECT_APPEND}, // REDIRECT_OUT
-	{WORD_ERROR, }, // REDIRECT_APPEND
-	{WORD_ERROR, }, // HERE_DOC
-	{WORD_ERROR, WORD_SPACE, WORD_STANDARD, WORD_END, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_REDIRECT_IN}, // END OF SINGLE QUOTE
-	{WORD_ERROR, }, // END OF DOUBLE QUOTE
-	{WORD_ERROR, } // SPACE
+	{WORD_START, WORD_STANDARD, WORD_END, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_REDIRECT_IN, WORD_REDIRECT_OUT}, //WORD_START
+	{WORD_SPACE, WORD_STANDARD, WORD_END, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_REDIRECT_IN, WORD_REDIRECT_OUT}, // WORD_STANDARD
+	{WORD_SINGLE_QUOTE, WORD_SINGLE_QUOTE, WORD_ERROR, WORD_END_OF_SINGLE_QUOTE,WORD_SINGLE_QUOTE, WORD_SINGLE_QUOTE}, // WORD_SINGLE QUOTE
+	{WORD_DOUBLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_ERROR, WORD_DOUBLE_QUOTE, WORD, END_OF_DOUBLE_QUOTE, WORD_DOUBLE_QUOTE}, // WORD_DOUBLE QUOTE
+	{WORD_SPACE, WORD_STANDARD, WORD_ERROR, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_HEREDOC}, // REDIRECT_IN
+	{WORD_REDIRECT_OUT, WORD_REDIRECT_OUT, WORD_END, WORD_REDIRECT_OUT, WORD_REDIRECT_OUT, WORD_REDIRECT_APPEND}, // REDIRECT_OUT
+	{WORD_SPACE_AFTER_REDIRECT, WORD_STANDARD, WORD_ERROR, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_ERROR}, // REDIRECT_APPEND
+	{WORD_SPACE_AFTER_REDIRECT, WORD_STANDARD, WORD_ERROR, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_ERROR}, // HERE_DOC
+	{WORD_SPACE, WORD_STANDARD, WORD_END, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_REDIRECT_IN, WORD_REDIRECT_OUT}, // SPACE AFTER WORD
+	{WORD_SPACE_AFTER_REDIRECT, WORD_STANDARD, WORD_ERROR, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_ERROR, WORD_ERROR}, // SPACE AFTER REDIRECT
+	{WORD_SPACE, WORD_STANDARD, WORD_END, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_REDIRECT_IN, WORD_REDIRECT_OUT}, // END OF SINGLE QUOTE
+	{WORD_SPACE, WORD_STANDARD, WORD_END, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_REDIRECT_IN, WORD_REDIRECT_OUT}, // END OF DOUBLE QUOTE
 	};
 	word_type = WORD_START;
 
-	printf("%d\n", token_number);
 	//sustituir por funciones que partan las diferentes partes del pipe y lo ponga en una lista enlazada
-	while(1)
+	while (1)
 	{
 		input = get_input_type(valid_command[i]);
-		if((word_type = WORD_ERROR) || (word_type == WORD_END))
+		if(word_type == WORD_START)
+			printf("word_type START\n");
+		if(word_type == WORD_STANDARD)
+			printf("word_type WORD\n");
+		if(word_type == WORD_SINGLE_QUOTE)
+			printf("word_type SINGLE QUOTE\n");	
+		if(word_type == WORD_DOUBLE_QUOTE)
+			printf("word_type DOUBLE\n");	
+		if(word_type == WORD_REDIRECT_IN)
+			printf("word_type REDIR\n");	
+		if(word_type == WORD_SPACE)
+			printf("word_type SPACE AFTER WORD\n");
+		if(word_type == WORD_END_OF_SINGLE_QUOTE)
+			printf("word_type END OF SINGLE QUOTE\n");
+		if(word_type == WORD_END_OF_DOUBLE_QUOTE)
+			printf("word_type END OF DOUBLE QUOTE\n");
+		if((word_type == WORD_ERROR))
+		{
+			printf("Super error\n");
 			break;
+		}
 		word_type = matrix[word_type][input];	
 		i++;
 	}

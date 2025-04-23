@@ -6,11 +6,12 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/22 15:49:08 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:34:55 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+#include "../includes/tokenizer.h"
 
 static char	*get_hostname(t_env *env)
 {
@@ -86,8 +87,8 @@ void	shell_loop(t_env *env)
 {
 	char	*input;
 	char	*prompt;
-	//int		i;
-	//char	**tokens;
+	int		i;
+	char	**tokens;
 	int		token_num;
 
 	while (1)
@@ -102,11 +103,11 @@ void	shell_loop(t_env *env)
 			break ;
 		if (*input)
 			add_history(input);
-		//tokens = tokenize(input, token_num);
-		//i = 0;
-		// while (tokens && tokens[i])
-		// 	free(tokens[i++]);
-		//free(tokens);
+		tokens = tokenize(input);
+		i = 0;
+		while (tokens && tokens[i])
+			free(tokens[i++]);
+		free(tokens);
 		free(input);
 	}
 }

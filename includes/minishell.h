@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/23 14:06:59 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/23 16:33:14 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ typedef enum e_state
 	NUM_STATES
 }	t_state;
 
-typedef enum e_input
+typedef enum e_input_parse
 {
 	INPUT_PIPE,
 	INPUT_SPACE,
@@ -55,19 +55,11 @@ typedef enum e_input
 	INPUT_IN_DOUBLE_QUOTE,
 	INPUT_REDIRECT,
 	NUM_INPUT
-}	t_input;
+}	t_input_parse;
 
-
-typedef struct s_command_part
-{
-	char	*value;
-	t_input	type;
-	struct s_command_part	*next;
-} t_command_part;
 
 void	shell_loop(t_env *env);
 int		parse(char *readline);
 int		get_input_type(char c);
-char**	tokenize(char *valid_input, int token_number);
 
 #endif
