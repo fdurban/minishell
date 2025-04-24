@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/24 16:10:02 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/21 12:36:28 by igngonza         ###   ########.fr       */
+/*   Created: 2025/04/23 10:21:47 by igngonza          #+#    #+#             */
+/*   Updated: 2025/04/23 10:22:20 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/pipex.h"
+#include "../../includes/minishell.h"
 
 void	safe_close(int *fd)
 {
@@ -46,8 +46,8 @@ void	free_cmd_paths(t_pipex *pipex)
 
 void	free_cmd_args(t_pipex *pipex)
 {
-	int	i;
-	int	j;
+	int i;
+	int j;
 
 	if (!pipex->cmd_args)
 		return ;
@@ -67,20 +67,4 @@ void	free_cmd_args(t_pipex *pipex)
 	}
 	free(pipex->cmd_args);
 	pipex->cmd_args = NULL;
-}
-
-void	parent_free(t_pipex *pipex)
-{
-	if (!pipex)
-		return ;
-	safe_close(&pipex->in_fd);
-	safe_close(&pipex->out_fd);
-	cleanup_heredoc(pipex);
-	free_cmd_paths(pipex);
-	free_cmd_args(pipex);
-	if (pipex->pipes)
-	{
-		free(pipex->pipes);
-		pipex->pipes = NULL;
-	}
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/21 15:56:23 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/23 11:13:37 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,10 @@ typedef struct s_pipex
 	pid_t	pid;
 }			t_pipex;
 
-int			pipex_implementation(char **tokens, t_env *envp);
+int			execution(char **tokens, t_env *env_copy);
 
-void		init_files(char **argv, int argc, t_pipex *pipex);
+void		*ft_bzero(void *s, size_t n);
+void		init_files(char **tokens, int tokens_length, t_pipex *pipex);
 void		get_infile(char **argv, t_pipex *pipex);
 void		get_outfile(char *argv, t_pipex *pipex);
 void		create_pipes(t_pipex *pipex);
@@ -59,6 +60,7 @@ void		redirect_io(int input_fd, int output_fd);
 void		setup_child_io(t_pipex *pipex);
 void		handle_child_error(t_pipex *pipex, int saved_stdout);
 void		execute_child_command(t_pipex *pipex, t_env *envp);
+int			ft_strcmp(const char *s1, const char *s2);
 
 int			check_and_set_heredoc(char *arg, t_pipex *pipex);
 int			create_heredoc_file(void);

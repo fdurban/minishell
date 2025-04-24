@@ -3,25 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/27 15:44:47 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/21 15:04:17 by igngonza         ###   ########.fr       */
+/*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
+/*   Updated: 2025/04/24 10:24:52 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/pipex.h"
-
-int	check_and_set_heredoc(char *arg, t_pipex *pipex)
-{
-	if (!ft_strncmp("<<", arg, 2))
-	{
-		pipex->here_doc = 1;
-		return (6);
-	}
-	pipex->here_doc = 0;
-	return (5);
-}
+#include "../../includes/minishell.h"
 
 int	create_heredoc_file(void)
 {
@@ -41,7 +30,7 @@ void	process_heredoc_input(char *limiter, int fd)
 	lim_len = ft_strlen(limiter);
 	while (1)
 	{
-		write(1, ">", 1);
+		write(1, "heredoc> ", 9);
 		buf = get_next_line(STDIN_FILENO);
 		if (!buf)
 			break ;
@@ -67,7 +56,7 @@ void	finalize_heredoc(t_pipex *pipex)
 
 void	handle_heredoc(char *limiter, t_pipex *pipex)
 {
-	int	fd;
+	int fd;
 
 	fd = create_heredoc_file();
 	process_heredoc_input(limiter, fd);

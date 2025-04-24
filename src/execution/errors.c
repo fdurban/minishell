@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/20 16:30:36 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/21 12:36:40 by igngonza         ###   ########.fr       */
+/*   Created: 2025/04/23 10:35:48 by igngonza          #+#    #+#             */
+/*   Updated: 2025/04/23 10:36:09 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/pipex.h"
+#include "../../includes/minishell.h"
 
 void	handle_error(const char *message)
 {
