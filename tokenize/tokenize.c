@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/24 00:42:15 by fernando         ###   ########.fr       */
+/*   Updated: 2025/04/24 14:21:55 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,10 @@ t_command_part		*create_command_part(char *value, t_word_type type)
 	return (new);
 }
 
+char	*extract_command(char *str, int start, int end)
+{
+	
+}
 int	get_token_type(char c)
 {
 	if (c == ' ')
@@ -126,6 +130,8 @@ char	**tokenize(char *valid_command)
 	while (1)
 	{
 		input = get_token_type(valid_command[i]);
+		if(word_type == WORD_START)
+			printf("word_type START\n");
 		if(word_type == WORD_STANDARD)
 			printf("word_type WORD\n");
 		if(word_type == WORD_SINGLE_QUOTE)
@@ -140,6 +146,8 @@ char	**tokenize(char *valid_command)
 			printf("word_type REDIR append\n");
 		if(word_type == WORD_SPACE)
 			printf("word_type SPACE AFTER WORD\n");
+		if(word_type == WORD_SPACE_AFTER_REDIRECT)
+			printf("word_type SPACE AFTER REDIRECT\n");
 		if(word_type == WORD_END_OF_SINGLE_QUOTE)
 			printf("word_type END OF SINGLE QUOTE\n");
 		if(word_type == WORD_END_OF_DOUBLE_QUOTE)
