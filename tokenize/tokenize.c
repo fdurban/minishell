@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/24 14:21:55 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/25 18:40:17 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,11 +74,7 @@ t_command_part		*create_command_part(char *value, t_word_type type)
 	new->type = type;
 	return (new);
 }
-
-char	*extract_command(char *str, int start, int end)
-{
-	
-}
+// Este comando extrae solo comandos o partes de los comandos 
 int	get_token_type(char c)
 {
 	if (c == ' ')
@@ -99,16 +95,48 @@ int	get_token_type(char c)
 		return (0);
 }
 //char command
+char	*extract_command(char *str,int i, const int matrix[NUM_WORDS][NUM_INPUT], t_word_type word_type)
+{
+	int					start;
+	t_input_tokenizer	input;
+	char				*result;
+
+	start = i;
+	if (word_type == WORD_DOUBLE_QUOTE)
+	{
+		while(word_type != WORD_END_OF_DOUBLE_QUOTE && word_type != WORD_ERROR && str[i])
+		{
+			input = get_token_type(str[i]);
+			word_type = matrix[word_type][input];
+			i++;
+		}
+		result = ft_substr(str, start, i - start - 1);
+	}
+	else if (word_type == WORD_SINGLE_QUOTE)
+	{
+		while(word_type != WORD_END_OF_SINGLE_QUOTE && word_type != WORD_ERROR && str[i])
+		{
+			input = get_token_type(str[i]);
+			word_type = matrix[word_type][input];
+			i++;
+		}
+		result = ft_substr(str, start, i - start - 1);
+	}
+	else
+		result = NULL;
+	return (result);
+}
 char	**tokenize(char *valid_command)
 {
 	char				**tokens;
 	t_input_tokenizer	input;
 	int					i;
-	t_word_type 		word_type;
+	t_word_type			word_type;
+	char				*random_command;
 
 	i = 0;
 	tokens = ft_split(valid_command, '|');
-	//char			***parsed_tokens;
+	random_command = NULL;
 	// space //letter // end // single quote //double quote //redirect IN // redirect out
 	const int	matrix[NUM_WORDS][NUM_INPUT] = {
 	{WORD_START, WORD_STANDARD, WORD_END, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_REDIRECT_IN, WORD_REDIRECT_OUT}, //WORD_START
@@ -125,43 +153,49 @@ char	**tokenize(char *valid_command)
 	{WORD_SPACE, WORD_STANDARD, WORD_END, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_REDIRECT_IN, WORD_REDIRECT_OUT}, // END OF DOUBLE QUOTE
 	};
 	word_type = WORD_START;
-
 	//sustituir por funciones que partan las diferentes partes del pipe y lo ponga en una lista enlazada
 	while (1)
 	{
 		input = get_token_type(valid_command[i]);
-		if(word_type == WORD_START)
-			printf("word_type START\n");
-		if(word_type == WORD_STANDARD)
-			printf("word_type WORD\n");
-		if(word_type == WORD_SINGLE_QUOTE)
-			printf("word_type SINGLE QUOTE\n");
-		if(word_type == WORD_DOUBLE_QUOTE)
-			printf("word_type DOUBLE\n");
-		if(word_type == WORD_REDIRECT_IN)
-			printf("word_type REDIR in\n");
-		if(word_type == WORD_REDIRECT_OUT)
-			printf("word_type REDIR out\n");
-		if(word_type == WORD_REDIRECT_APPEND)
-			printf("word_type REDIR append\n");
-		if(word_type == WORD_SPACE)
-			printf("word_type SPACE AFTER WORD\n");
-		if(word_type == WORD_SPACE_AFTER_REDIRECT)
-			printf("word_type SPACE AFTER REDIRECT\n");
-		if(word_type == WORD_END_OF_SINGLE_QUOTE)
-			printf("word_type END OF SINGLE QUOTE\n");
-		if(word_type == WORD_END_OF_DOUBLE_QUOTE)
-			printf("word_type END OF DOUBLE QUOTE\n");
+		word_type = matrix[word_type][input];	
 		if((word_type == WORD_ERROR))
 		{
-			printf("Super error\n");
+			printf("Word type error with i loop  value of %d\n", i);
 			break;
 		}
 		if(word_type == WORD_END)
 			break;
-		word_type = matrix[word_type][input];	
+		if (word_type == WORD_SINGLE_QUOTE || word_type == WORD_DOUBLE_QUOTE)
+		{
+			random_command = extract_command(valid_command,i, matrix, word_type);
+			i+=ft_strlen(random_command);
+		}
+		printf("%s\n", random_command);
 		i++;
 	}
-	//parsed_tokens =  malloc(sizeof(char **) * token_number + 1);
 	return (tokens);
 }
+
+
+// if(word_type == WORD_ERROR)
+// 			printf("word_type ERROR\n");
+// 		if(word_type == WORD_STANDARD)
+// 			printf("word_type WORD\n");
+// 		if(word_type == WORD_SINGLE_QUOTE)
+// 			printf("word_type SINGLE QUOTE\n");
+// 		if(word_type == WORD_DOUBLE_QUOTE)
+// 			printf("word_type DOUBLE\n");
+// 		if(word_type == WORD_REDIRECT_IN)
+// 			printf("word_type REDIR in\n");
+// 		if(word_type == WORD_REDIRECT_OUT)
+// 			printf("word_type REDIR out\n");
+// 		if(word_type == WORD_REDIRECT_APPEND)
+// 			printf("word_type REDIR append\n");
+// 		if(word_type == WORD_SPACE)
+// 			printf("word_type SPACE AFTER WORD\n");
+// 		if(word_type == WORD_SPACE_AFTER_REDIRECT)
+// 			printf("word_type SPACE AFTER REDIRECT\n");
+// 		if(word_type == WORD_END_OF_SINGLE_QUOTE)
+// 			printf("word_type END OF SINGLE QUOTE\n");
+// 		if(word_type == WORD_END_OF_DOUBLE_QUOTE)
+// 			printf("word_type END OF DOUBLE QUOTE\n");
