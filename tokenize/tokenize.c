@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/25 18:40:17 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/25 18:43:12 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ char	*extract_command(char *str,int i, const int matrix[NUM_WORDS][NUM_INPUT], t
 			word_type = matrix[word_type][input];
 			i++;
 		}
-		result = ft_substr(str, start, i - start - 1);
+		result = ft_substr(str, start, i - start -1);
 	}
 	else
 		result = NULL;
