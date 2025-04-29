@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/29 14:52:43 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/29 17:13:57 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ char	*extract_command(char *str,int i, const int matrix[NUM_WORDS][NUM_INPUT], t
 			i++;
 		}
 		result = ft_substr(str, start, i - start - 1);
+		printf("valor de i es %d\n", i);
+		printf("valor de start es %d\n", start);
 	}
 	else if (word_type == WORD_SINGLE_QUOTE)
 	{
@@ -120,7 +122,21 @@ char	*extract_command(char *str,int i, const int matrix[NUM_WORDS][NUM_INPUT], t
 			word_type = matrix[word_type][input];
 			i++;
 		}
-		result = ft_substr(str, start, i - start -1);
+		result = ft_substr(str, start, i - start - 1);
+		printf("valor de i es %d\n", i);
+		printf("valor de start es %d\n", start);
+	}
+	else if (word_type == WORD_STANDARD)
+	{
+		while(word_type != WORD_SPACE && word_type != WORD_END && str[i])
+		{
+			input = get_token_type(str[i]);
+			word_type = matrix[word_type][input];
+			i++;
+		}
+		result = ft_substr(str, start - 1, (i - start) + 1);
+		printf("valor de i es %d\n", i);
+		printf("valor de start es %d\n", start);
 	}
 	else
 		result = NULL;
@@ -157,7 +173,7 @@ char	**tokenize(char *valid_command)
 	while (1)
 	{
 		printf("//////////////////////////\n");
-		printf("%d\n", i);
+		printf("valor de i es %d\n", i);
 		// PONER ESTE CONTROL DE ERRORES SIEMPRE AL PRINCIPIO DEL BUCLE
 		if(word_type == WORD_START)
 			printf("word_type START\n");
@@ -189,7 +205,7 @@ char	**tokenize(char *valid_command)
 		}
 		if(word_type == WORD_END)
 			break;
-		if (word_type == WORD_SINGLE_QUOTE || word_type == WORD_DOUBLE_QUOTE)
+		if (word_type == WORD_SINGLE_QUOTE || word_type == WORD_DOUBLE_QUOTE || word_type == WORD_STANDARD)
 		{
 			random_command = extract_command(valid_command,i, matrix, word_type);
 			i+=ft_strlen(random_command);
@@ -200,7 +216,11 @@ char	**tokenize(char *valid_command)
 		printf("Letra %c y posicion %d\n", valid_command[i], i);
 		i++;
 	}
-		printf("random command is %s\n", random_command);
+	printf("random command is %s\n", random_command);
 	return (tokens);
 }
 
+
+//probar los siguientes comandos en casa
+// "abcde" abcd abcdef
+// "p"w'd'
