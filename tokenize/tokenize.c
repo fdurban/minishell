@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/25 18:43:12 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/04/29 14:52:43 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,7 +142,7 @@ char	**tokenize(char *valid_command)
 	{WORD_START, WORD_STANDARD, WORD_END, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_REDIRECT_IN, WORD_REDIRECT_OUT}, //WORD_START
 	{WORD_SPACE, WORD_STANDARD, WORD_END, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_REDIRECT_IN, WORD_REDIRECT_OUT}, // WORD_STANDARD
 	{WORD_SINGLE_QUOTE, WORD_SINGLE_QUOTE, WORD_ERROR, WORD_END_OF_SINGLE_QUOTE,WORD_SINGLE_QUOTE, WORD_SINGLE_QUOTE}, // WORD_SINGLE QUOTE
-	{WORD_DOUBLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_ERROR, WORD_DOUBLE_QUOTE, WORD_END_OF_DOUBLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_DOUBLE_QUOTE}, // WORD_DOUBLE QUOTE
+	{WORD_DOUBLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_STANDARD, WORD_DOUBLE_QUOTE, WORD_END_OF_DOUBLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_DOUBLE_QUOTE}, // WORD_DOUBLE QUOTE
 	{WORD_SPACE, WORD_STANDARD, WORD_ERROR, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_HEREDOC}, // REDIRECT_IN
 	{WORD_REDIRECT_OUT, WORD_REDIRECT_OUT, WORD_END, WORD_REDIRECT_OUT, WORD_REDIRECT_OUT,WORD_REDIRECT_IN, WORD_REDIRECT_APPEND}, // REDIRECT_OUT
 	{WORD_SPACE_AFTER_REDIRECT, WORD_STANDARD, WORD_ERROR, WORD_SINGLE_QUOTE, WORD_DOUBLE_QUOTE, WORD_ERROR}, // REDIRECT_APPEND
@@ -156,8 +156,32 @@ char	**tokenize(char *valid_command)
 	//sustituir por funciones que partan las diferentes partes del pipe y lo ponga en una lista enlazada
 	while (1)
 	{
-		input = get_token_type(valid_command[i]);
-		word_type = matrix[word_type][input];	
+		printf("//////////////////////////\n");
+		printf("%d\n", i);
+		// PONER ESTE CONTROL DE ERRORES SIEMPRE AL PRINCIPIO DEL BUCLE
+		if(word_type == WORD_START)
+			printf("word_type START\n");
+		if(word_type == WORD_STANDARD)
+			printf("word_type WORD\n");
+		if(word_type == WORD_SINGLE_QUOTE)
+			printf("word_type SINGLE QUOTE\n");
+		if(word_type == WORD_DOUBLE_QUOTE)
+			printf("word_type DOUBLE\n");
+		if(word_type == WORD_REDIRECT_IN)
+			printf("word_type REDIR in\n");
+		if(word_type == WORD_REDIRECT_OUT)
+			printf("word_type REDIR out\n");
+		if(word_type == WORD_REDIRECT_APPEND)
+			printf("word_type REDIR append\n");
+		if(word_type == WORD_SPACE)
+			printf("word_type SPACE AFTER WORD\n");
+		if(word_type == WORD_SPACE_AFTER_REDIRECT)
+			printf("word_type SPACE AFTER REDIRECT\n");
+		if(word_type == WORD_END_OF_SINGLE_QUOTE)
+			printf("word_type END OF SINGLE QUOTE\n");
+		if(word_type == WORD_END_OF_DOUBLE_QUOTE)
+			printf("word_type END OF DOUBLE QUOTE\n");
+		////////////////////////////////////////////////////////////////
 		if((word_type == WORD_ERROR))
 		{
 			printf("Word type error with i loop  value of %d\n", i);
@@ -169,33 +193,14 @@ char	**tokenize(char *valid_command)
 		{
 			random_command = extract_command(valid_command,i, matrix, word_type);
 			i+=ft_strlen(random_command);
+			printf("Salto del largo de la cadena %d\n", ft_strlen(random_command));
 		}
-		printf("%s\n", random_command);
+		input = get_token_type(valid_command[i]);
+		word_type = matrix[word_type][input];
+		printf("Letra %c y posicion %d\n", valid_command[i], i);
 		i++;
 	}
+		printf("random command is %s\n", random_command);
 	return (tokens);
 }
 
-
-// if(word_type == WORD_ERROR)
-// 			printf("word_type ERROR\n");
-// 		if(word_type == WORD_STANDARD)
-// 			printf("word_type WORD\n");
-// 		if(word_type == WORD_SINGLE_QUOTE)
-// 			printf("word_type SINGLE QUOTE\n");
-// 		if(word_type == WORD_DOUBLE_QUOTE)
-// 			printf("word_type DOUBLE\n");
-// 		if(word_type == WORD_REDIRECT_IN)
-// 			printf("word_type REDIR in\n");
-// 		if(word_type == WORD_REDIRECT_OUT)
-// 			printf("word_type REDIR out\n");
-// 		if(word_type == WORD_REDIRECT_APPEND)
-// 			printf("word_type REDIR append\n");
-// 		if(word_type == WORD_SPACE)
-// 			printf("word_type SPACE AFTER WORD\n");
-// 		if(word_type == WORD_SPACE_AFTER_REDIRECT)
-// 			printf("word_type SPACE AFTER REDIRECT\n");
-// 		if(word_type == WORD_END_OF_SINGLE_QUOTE)
-// 			printf("word_type END OF SINGLE QUOTE\n");
-// 		if(word_type == WORD_END_OF_DOUBLE_QUOTE)
-// 			printf("word_type END OF DOUBLE QUOTE\n");
