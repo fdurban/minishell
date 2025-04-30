@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/30 00:37:47 by fernando         ###   ########.fr       */
+/*   Updated: 2025/04/30 16:46:02 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,6 @@
 #include "../includes/minishell.h"
 
 //modificar en funcion de los estados
-int	is_special(char letter)
-{
-	if (letter == '>' || letter == '<' || letter == '|')
-		return (1);
-	else
-		return (0);
-}
-//modificar en funcion de los estados
-char	*extract_word(char *str, int *i)
-{
-	int start;
-
-	start = *i;
-	while (str[*i] && !isspace(str[*i]) && !is_special(str[*i]))
-		(*i)++;
-	return (ft_substr(str, start, *i - start));
-}
-
-char	*extract_quoted_string(char *str, int *i)
-{
-	int		start;
-	char	quote;
-
-	(*i)++;
-	start = *i;
-	quote = str[*i];
-	while (str[*i] && str[*i] != quote)
-		(*i)++;
-	return (ft_substr(str, start, *i - start));
-}
 
 void	add_command_part_to_list(t_command_part **lst, t_command_part *new)
 {
@@ -100,47 +70,28 @@ char	*extract_command(char *str,int i, const int matrix[NUM_WORDS][NUM_INPUT], t
 	int					start;
 	t_input_tokenizer	input;
 	char				*result;
+	t_word_type			end_type;
 
 	start = i;
-	if (word_type == WORD_DOUBLE_QUOTE)
-	{
-		while(word_type != WORD_END_OF_DOUBLE_QUOTE && word_type != WORD_ERROR && str[i])
-		{
-			input = get_token_type(str[i]);
-			word_type = matrix[word_type][input];
-			i++;
-		}
-		result = ft_substr(str, start, i - start - 1);
-		printf("valor de i es %d\n", i);
-		printf("valor de start es %d\n", start);
-	}
+	if ((word_type == WORD_DOUBLE_QUOTE))
+		end_type = WORD_END_OF_DOUBLE_QUOTE;
 	else if (word_type == WORD_SINGLE_QUOTE)
-	{
-		while(word_type != WORD_END_OF_SINGLE_QUOTE && word_type != WORD_ERROR && str[i])
-		{
-			input = get_token_type(str[i]);
-			word_type = matrix[word_type][input];
-			i++;
-		}
-		result = ft_substr(str, start, i - start - 1);
-		printf("valor de i es %d\n", i);
-		printf("valor de start es %d\n", start);
-	}
-	else if (word_type == WORD_STANDARD)
-	{
-		while(word_type != WORD_SPACE && word_type != WORD_ERROR && str[i])
-		{
-			input = get_token_type(str[i]);
-			word_type = matrix[word_type][input];
-			i++;
-		}
-		result = ft_substr(str, start - 1, i - start);
-		printf("valor de i es %d\n", i);
-		printf("valor de start es %d\n", start);
-		printf("Numero de caracteres impresos son %d\n", i - start -1);
-	}
+		end_type = WORD_END_OF_SINGLE_QUOTE;
 	else
-		result = NULL;
+		end_type = WORD_SPACE;
+	while (word_type != end_type && word_type != WORD_ERROR && str[i])
+	{
+		input = get_token_type(str[i]);
+		word_type = matrix[word_type][input];
+		i++;
+	}
+	if (end_type == WORD_SPACE)
+		result = ft_substr(str, start, (i - start));
+	else
+		result = ft_substr(str, start, i - start - 1);
+	printf("valor de i es %d\n", i);
+	printf("valor de start es %d\n", start);
+	printf("Numero de caracteres impresos son %d\n", i - start -1);
 	return (result);
 }
 char	**tokenize(char *valid_command)
@@ -207,6 +158,8 @@ word_type = WORD_START;
 			break;
 		if (word_type == WORD_SINGLE_QUOTE || word_type == WORD_DOUBLE_QUOTE || word_type == WORD_STANDARD)
 		{
+			if (word_type == WORD_STANDARD)
+				i--;
 			random_command = extract_command(valid_command,i, matrix, word_type);
 			i+= ft_strlen(random_command);
 			printf("random command is %s\n", random_command);
@@ -224,3 +177,33 @@ word_type = WORD_START;
 //probar los siguientes comandos en casa
 // "abcde" abcd abcdef
 // "p"w'd'
+// int	is_special(char letter)
+// {
+// 	if (letter == '>' || letter == '<' || letter == '|')
+// 		return (1);
+// 	else
+// 		return (0);
+// }
+// //modificar en funcion de los estados
+// char	*extract_word(char *str, int *i)
+// {
+// 	int start;
+
+// 	start = *i;
+// 	while (str[*i] && !isspace(str[*i]) && !is_special(str[*i]))
+// 		(*i)++;
+// 	return (ft_substr(str, start, *i - start));
+// }
+
+// char	*extract_quoted_string(char *str, int *i)
+// {
+// 	int		start;
+// 	char	quote;
+
+// 	(*i)++;
+// 	start = *i;
+// 	quote = str[*i];
+// 	while (str[*i] && str[*i] != quote)
+// 		(*i)++;
+// 	return (ft_substr(str, start, *i - start));
+// }
