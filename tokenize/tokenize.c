@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/30 16:46:02 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/05 12:18:59 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ char	*extract_command(char *str,int i, const int matrix[NUM_WORDS][NUM_INPUT], t
 		end_type = WORD_END_OF_SINGLE_QUOTE;
 	else
 		end_type = WORD_SPACE;
-	while (word_type != end_type && word_type != WORD_ERROR && str[i])
+	while (word_type != end_type && word_type != WORD_ERROR && word_type != WORD_END)
 	{
 		input = get_token_type(str[i]);
 		word_type = matrix[word_type][input];
