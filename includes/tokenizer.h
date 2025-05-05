@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/04/23 16:33:26 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/05 12:51:48 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef enum e_word_type
 	WORD_SPACE_AFTER_REDIRECT,
 	WORD_END_OF_SINGLE_QUOTE,
 	WORD_END_OF_DOUBLE_QUOTE,
+	WORD_END_STANDARD,
 	WORD_END,
 	WORD_ERROR,
 	NUM_WORDS
