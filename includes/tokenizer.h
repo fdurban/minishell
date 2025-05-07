@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/05 12:51:48 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:40:21 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ typedef enum e_word_type
 	WORD_END_OF_SINGLE_QUOTE,
 	WORD_END_OF_DOUBLE_QUOTE,
 	WORD_END_STANDARD,
+	WORD_END_STANDARD_TO_DOUBLE_QUOTE,
+	WORD_END_STANDARD_TO_SINGLE_QUOTE,
 	WORD_END,
 	WORD_ERROR,
 	NUM_WORDS
