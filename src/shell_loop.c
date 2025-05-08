@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/23 16:34:55 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/09 00:36:28 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,11 @@ static char	*build_prompt(t_env *env)
 
 void	shell_loop(t_env *env)
 {
-	char	*input;
-	char	*prompt;
-	int		i;
-	char	**tokens;
-	int		token_num;
+	char			*input;
+	char			*prompt;
+	int				i;
+	t_command_part	**tokens;
+	int				token_num;
 
 	while (1)
 	{
