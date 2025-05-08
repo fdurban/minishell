@@ -1,6 +1,6 @@
 NAME = minishell
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g -O0 -Wall -Wextra -Werror
 
 
 LIBFT_DIR = ./libft
@@ -13,7 +13,7 @@ PARSE_DIR = ./parse
 PARSE_FILES = $(PARSE_DIR)/automats.c
 
 TOKEN_DIR = ./tokenize
-TOKEN_FILES = $(TOKEN_DIR)/tokenize.c
+TOKEN_FILES = $(TOKEN_DIR)/tokenize.c $(TOKEN_DIR)/debug.c
 
 OBJ_DIR = ./obj
 SRC_OBJ = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
