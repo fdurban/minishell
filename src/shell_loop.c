@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/09 00:36:28 by fernando         ###   ########.fr       */
+/*   Updated: 2025/05/12 19:19:16 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,26 +88,44 @@ void	shell_loop(t_env *env)
 	char			*input;
 	char			*prompt;
 	int				i;
-	t_command_part	**tokens;
 	int				token_num;
+	t_command_part	*command_tokens;
+	char			**argv;
+	t_command_part	**tokens_array;
+	t_shell			shell;
 
+	shell.env = env;
 	while (1)
 	{
 		prompt = build_prompt(env);
 		input = readline(prompt);
 		token_num = parse(input);
 		if (!token_num)
-			break;
+			break ;
 		free(prompt);
 		if (!input)
 			break ;
 		if (*input)
 			add_history(input);
-		tokens = tokenize(input);
-		i = 0;
-		while (tokens && tokens[i])
-			free(tokens[i++]);
-		free(tokens);
+		tokens_array = tokenize(input);
+		command_tokens = tokens_array[0];
+		if (command_tokens)
+		{
+			argv = tokens_to_argv(command_tokens);
+			if (is_builtin(argv[0]))
+				exec_builtin(argv, &shell);
+			else
+				return ;
+			i = 0;
+			while (argv[i])
+			{
+				free(argv[i]);
+				i++;
+			}
+			free(argv);
+		}
+		// free_tokens(tokens_array);
+		free(tokens_array);
 		free(input);
 	}
 }

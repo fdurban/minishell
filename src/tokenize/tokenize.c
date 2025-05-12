@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/12 12:46:12 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/12 18:18:47 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/tokenizer.h"
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-//modificar en funcion de los estados
+// modificar en funcion de los estados
 
 void	add_command_part_to_list(t_command_part **lst, t_command_part *new)
 {
@@ -65,7 +64,9 @@ int	get_token_type(char c)
 		return (0);
 }
 
-char	*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][NUM_INPUT], t_word_type word_type, t_word_type previous_word_type)
+char	*extract_token_value(char *str, int *i,
+		const int matrix[W_TOTAL][NUM_INPUT], t_word_type word_type,
+		t_word_type previous_word_type)
 {
 	int					start;
 	t_input_tokenizer	input;
@@ -73,8 +74,9 @@ char	*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][NUM_INPUT
 	t_word_type			end_type;
 
 	start = *i;
-	//para definir start
-	if ((word_type == W_DOUBQ || word_type == W_SINGQ) && (previous_word_type == W_EOSTD || previous_word_type == W_EOSTS))
+	// para definir start
+	if ((word_type == W_DOUBQ || word_type == W_SINGQ)
+		&& (previous_word_type == W_EOSTD || previous_word_type == W_EOSTS))
 		start = *i - 1;
 	// para definir endtype
 	if (word_type == W_DOUBQ)
@@ -83,7 +85,7 @@ char	*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][NUM_INPUT
 		end_type = W_EOFSQ;
 	else
 		end_type = W_EOFST;
-	//para sacar resultado
+	// para sacar resultado
 	if (word_type == W_SPACE || word_type == W_SARED)
 	{
 		start = *i;
@@ -118,7 +120,8 @@ char	*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][NUM_INPUT
 	}
 	return (result);
 }
-t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char *valid_command)
+t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT],
+		char *valid_command)
 {
 	t_input_tokenizer	input;
 	int					i;
@@ -126,9 +129,10 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 	char				*random_command;
 	t_word_type			previous_word_type;
 	t_command_part		*command;
-	t_command_part		*lst = NULL;
+	t_command_part		*lst;
 
-	i = 0;	
+	lst = NULL;
+	i = 0;
 	random_command = NULL;
 	command = NULL;
 	word_type = W_START;
@@ -137,17 +141,19 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 		previous_word_type = word_type;
 		input = get_token_type(valid_command[i]);
 		word_type = matrix[word_type][input];
-		//checkposition(word_type, valid_command, i);
+		// checkposition(word_type, valid_command, i);
 		if (word_type == W_ERROR)
 		{
 			printf("Word type error with i loop  value of %d\n", i);
-			break;
+			break ;
 		}
 		if (word_type == W___END)
-			break;
-		if (word_type == W_SINGQ || word_type == W_DOUBQ || word_type == W_STNDR || word_type == W_SARED || word_type == W_SPACE)
+			break ;
+		if (word_type == W_SINGQ || word_type == W_DOUBQ || word_type == W_STNDR
+			|| word_type == W_SARED || word_type == W_SPACE)
 		{
-			random_command = extract_token_value(valid_command, &i, matrix, word_type, previous_word_type);
+			random_command = extract_token_value(valid_command, &i, matrix,
+					word_type, previous_word_type);
 			if (random_command)
 			{
 				command = create_command_part(random_command, word_type);
@@ -155,19 +161,20 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 			}
 			// printf("random command is %s\n", random_command);
 			// printf("Salto del largo de la cadena %d\n", i);
-			continue;
+			continue ;
 		}
 		i++;
 	}
 	return (lst);
 }
-t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][NUM_INPUT], char *valid_command)
+t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][NUM_INPUT],
+		char *valid_command)
 {
-	char				**tokens;
-	int					count;
-	int					i;
-	t_command_part		**results;
-	
+	char			**tokens;
+	int				count;
+	int				i;
+	t_command_part	**results;
+
 	count = 0;
 	i = 0;
 	tokens = ft_split(valid_command, '|');
@@ -188,37 +195,50 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][NUM_INPUT], char *
 t_command_part	**tokenize(char *valid_command)
 {
 	t_command_part	**token;
-	// space //letter // end // single quote //double quote //redirect IN // redirect out
-	const int	matrix[W_TOTAL][NUM_INPUT] = {
-	{W_START, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, //W_START
-	{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_EOFST, W_EOFST}, // W_STNDR
-	{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ}, // WORD_SINGLE QUOTE
-	{W_DOUBQ, W_DOUBQ, W_STNDR, W_DOUBQ, W_EOFDQ, W_DOUBQ, W_DOUBQ}, // WORD_DOUBLE QUOTE
-	{W_SPACE, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_HRDOC, W_ERROR}, // REDIRECT_IN
-	{W_REDOU, W_REDOU, W___END, W_REDOU, W_REDOU, W_REDIN, W_REDAP}, // REDIRECT_OUT
-	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR}, // REDIRECT_APPEND
-	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR}, // HERE_DOC
-	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // SPACE AFTER WORD
-	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR}, // SPACE AFTER REDIRECT
-	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // END OF SINGLE QUOTE
-	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // END OF DOUBLE QUOTE
-	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // END OF STANDARD
-	{W_DOUBQ, W_DOUBQ, W___END, W_EOFDQ, W_EOFDQ, W_DOUBQ, W_DOUBQ}, // END OF STANDARD TO DOUBLE QUOTE
-	{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ} // END OF STANDARD TO DOUBLE QUOTE
+
+	// space //letter // end // single quote //double quote //redirect IN
+		// redirect out
+	const int matrix[W_TOTAL][NUM_INPUT] = {
+		{W_START, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},
+			// W_START
+		{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_EOFST, W_EOFST},
+			// W_STNDR
+		{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ},
+			// WORD_SINGLE QUOTE
+		{W_DOUBQ, W_DOUBQ, W_STNDR, W_DOUBQ, W_EOFDQ, W_DOUBQ, W_DOUBQ},
+			// WORD_DOUBLE QUOTE
+		{W_SPACE, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_HRDOC, W_ERROR},
+			// REDIRECT_IN
+		{W_REDOU, W_REDOU, W___END, W_REDOU, W_REDOU, W_REDIN, W_REDAP},
+			// REDIRECT_OUT
+		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR},
+			// REDIRECT_APPEND
+		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR},
+			// HERE_DOC
+		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},
+			// SPACE AFTER WORD
+		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR},
+			// SPACE AFTER REDIRECT
+		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},
+			// END OF SINGLE QUOTE
+		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},
+			// END OF DOUBLE QUOTE
+		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},
+			// END OF STANDARD
+		{W_DOUBQ, W_DOUBQ, W___END, W_EOFDQ, W_EOFDQ, W_DOUBQ, W_DOUBQ},
+			// END OF STANDARD TO DOUBLE QUOTE
+		{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ} 
+			// END OF STANDARD TO DOUBLE QUOTE
 	};
 	token = split_and_tokenize(matrix, valid_command);
 	// print_values(token);
 	return (token);
 }
 
-
-
-//probar los siguientes comandos en casa
+// probar los siguientes comandos en casa
 // "abcde" abcd abcdef
 // "p"w'd'
 
-
-
-	// printf("valor de i es %d\n", *i);
-	// printf("valor de start es %d\n", start);
-	// printf("Numero de caracteres impresos son %d\n", *i - start);
+// printf("valor de i es %d\n", *i);
+// printf("valor de start es %d\n", start);
+// printf("Numero de caracteres impresos son %d\n", *i - start);
