@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/08 18:24:28 by fernando         ###   ########.fr       */
+/*   Updated: 2025/05/12 16:36:16 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef struct s_command_part
 	struct s_command_part	*next;
 } t_command_part;
 
-t_command_part	**tokenize(char *valid_command);
+t_command_part	**tokenize(char *valid_command, t_env *env);
 void			checkposition(t_word_type word_type, char *valid_command, int i);
 void			print_values(t_command_part **results);
 

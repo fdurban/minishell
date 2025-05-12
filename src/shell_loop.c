@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/09 00:36:28 by fernando         ###   ########.fr       */
+/*   Updated: 2025/05/12 16:34:59 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	shell_loop(t_env *env)
 			break ;
 		if (*input)
 			add_history(input);
-		tokens = tokenize(input);
+		tokens = tokenize(input, env);
 		i = 0;
 		while (tokens && tokens[i])
 			free(tokens[i++]);
