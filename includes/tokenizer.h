@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/08 18:24:28 by fernando         ###   ########.fr       */
+/*   Updated: 2025/05/12 19:04:59 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKENIZER_H
-#define TOKENIZER_H
+# define TOKENIZER_H
 
 // "state"
 typedef enum e_word_type
@@ -34,7 +34,7 @@ typedef enum e_word_type
 	W___END,
 	W_ERROR,
 	W_TOTAL
-} t_word_type;
+}							t_word_type;
 
 typedef enum e_input_tokenizer
 {
@@ -46,22 +46,26 @@ typedef enum e_input_tokenizer
 	TOKEN_REDIRECT_IN,
 	TOKEN_REDIRECT_OUT,
 	TOKEN_NUM_INPUT
-}	t_input_tokenizer;
+}							t_input_tokenizer;
 
 typedef struct s_command_part
 {
-	char	*value;
-	t_word_type	type;
+	char					*value;
+	t_word_type				type;
 	struct s_command_part	*next;
-} t_command_part;
+}							t_command_part;
 
-t_command_part	**tokenize(char *valid_command);
-void			checkposition(t_word_type word_type, char *valid_command, int i);
-void			print_values(t_command_part **results);
+t_command_part				**tokenize(char *valid_command);
+void						checkposition(t_word_type word_type,
+								char *valid_command, int i);
+void						print_values(t_command_part **results);
+int							count_tokens(t_command_part *lst);
+char						**tokens_to_argv(t_command_part *lst);
 
 #endif
 
-// space //letter // end // single quote //double quote //redirect IN // redirect out
+// space //letter // end // single quote //double quote //redirect IN
+	// redirect out
 /*
 	WORD_START ->						W_START
 	WORD_STANDARD->						W_STNDR

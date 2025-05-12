@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/23 16:33:14 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/12 18:18:33 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "builtins.h"
 # include "env.h"
+# include "tokenizer.h"
 
 /* Standard libraries */
 # include <signal.h>
@@ -43,7 +45,7 @@ typedef enum e_state
 	END,
 	ERROR,
 	NUM_STATES
-}	t_state;
+}		t_state;
 
 typedef enum e_input_parse
 {
@@ -55,8 +57,7 @@ typedef enum e_input_parse
 	INPUT_IN_DOUBLE_QUOTE,
 	INPUT_REDIRECT,
 	NUM_INPUT
-}	t_input_parse;
-
+}		t_input_parse;
 
 void	shell_loop(t_env *env);
 int		parse(char *readline);
