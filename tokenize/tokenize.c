@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/09 13:31:22 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/12 12:46:12 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ char	*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][NUM_INPUT
 		start = *i;
 		while (word_type == W_SPACE || word_type == W_SARED)
 		{
-			printf("El bucle esta aqui\n");
 			(*i)++;
 			input = get_token_type(str[*i]);
 			word_type = matrix[word_type][input];
@@ -138,7 +137,7 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 		previous_word_type = word_type;
 		input = get_token_type(valid_command[i]);
 		word_type = matrix[word_type][input];
-		checkposition(word_type, valid_command, i);
+		//checkposition(word_type, valid_command, i);
 		if (word_type == W_ERROR)
 		{
 			printf("Word type error with i loop  value of %d\n", i);
@@ -154,8 +153,8 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 				command = create_command_part(random_command, word_type);
 				add_command_part_to_list(&lst, command);
 			}
-			printf("random command is %s\n", random_command);
-			printf("Salto del largo de la cadena %d\n", i);
+			// printf("random command is %s\n", random_command);
+			// printf("Salto del largo de la cadena %d\n", i);
 			continue;
 		}
 		i++;
@@ -208,7 +207,7 @@ t_command_part	**tokenize(char *valid_command)
 	{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ} // END OF STANDARD TO DOUBLE QUOTE
 	};
 	token = split_and_tokenize(matrix, valid_command);
-	print_values(token);
+	// print_values(token);
 	return (token);
 }
 
