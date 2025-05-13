@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/23 11:13:37 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/29 13:16:40 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,13 +39,20 @@ typedef struct s_pipex
 	int		here_doc;
 	int		is_invalid_infile;
 	char	**cmd_paths;
-	char	***cmd_args;
+	t_cmd	**cmds;
 	int		cmd_count;
 	int		pipe_count;
 	int		*pipes;
 	int		idx;
 	pid_t	pid;
 }			t_pipex;
+
+typedef struct s_cmd
+{
+	char **args; // Command arguments
+	int in_fd;   // Input fd (default STDIN_FILENO)
+	int out_fd;  // Output fd (default STDOUT_FILENO)
+}			t_cmd;
 
 int			execution(char **tokens, t_env *env_copy);
 

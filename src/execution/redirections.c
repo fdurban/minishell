@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:22:50 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/24 10:25:04 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/29 13:21:53 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,6 @@ int	redirect_input(char *infile)
 	return (STDIN_FILENO);
 }
 
-/*
- * Redirect output (>) -- truncates the file if it exists.
- */
 int	redirect_output(char *outfile)
 {
 	int	fd;
@@ -53,12 +50,9 @@ int	redirect_output(char *outfile)
 	return (STDOUT_FILENO);
 }
 
-/*
- * Redirect output append (>>)
- */
 int	redirect_output_append(char *outfile)
 {
-	int fd;
+	int	fd;
 
 	fd = open(outfile, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd < 0)
@@ -73,4 +67,29 @@ int	redirect_output_append(char *outfile)
 	}
 	close(fd);
 	return (STDOUT_FILENO);
+}
+void	process_redirection(char **tokens, int *i, t_cmd *cmd)
+{
+	if (!tokens[*i])
+		return ;
+	if (ft_strcmp(tokens[*i], "<") == 0)
+	{
+		cmd->in_fd = redirect_input(tokens[*i + 1]);
+		*i += 2;
+	}
+	else if (ft_strcmp(tokens[*i], ">") == 0)
+	{
+		cmd->out_fd = redirect_output(tokens[*i + 1]);
+		*i += 2;
+	}
+	else if (ft_strcmp(tokens[*i], ">>") == 0)
+	{
+		cmd->out_fd = redirect_output_append(tokens[*i + 1]);
+		*i += 2;
+	}
+	else if (ft_strcmp(tokens[*i], "<<") == 0)
+	{
+		handle_heredoc(tokens[*i + 1], cmd);
+		*i += 2;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:10:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/24 10:06:39 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/04/29 13:41:17 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,12 +175,14 @@ void	parse_paths(t_pipex *pipex, t_env *envp)
 
 void	parse_cmds(t_pipex *pipex, char **tokens)
 {
-	int	i;
-	int	n_cmds;
-	int	cmd_idx;
-	int	arg_count;
-	int	j;
-	int	start;
+	int		i;
+	int		n_cmds;
+	int		cmd_idx;
+	int		arg_count;
+	int		j;
+	int		start;
+	int		temp;
+	t_cmd	*cmd;
 
 	n_cmds = 1;
 	i = 0;
@@ -191,25 +193,35 @@ void	parse_cmds(t_pipex *pipex, char **tokens)
 		i++;
 	}
 	pipex->cmd_count = n_cmds;
-	// Allocate an array of pointers to command argument arrays.
-	pipex->cmd_args = malloc(sizeof(char **) * (n_cmds + 1));
-	if (!pipex->cmd_args)
+	pipex->cmds = malloc(sizeof(t_cmd *) * (n_cmds + 1));
+	if (!pipex->cmds)
 		handle_error("Memory allocation failed for cmd_args");
 	cmd_idx = 0;
 	i = 0;
 	while (tokens[i])
 	{
-		// Count the number of arguments for the current command.
+		cmd = malloc(sizeof(t_cmd));
+		if (!cmd)
+			handle_error("Memory allocation failed for a command");
+		cmd->in_fd = STDIN_FILENO;
+		cmd->out_fd = STDOUT_FILENO;
 		arg_count = 0;
 		start = i;
-		while (tokens[i] && ft_strcmp(tokens[i], "|") != 0)
+		temp = i;
+		while (tokens[temp] && ft_strcmp(tokens[temp], "|") != 0)
 		{
-			arg_count++;
-			i++;
+			if (ft_strcmp(tokens[temp], "<") == 0 || ft_strcmp(tokens[temp],
+					">") == 0 || ft_strcmp(tokens[temp], ">>") == 0
+				|| ft_strcmp(tokens[temp], "<<") == 0)
+				temp += 2;
+			else
+			{
+				arg_count++;
+				temp++;
+			}
 		}
-		// Allocate the argument array for this command.
-		pipex->cmd_args[cmd_idx] = malloc(sizeof(char *) * (arg_count + 1));
-		if (!pipex->cmd_args[cmd_idx])
+		cmd->args = malloc(sizeof(char *) * (arg_count + 1));
+		if (!cmd->args)
 			handle_error("Memory allocation failed for a command");
 		j = 0;
 		while (j < arg_count)
@@ -219,7 +231,6 @@ void	parse_cmds(t_pipex *pipex, char **tokens)
 		}
 		pipex->cmd_args[cmd_idx][arg_count] = NULL;
 		cmd_idx++;
-		// If there is a pipe token, skip it.
 		if (tokens[i] && ft_strcmp(tokens[i], "|") == 0)
 			i++;
 	}
@@ -238,10 +249,10 @@ void	*ft_bzero(void *s, size_t n)
 
 int	execution(char **tokens, t_env *env_copy)
 {
-	t_pipex pipex;
-	int status;
-	int last_exit_status;
-	int last_exit_id;
+	t_pipex	pipex;
+	int		status;
+	int		last_exit_status;
+	int		last_exit_id;
 
 	ft_bzero(&pipex, sizeof(t_pipex));
 	last_exit_status = 0;
