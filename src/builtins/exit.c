@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 16:06:57 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/12 18:09:11 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/05/14 12:39:05 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	builtin_exit(char **args, t_shell *shell)
 	if (args[2])
 	{
 		ft_putstr_fd("exit: too many arguments\n", 2);
+		shell->exit_status = 1;
 		return (1);
 	}
 	exit_code = ft_atoi(args[1]);
