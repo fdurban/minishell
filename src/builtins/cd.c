@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/12 18:08:31 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/05/14 13:08:07 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,37 +75,46 @@ static char	*get_abs_path(const char *arg, t_shell *shell)
 	return (abs_path);
 }
 
-static int	change_directory(const char *path, t_shell *shell)
+static int	change_directory(const char *arg, t_shell *shell)
 {
+	char	*path;
+
+	path = get_abs_path(arg, shell);
+	if (!path)
+	{
+		ft_putstr_fd("cd: ", STDERR_FILENO);
+		ft_putstr_fd((char *)arg, STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		shell->exit_status = 1;
+		return (0);
+	}
 	if (chdir(path) == 0)
 	{
 		update_env_field(shell->env, "PWD", path);
+		free(path);
 		return (1);
 	}
-	return (0);
+	else
+	{
+		ft_putstr_fd("cd: ", STDERR_FILENO);
+		ft_putstr_fd((char *)arg, STDERR_FILENO);
+		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+		shell->exit_status = 1;
+		free(path);
+		return (0);
+	}
 }
 
 int	builtin_cd(char **argv, t_shell *shell)
 {
-	int i;
-	char *path;
-	int result;
+	int	i;
 
 	i = 1;
-	result = 0;
 	while (argv[i])
 	{
-		path = get_abs_path(argv[i], shell);
-		if (!path)
-			return (0);
-		if (change_directory(path, shell))
-		{
-			result = 1;
-			free(path);
-			return (result);
-		}
-		free(path);
+		if (!change_directory(argv[i], shell))
+			return (1);
 		i++;
 	}
-	return (result);
+	return (0);
 }

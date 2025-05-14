@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   token_utils.c                                      :+:      :+:    :+:   */
+/*   tokenize_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 19:03:53 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/12 19:04:43 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/05/13 12:32:51 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,14 @@ char	**tokens_to_argv(t_command_part *lst)
 	int				i;
 	t_command_part	*cur;
 
-	count = count_tokens(lst);
+	count = 0;
+	cur = lst;
+	while (cur)
+	{
+		if (cur->type != W_SPACE)
+			count++;
+		cur = cur->next;
+	}
 	argv = malloc(sizeof(char *) * (count + 1));
 	if (!argv)
 		return (NULL);
@@ -40,8 +47,8 @@ char	**tokens_to_argv(t_command_part *lst)
 	cur = lst;
 	while (cur)
 	{
-		argv[i] = ft_strdup(cur->value);
-		i++;
+		if (cur->type != W_SPACE)
+			argv[i++] = ft_strdup(cur->value);
 		cur = cur->next;
 	}
 	argv[i] = NULL;

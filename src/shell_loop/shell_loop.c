@@ -6,14 +6,13 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/12 19:19:16 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/05/13 16:38:46 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
-#include "../includes/tokenizer.h"
+#include "../../includes/minishell.h"
 
-static char	*get_hostname(t_env *env)
+char	*get_hostname(t_env *env)
 {
 	char	*sessionmanager;
 	char	*start;
@@ -31,7 +30,7 @@ static char	*get_hostname(t_env *env)
 	return (hostname);
 }
 
-static char	*get_current_pwd(t_env *env)
+char	*get_current_pwd(t_env *env)
 {
 	char	*home;
 	char	*pwd;
@@ -45,7 +44,7 @@ static char	*get_current_pwd(t_env *env)
 	return (currentpwd);
 }
 
-static char	*build_user_prompt(t_env *env, char *hostname, char *currentpwd)
+char	*build_user_prompt(t_env *env, char *hostname, char *currentpwd)
 {
 	char	*username;
 	char	*tmp;
@@ -65,7 +64,7 @@ static char	*build_user_prompt(t_env *env, char *hostname, char *currentpwd)
 	return (prompt);
 }
 
-static char	*build_prompt(t_env *env)
+char	*build_prompt(t_env *env)
 {
 	char	*hostname;
 	char	*currentpwd;
@@ -83,49 +82,21 @@ static char	*build_prompt(t_env *env)
 	return (prompt);
 }
 
-void	shell_loop(t_env *env)
+void	shell_loop(t_shell *shell)
 {
-	char			*input;
-	char			*prompt;
-	int				i;
-	int				token_num;
-	t_command_part	*command_tokens;
-	char			**argv;
-	t_command_part	**tokens_array;
-	t_shell			shell;
+	char	*input;
 
-	shell.env = env;
 	while (1)
 	{
-		prompt = build_prompt(env);
-		input = readline(prompt);
-		token_num = parse(input);
-		if (!token_num)
-			break ;
-		free(prompt);
+		input = get_user_input(shell->env);
 		if (!input)
 			break ;
-		if (*input)
-			add_history(input);
-		tokens_array = tokenize(input);
-		command_tokens = tokens_array[0];
-		if (command_tokens)
+		if (*input == '\0')
 		{
-			argv = tokens_to_argv(command_tokens);
-			if (is_builtin(argv[0]))
-				exec_builtin(argv, &shell);
-			else
-				return ;
-			i = 0;
-			while (argv[i])
-			{
-				free(argv[i]);
-				i++;
-			}
-			free(argv);
+			free(input);
+			continue ;
 		}
-		// free_tokens(tokens_array);
-		free(tokens_array);
+		process_command_line(input, shell);
 		free(input);
 	}
 }

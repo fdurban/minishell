@@ -1,31 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   shell_loop.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/09 20:11:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/13 16:36:43 by igngonza         ###   ########.fr       */
+/*   Created: 2025/05/13 12:14:09 by igngonza          #+#    #+#             */
+/*   Updated: 2025/05/13 16:36:28 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
-{
-	t_shell	shell;
-
-	(void)argc;
-	(void)argv;
-	shell.exit_status = 0;
-	shell.env = copy_env(envp);
-	if (!shell.env)
-	{
-		fprintf(stderr, "Failed to copy environment\n");
-		return (1);
-	}
-	shell_loop(&shell);
-	free_env(shell.env);
-	return (0);
-}
+void	process_command_line(char *input, t_shell *shell);
+char	*get_user_input(t_env *env);
+char	*get_hostname(t_env *env);
+char	*get_current_pwd(t_env *env);
+char	*build_user_prompt(t_env *env, char *hostname, char *currentpwd);
+char	*build_prompt(t_env *env);
+void	shell_loop(t_shell *shell);
