@@ -6,12 +6,13 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/12 16:36:16 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/14 14:27:42 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
+# include "env.h"
 
 // "state"
 typedef enum e_word_type
