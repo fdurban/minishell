@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 19:48:26 by fernando          #+#    #+#             */
-/*   Updated: 2025/05/08 18:24:23 by fernando         ###   ########.fr       */
+/*   Updated: 2025/05/15 15:54:19 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	checkposition(t_word_type word_type, char *valid_command, int i)
 	//--------------------------------------------------------------------
 	printf("---------------------------------------\n");
 	printf("Letra %c\n", valid_command[i]);
+	if(word_type == W___END)
+		printf("word_type END and i value is : %d\n", i);
 	if(word_type == W_START)
 		printf("word_type START and i value is : %d\n", i);
 	if(word_type == W_STNDR)

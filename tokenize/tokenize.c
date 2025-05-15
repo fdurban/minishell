@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/14 18:42:03 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/15 15:48:34 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	add_command_part_to_list(t_command_part **lst, t_command_part *new)
 	last->next = new;
 }
 
-t_command_part	*create_command_part(char *value, t_word_type type)
+t_command_part	*create_command_node(char *value, t_word_type type)
 {
 	t_command_part	*new;
 
@@ -43,80 +43,6 @@ t_command_part	*create_command_part(char *value, t_word_type type)
 	new->type = type;
 	new->next = NULL;
 	return (new);
-}
-
-int	get_token_type(char c)
-{
-	if (c == ' ')
-		return (TOKEN_SPACE);
-	else if (c == '\'')
-		return (TOKEN_IN_SINGLE_QUOTE);
-	else if (c == '<')
-		return (TOKEN_REDIRECT_IN);
-	else if (c == '>')
-		return (TOKEN_REDIRECT_OUT);
-	else if (c == '"')
-		return (TOKEN_IN_DOUBLE_QUOTE);
-	else if (c == '\0')
-		return (TOKEN_END);
-	else if (c >= 33 && c <= 126)
-		return (TOKEN_LETTER);
-	else
-		return (0);
-}
-
-char	*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][NUM_INPUT], t_word_type word_type, t_word_type previous_word_type)
-{
-	int					start;
-	t_input_tokenizer	input;
-	char				*result;
-	t_word_type			end_type;
-
-	start = *i;
-	//para definir start
-	if ((word_type == W_DOUBQ || word_type == W_SINGQ) && (previous_word_type == W_EOSTD || previous_word_type == W_EOSTS))
-		start = *i - 1;
-	// para definir endtype
-	if (word_type == W_DOUBQ)
-		end_type = W_EOFDQ;
-	else if (word_type == W_SINGQ)
-		end_type = W_EOFSQ;
-	else
-		end_type = W_EOFST;
-	//para sacar resultado
-	if (word_type == W_SPACE || word_type == W_SARED)
-	{
-		start = *i;
-		while (word_type == W_SPACE || word_type == W_SARED)
-		{
-			(*i)++;
-			input = get_token_type(str[*i]);
-			word_type = matrix[word_type][input];
-		}
-		result = ft_substr(str, start, *i - start);
-		if (!result)
-		{
-			printf("Error extrayendo espacios\n");
-			return (NULL);
-		}
-		return (result);
-	}
-	while (word_type == W_DOUBQ || word_type == W_SINGQ || word_type == W_STNDR)
-	{
-		(*i)++;
-		input = get_token_type(str[*i]);
-		word_type = matrix[word_type][input];
-	}
-	if (end_type == W_EOFDQ || end_type == W_EOFSQ)
-		result = ft_substr(str, start + 1, *i - start - 1);
-	else
-		result = ft_substr(str, start, *i - start);
-	if (!result)
-	{
-		printf("Error\n");
-		return (NULL);
-	}
-	return (result);
 }
 
 char	*expand_token(t_command_part *word, t_env *env)
@@ -132,31 +58,30 @@ char	*expand_token(t_command_part *word, t_env *env)
 	i = 0;
 	start = 0;
 	result = ft_strdup("");
-		while (word->value[i] != '\0')
+	while (word->value[i] != '\0')
+	{
+		start = i;
+		len = 0;
+		while (word->value[i] && word->value[i] != '$')
+			i++;
+		prefix = ft_substr(word->value, start, i - start);
+		tmp = ft_strjoin(result, prefix);
+		free(result);
+		result = tmp;
+		if(word->value[i] == '$')
 		{
-			start = i;
-			len = 0;
-			while (word->value[i] && word->value[i] != '$')
-				i++;
-			prefix = ft_substr(word->value, start, i - start);
-			printf("value of prefix is %s\n", prefix);
-			tmp = ft_strjoin(result, prefix);
+			start = i + 1;
+			while(ft_isalnum(word->value[start + len]) || word->value[start + len] == '_')
+				len++;
+			expanded_token = get_env_var(env, ft_substr(word->value, start, len));
+			tmp = ft_strjoin(result, expanded_token);
 			free(result);
 			result = tmp;
-			if(word->value[i] == '$')
-			{
-				start = i+1;
-				while(ft_isalnum(word->value[start + len]) || word->value[start + len] == '_')
-					len++;
-				expanded_token = get_env_var(env, ft_substr(word->value, start, len));
-				tmp = ft_strjoin(result, expanded_token);
-				free(result);
-				result = tmp;
-				i += len + 1;
-			}
+			i += len + 1;
 		}
-		printf("El resultado de expanded token es: %s\n",result);
-		return (result);
+	}
+	printf("El resultado de expanded token es: %s\n",result);
+	return (result);
 }
 t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char *valid_command, t_env *env)
 {
@@ -190,7 +115,7 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 			command_token = extract_token_value(valid_command, &i, matrix, word_type, previous_word_type);
 			if (command_token)
 			{
-				command = create_command_part(command_token, word_type);
+				command = create_command_node(command_token, word_type);
 				if (word_type == W_STNDR || word_type == W_DOUBQ)
 				{
 					char *expanded = expand_token(command, env);
@@ -199,8 +124,6 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 				}
 				add_command_part_to_list(&lst, command);
 			}
-			//printf("command_token is %s\n", command_token);
-			printf("Salto del largo de la cadena %d\n", i);
 			continue;
 		}
 		i++;
@@ -225,13 +148,6 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][NUM_INPUT], char *
 	while (tokens[i])
 	{
 		results[i] = tokenize_pipe_segment(matrix, tokens[i], env);
-		i++;
-	}
-	results[i] = NULL;
-	i = 0;
-	while(results[i])
-	{
-		printf("results is %s\n", results[i]->value);
 		i++;
 	}
 	results[i] = NULL;
@@ -275,3 +191,16 @@ t_command_part	**tokenize(char *valid_command, t_env *env)
 	// printf("valor de i es %d\n", *i);
 	// printf("valor de start es %d\n", start);
 	// printf("Numero de caracteres impresos son %d\n", *i - start);
+	// i = 0;
+	// while (results[i])
+	// {
+	// 	t_command_part *curr = results[i];
+	// 	printf("Segmento %d:\n", i);
+	// 	while (curr)
+	// 	{
+	// 	    printf("  token: %s\n", curr->value);
+	// 	    curr = curr->next;
+	// 	}
+	// 	i++;
+	// }
+	// results[i] = NULL;
