@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:30:02 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/15 15:55:08 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/15 17:17:40 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ int	get_token_type(char c)
 		return (0);
 }
 
-char	*extract_space_or_sared(t_word_type word_type,int *i, char *str,  const int matrix[W_TOTAL][NUM_INPUT])
+char	*extract_space_or_sared(t_word_type word_type, int *i, char *str, const int matrix[W_TOTAL][NUM_INPUT])
 {
-	int start;
-	char *result;
+	int		start;
+	char	*result;
 
 	start = 0;
 	if (word_type == W_SPACE || word_type == W_SARED)
@@ -59,7 +59,7 @@ char	*extract_space_or_sared(t_word_type word_type,int *i, char *str,  const int
 		return (NULL);
 }
 
-char	*extract_word(t_word_type word_type,int *i, char *str, const int matrix[W_TOTAL][NUM_INPUT], t_word_type previous_word_type)
+char	*extract_word(t_word_type word_type, int *i, char *str, const int matrix[W_TOTAL][NUM_INPUT], t_word_type previous_word_type)
 {
 	int		start;
 	char	*result;
@@ -86,7 +86,7 @@ char	*extract_word(t_word_type word_type,int *i, char *str, const int matrix[W_T
 
 char	*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][NUM_INPUT], t_word_type word_type, t_word_type previous_word_type)
 {
-	char				*result;
+	char	*result;
 
 	result = extract_space_or_sared(word_type, i, str, matrix);
 	if (result)
@@ -94,8 +94,6 @@ char	*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][NUM_INPUT
 	result = extract_word(word_type, i, str, matrix, previous_word_type);
 	return (result);
 }
-
-
 
 // void	print_tokens_by_space(char ***parsed_tokens, int token_number)
 // {

@@ -13,7 +13,7 @@ PARSE_DIR = ./parse
 PARSE_FILES = $(PARSE_DIR)/automats.c
 
 TOKEN_DIR = ./tokenize
-TOKEN_FILES = $(TOKEN_DIR)/tokenize.c $(TOKEN_DIR)/debug.c $(TOKEN_DIR)/tokenizer_utils.c
+TOKEN_FILES = $(TOKEN_DIR)/tokenize.c $(TOKEN_DIR)/debug.c $(TOKEN_DIR)/token_extraction.c $(TOKEN_DIR)/variable_expansion.c
 
 OBJ_DIR = ./obj
 SRC_OBJ = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
