@@ -1,59 +1,70 @@
 NAME = minishell
-TEST_EXE = test_execution
+CC = cc
+CFLAGS = -g -O0 -Wall -Wextra -Werror
 
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror
 
 LIBFT_DIR = ./libft
 LIBFT_PATH = $(LIBFT_DIR)/libft.a
 
 SRC_DIR = ./src
-EXE_FILES = $(SRC_DIR)/execution/execution.c $(SRC_DIR)/execution/cleanup.c $(SRC_DIR)/execution/errors.c $(SRC_DIR)/execution/exec.c
+SRC_FILES = $(SRC_DIR)/main.c
+
+ENV_DIR  = $(SRC_DIR)/env
+ENV_FILES = $(ENV_DIR)/env.c $(ENV_DIR)/env_utils.c 
+
+LOOP_DIR  = $(SRC_DIR)/shell_loop
+LOOP_FILES = $(LOOP_DIR)/shell_loop.c $(ENV_DIR)/shell_loop_utils.c 
+
 PARSE_DIR = $(SRC_DIR)/parse
-ENV_FILE = $(SRC_DIR)/env.c
-ENV_OBJ = $(ENV_FILE:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-OBJ_DIR = ./obj
-
-# Main shell source files
-SRC_FILES = $(SRC_DIR)/main.c \
-            $(SRC_DIR)/shell_loop.c \
-            $(SRC_DIR)/env.c
-
-# Parse files (used by execution code)
 PARSE_FILES = $(PARSE_DIR)/automats.c
 
-SRC_OBJ   = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-EXE_OBJ   = $(EXE_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
-PARSE_OBJ = $(PARSE_FILES:$(PARSE_DIR)/%.c=$(OBJ_DIR)/parse/%.o)
+TOKEN_DIR = $(SRC_DIR)/tokenize
+TOKEN_FILES = $(TOKEN_DIR)/tokenize.c $(TOKEN_DIR)/tokenize_utils.c 
 
-OBJS = $(SRC_OBJ) $(PARSE_OBJ)
+BUILTINS_DIR = $(SRC_DIR)/builtins
+BUILTINS_FILES = $(BUILTINS_DIR)/unset.c $(BUILTINS_DIR)/pwd.c $(BUILTINS_DIR)/export_print.c \
+                 $(BUILTINS_DIR)/export.c $(BUILTINS_DIR)/exit.c $(BUILTINS_DIR)/env_builtin.c \
+                 $(BUILTINS_DIR)/echo.c $(BUILTINS_DIR)/cd_utils.c $(BUILTINS_DIR)/cd.c \
+                 $(BUILTINS_DIR)/builtin_dispatch.c
 
-TEST_OBJS = $(SRC_OBJ)
+OBJ_DIR = ./obj
+SRC_OBJ = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+ENV_OBJ = $(ENV_FILES:$(ENV_DIR)/%.c=$(OBJ_DIR)/%.o)
+LOOP_OBJ = $(LOOP_FILES:$(ENV_DIR)/%.c=$(OBJ_DIR)/%.o)
+PARSE_OBJ = $(PARSE_FILES:$(PARSE_DIR)/%.c=$(OBJ_DIR)/%.o)
+TOKEN_OBJ = $(TOKEN_FILES:$(TOKEN_DIR)/%.c=$(OBJ_DIR)/%.o)
+BUILTINS_OBJ = $(BUILTINS_FILES:$(BUILTINS_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-# New test source for execution (bypassing parsing/tokenization)
-TEST_SRC = $(SRC_DIR)/execution/test_execution.c
-TEST_OBJ = $(TEST_SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
+all: $(OBJ_DIR) $(NAME)
 
-all: $(LIBFT_PATH) $(NAME)
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
-$(NAME): $(OBJS) $(EXE_OBJ)
-		$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(EXE_OBJ) $(LIBFT_PATH) -lreadline
+$(NAME): $(SRC_OBJ) $(ENV_OBJ) $(LOOP_OBJ) $(PARSE_OBJ) $(TOKEN_OBJ) $(BUILTINS_OBJ)
+	make -C $(LIBFT_DIR)
+	$(CC) $(CFLAGS) $(SRC_OBJ) $(LOOP_OBJ) $(PARSE_OBJ) $(TOKEN_OBJ) $(BUILTINS_OBJ) $(ENV_OBJ) $(LIBFT_PATH) -lreadline -o $(NAME)
 
-test_execution: $(TEST_OBJ) $(EXE_OBJ) $(ENV_OBJ) $(LIBFT_PATH)
-		$(CC) $(CFLAGS) -o $(TEST_EXE) $(TEST_OBJ) $(EXE_OBJ) $(ENV_OBJ) $(LIBFT_PATH) -lreadline
-
-$(LIBFT_PATH):
-		$(MAKE) -C $(LIBFT_DIR)
-
-# Generic pattern rule for files in src/
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 		@mkdir -p $(dir $@)
 		$(CC) $(CFLAGS) -c $< -o $@
 
-# Specific rule for parse files
-$(OBJ_DIR)/parse/%.o: $(PARSE_DIR)/%.c
-		@mkdir -p $(dir $@)
-		$(CC) $(CFLAGS) -c $< -o $@
+$(OBJ_DIR)/%.o: $(ENV_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(LOOP_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(PARSE_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(TOKEN_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(BUILTINS_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+norminette:
+	norminette $(SRC_FILES) minishell.h
 
 clean:
 		rm -rf $(OBJ_DIR)

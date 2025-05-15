@@ -6,15 +6,18 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/22 12:34:37 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/05/15 10:42:40 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# include "builtins.h"
 # include "env.h"
 # include "execution.h"
+# include "shell_loop.h"
+# include "tokenizer.h"
 
 /* Standard libraries */
 # include <signal.h>
@@ -30,20 +33,23 @@
 # include <stdio.h>
 # include <string.h>
 
-typedef enum estate
+typedef enum e_state
 {
-	STATE_START,
-	STATE_WORD,
-	STATE_IN_SINGLE_QUOTE,
-	STATE_IN_DOUBLE_QUOTE,
-	STATE_PIPE,
-	STATE_REDIR,
-	STATE_SPACE_AFTER_WORD,
-	STATE_END,
-	STATE_ERROR,
+	START,
+	WORD,
+	IN_SINGLE_QUOTE,
+	IN_DOUBLE_QUOTE,
+	PIPE,
+	REDIR,
+	SPACE_AFTER_WORD,
+	END_OF_SINGLE_QUOTE,
+	END_OF_DOUBLE_QUOTE,
+	END,
+	ERROR,
 	NUM_STATES
-}		t_state;
-typedef enum einput
+}	t_state;
+
+typedef enum e_input_parse
 {
 	INPUT_PIPE,
 	INPUT_SPACE,
@@ -53,8 +59,9 @@ typedef enum einput
 	INPUT_IN_DOUBLE_QUOTE,
 	INPUT_REDIRECT,
 	NUM_INPUT
-}		t_input;
+}	t_input_parse;
 
-void	shell_loop(t_env *env);
-void	parse(char *readline);
+int	parse(char *readline);
+int	get_input_type(char c);
+
 #endif

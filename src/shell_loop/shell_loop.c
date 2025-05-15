@@ -6,13 +6,13 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/22 13:04:50 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/05/15 10:43:31 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-static char	*get_hostname(t_env *env)
+char	*get_hostname(t_env *env)
 {
 	char	*sessionmanager;
 	char	*start;
@@ -30,7 +30,7 @@ static char	*get_hostname(t_env *env)
 	return (hostname);
 }
 
-static char	*get_current_pwd(t_env *env)
+char	*get_current_pwd(t_env *env)
 {
 	char	*home;
 	char	*pwd;
@@ -44,7 +44,7 @@ static char	*get_current_pwd(t_env *env)
 	return (currentpwd);
 }
 
-static char	*build_user_prompt(t_env *env, char *hostname, char *currentpwd)
+char	*build_user_prompt(t_env *env, char *hostname, char *currentpwd)
 {
 	char	*username;
 	char	*tmp;
@@ -64,7 +64,7 @@ static char	*build_user_prompt(t_env *env, char *hostname, char *currentpwd)
 	return (prompt);
 }
 
-static char	*build_prompt(t_env *env)
+char	*build_prompt(t_env *env)
 {
 	char	*hostname;
 	char	*currentpwd;
@@ -82,32 +82,21 @@ static char	*build_prompt(t_env *env)
 	return (prompt);
 }
 
-void	shell_loop(t_env *env)
+void	shell_loop(t_shell *shell)
 {
 	char	*input;
-	char	**tokens;
-	char	*prompt;
-	int		i;
 
 	while (1)
 	{
-		prompt = build_prompt(env);
-		input = readline(prompt);
+		input = get_user_input(shell->env);
 		if (!input)
 			break ;
-		parse(input);
-		free(prompt);
-		if (!input)
-			break ;
-		if (*input)
-			add_history(input);
-		tokens = ft_split(input, '|');
-		if (tokens && tokens[0])
-			printf("%s\n", tokens[0]);
-		i = 0;
-		while (tokens && tokens[i])
-			free(tokens[i++]);
-		free(tokens);
+		if (*input == '\0')
+		{
+			free(input);
+			continue ;
+		}
+		process_command_line(input, shell);
 		free(input);
 	}
 }
