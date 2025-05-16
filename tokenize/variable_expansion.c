@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/15 17:09:45 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/16 13:49:55 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,5 @@ char	*expand_token(t_command_part *word, t_env *env)
 		if (word->value[i] == '$')
 			result = append_variable(result, &i, word, env);
 	}
-	printf("El resultado de expanded token es: %s\n", result);
 	return (result);
 }

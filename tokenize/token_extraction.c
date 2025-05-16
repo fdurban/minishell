@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenizer_utils.c                                  :+:      :+:    :+:   */
+/*   token_extraction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:30:02 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/15 17:17:40 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/16 17:32:02 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,27 @@ char	*extract_space_or_sared(t_word_type word_type, int *i, char *str, const int
 		return (NULL);
 }
 
+char	*extract_redirect(t_word_type word_type, int *i, char *str, const int matrix[W_TOTAL][NUM_INPUT])
+{
+	int		start;
+	char	*result;
+
+	start = 0;
+	if (word_type == W_REDIN || word_type == W_REDOU)
+	{
+		start = *i;
+		(*i)++;
+		word_type = matrix[word_type][get_token_type(str[*i])];
+		if(word_type == W_REDAP || word_type == W_HRDOC)
+			*i += 1;
+		result = ft_substr(str, start, *i - start);
+		printf("value of extracted result when redirect is %s\n", result);
+		return (result);
+	}
+	else
+		return (NULL);
+}
+
 char	*extract_word(t_word_type word_type, int *i, char *str, const int matrix[W_TOTAL][NUM_INPUT], t_word_type previous_word_type)
 {
 	int		start;
@@ -89,6 +110,9 @@ char	*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][NUM_INPUT
 	char	*result;
 
 	result = extract_space_or_sared(word_type, i, str, matrix);
+	if (result)
+		return (result);
+	result = extract_redirect(word_type, i, str, matrix);
 	if (result)
 		return (result);
 	result = extract_word(word_type, i, str, matrix, previous_word_type);
