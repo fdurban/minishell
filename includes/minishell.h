@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/15 10:42:40 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/05/15 12:01:24 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@
 # include <readline/readline.h>
 
 /* Libft (if you use it) */
+# include "../libft/get_next_line/get_next_line.h"
+# include "../libft/printf/ft_printf.h"
 # include "../libft/standard/libft.h"
 # include <stdio.h>
 # include <string.h>

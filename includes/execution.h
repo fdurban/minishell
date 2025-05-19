@@ -6,17 +6,14 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/29 13:16:40 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/05/15 18:40:28 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PIPEX_H
 # define PIPEX_H
 
-# include "../libft/get_next_line/get_next_line.h"
-# include "../libft/printf/ft_printf.h"
-# include "../libft/standard/libft.h"
-# include "env.h"
+# include "minishell.h"
 # include <errno.h>
 # include <fcntl.h>
 # include <stdio.h>
@@ -32,6 +29,7 @@
 # define ERR_CMD "Command not found: "
 # define ERR_HEREDOC "here_doc"
 
+typedef int	pid_t;
 typedef struct s_pipex
 {
 	int		in_fd;
@@ -39,22 +37,16 @@ typedef struct s_pipex
 	int		here_doc;
 	int		is_invalid_infile;
 	char	**cmd_paths;
-	t_cmd	**cmds;
+	char	***cmd_args;
 	int		cmd_count;
 	int		pipe_count;
 	int		*pipes;
 	int		idx;
 	pid_t	pid;
+	pid_t	*pids;
 }			t_pipex;
 
-typedef struct s_cmd
-{
-	char **args; // Command arguments
-	int in_fd;   // Input fd (default STDIN_FILENO)
-	int out_fd;  // Output fd (default STDOUT_FILENO)
-}			t_cmd;
-
-int			execution(char **tokens, t_env *env_copy);
+int			execution(char **tokens, t_shell *shell);
 
 void		*ft_bzero(void *s, size_t n);
 void		init_files(char **tokens, int tokens_length, t_pipex *pipex);
@@ -76,8 +68,8 @@ void		finalize_heredoc(t_pipex *pipex);
 void		handle_heredoc(char *limiter, t_pipex *pipex);
 
 void		parse_cmds(t_pipex *pipex, char **argv);
-void		parse_paths(t_pipex *pipex, t_env *envp);
-void		create_child_process(t_pipex *pipex, t_env *envp);
+void		parse_paths(t_pipex *pipex, t_shell *shell);
+void		create_child_process(t_pipex *pipex, t_shell *shell);
 
 void		safe_close(int *fd);
 void		cleanup_heredoc(t_pipex *pipex);

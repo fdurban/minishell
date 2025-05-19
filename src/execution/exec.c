@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:41:35 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/24 09:48:43 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/05/15 12:22:04 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	setup_child_io(t_pipex *pipex)
 	else
 	{
 		dup2(pipex->pipes[(pipex->idx - 1) * 2], STDIN_FILENO);
-		// Redirect stdout to the next pipe’s write end.
 		dup2(pipex->pipes[pipex->idx * 2 + 1], STDOUT_FILENO);
 	}
 }

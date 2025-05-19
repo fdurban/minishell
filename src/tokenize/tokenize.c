@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/12 18:18:47 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/05/19 10:53:31 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,42 +196,44 @@ t_command_part	**tokenize(char *valid_command)
 {
 	t_command_part	**token;
 
-	// space //letter // end // single quote //double quote //redirect IN
-		// redirect out
 	const int matrix[W_TOTAL][NUM_INPUT] = {
 		{W_START, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},
-			// W_START
+		// W_START
 		{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_EOFST, W_EOFST},
-			// W_STNDR
+		// W_STNDR
 		{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ},
-			// WORD_SINGLE QUOTE
+		// WORD_SINGLE QUOTE
 		{W_DOUBQ, W_DOUBQ, W_STNDR, W_DOUBQ, W_EOFDQ, W_DOUBQ, W_DOUBQ},
-			// WORD_DOUBLE QUOTE
+		// WORD_DOUBLE QUOTE
 		{W_SPACE, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_HRDOC, W_ERROR},
-			// REDIRECT_IN
+		// REDIRECT_IN
 		{W_REDOU, W_REDOU, W___END, W_REDOU, W_REDOU, W_REDIN, W_REDAP},
-			// REDIRECT_OUT
+		// REDIRECT_OUT
 		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR},
-			// REDIRECT_APPEND
+		// REDIRECT_APPEND
 		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR},
-			// HERE_DOC
+		// HERE_DOC
 		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},
-			// SPACE AFTER WORD
+		// SPACE AFTER WORD
 		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR},
-			// SPACE AFTER REDIRECT
+		// SPACE AFTER REDIRECT
 		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},
-			// END OF SINGLE QUOTE
+		// END OF SINGLE QUOTE
 		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},
-			// END OF DOUBLE QUOTE
+		// END OF DOUBLE QUOTE
 		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},
-			// END OF STANDARD
+		// END OF STANDARD
 		{W_DOUBQ, W_DOUBQ, W___END, W_EOFDQ, W_EOFDQ, W_DOUBQ, W_DOUBQ},
-			// END OF STANDARD TO DOUBLE QUOTE
-		{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ} 
-			// END OF STANDARD TO DOUBLE QUOTE
+		// END OF STANDARD TO DOUBLE QUOTE
+		{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ}
+		// END OF STANDARD TO DOUBLE QUOTE
 	};
 	token = split_and_tokenize(matrix, valid_command);
-	// print_values(token);
+	if (!token)
+	{
+		printf("[DEBUG] Tokenization returned NULL.\n");
+		return (NULL);
+	}
 	return (token);
 }
 

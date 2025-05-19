@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:10:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/29 13:41:17 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/05/19 18:34:39 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ void	parent_free(t_pipex *pipex)
 {
 	if (!pipex)
 		return ;
-	safe_close(&pipex->in_fd);
-	safe_close(&pipex->out_fd);
+	if (pipex->in_fd > STDERR_FILENO)
+		safe_close(&pipex->in_fd);
+	if (pipex->out_fd > STDERR_FILENO)
+		safe_close(&pipex->out_fd);
 	cleanup_heredoc(pipex);
 	free_cmd_paths(pipex);
 	free_cmd_args(pipex);
@@ -44,12 +46,8 @@ void	close_pipes(t_pipex *pipex)
 	int	total_fds;
 
 	total_fds = pipex->pipe_count * 2;
-	i = 0;
-	while (i < total_fds)
-	{
+	for (i = 0; i < total_fds; i++)
 		close(pipex->pipes[i]);
-		i++;
-	}
 }
 
 void	execute_child_command(t_pipex *pipex, t_env *envp)
@@ -60,7 +58,10 @@ void	execute_child_command(t_pipex *pipex, t_env *envp)
 	cmd = pipex->cmd_paths[pipex->idx];
 	cmd_args = pipex->cmd_args[pipex->idx];
 	if (execve(cmd, cmd_args, envp->vars) == -1)
+	{
 		perror("execve failed");
+		exit(EXIT_FAILURE);
+	}
 }
 char	*join_path_cmd(char *dir, char *cmd)
 {
@@ -96,25 +97,59 @@ char	*find_command_path(char **paths, char *cmd)
 	return (NULL);
 }
 
-void	create_child_process(t_pipex *pipex, t_env *envp)
+void	create_child_process(t_pipex *px, t_shell *shell)
 {
-	int	saved_stdout;
+	pid_t	pid;
+	char	**cmd;
 
-	pipex->pid = fork();
-	if (pipex->pid == -1)
-		handle_error("Fork failed");
-	if (pipex->pid == 0)
+	cmd = NULL;
+	pid = fork();
+	if (pid < 0)
+		handle_error("fork failed");
+	px->pids[px->idx] = pid;
+	if (pid == 0)
 	{
-		if (pipex->cmd_count > 1)
+		if (px->cmd_count > 1)
 		{
-			saved_stdout = dup(STDOUT_FILENO);
-			setup_child_io(pipex);
-			close_pipes(pipex);
-			handle_child_error(pipex, saved_stdout);
+			if (px->idx == 0)
+				dup2(px->pipes[1], STDOUT_FILENO);
+			else if (px->idx == px->cmd_count - 1)
+				dup2(px->pipes[2 * (px->idx - 1)], STDIN_FILENO);
+			else
+			{
+				dup2(px->pipes[2 * (px->idx - 1)], STDIN_FILENO);
+				dup2(px->pipes[2 * px->idx + 1], STDOUT_FILENO);
+			}
 		}
-		fprintf(stderr, "Child process: executing %s\n",
-			pipex->cmd_paths[pipex->idx]);
-		execute_child_command(pipex, envp);
+		close_pipes(px);
+		cmd = px->cmd_args[px->idx];
+		if (is_builtin(cmd[0]))
+		{
+			exec_builtin(cmd, shell);
+			exit(shell->exit_status);
+			exit(0);
+		}
+		else
+		{
+			execute_child_command(px, shell->env);
+			perror(cmd[0]);
+			exit(EXIT_FAILURE);
+		}
+	}
+	else
+	{
+		if (px->cmd_count > 1)
+		{
+			if (px->idx == 0)
+				close(px->pipes[1]);
+			else if (px->idx == px->cmd_count - 1)
+				close(px->pipes[2 * (px->idx - 1)]);
+			else
+			{
+				close(px->pipes[2 * (px->idx - 1)]);
+				close(px->pipes[2 * px->idx + 1]);
+			}
+		}
 	}
 }
 
@@ -151,13 +186,13 @@ void	resolve_command_paths(t_pipex *pipex, char **paths)
 	}
 	pipex->cmd_paths[i] = NULL;
 }
-void	parse_paths(t_pipex *pipex, t_env *envp)
+void	parse_paths(t_pipex *pipex, t_shell *shell)
 {
 	char	*path_env;
 	char	**paths;
 	int		i;
 
-	path_env = get_env_var(envp, "PATH");
+	path_env = get_env_var(shell->env, "PATH");
 	if (!path_env)
 		handle_error("Error: PATH not found");
 	paths = ft_split(path_env, ':');
@@ -175,14 +210,12 @@ void	parse_paths(t_pipex *pipex, t_env *envp)
 
 void	parse_cmds(t_pipex *pipex, char **tokens)
 {
-	int		i;
-	int		n_cmds;
-	int		cmd_idx;
-	int		arg_count;
-	int		j;
-	int		start;
-	int		temp;
-	t_cmd	*cmd;
+	int	i;
+	int	n_cmds;
+	int	cmd_idx;
+	int	arg_count;
+	int	j;
+	int	start;
 
 	n_cmds = 1;
 	i = 0;
@@ -193,35 +226,22 @@ void	parse_cmds(t_pipex *pipex, char **tokens)
 		i++;
 	}
 	pipex->cmd_count = n_cmds;
-	pipex->cmds = malloc(sizeof(t_cmd *) * (n_cmds + 1));
-	if (!pipex->cmds)
+	pipex->cmd_args = malloc(sizeof(char **) * (n_cmds + 1));
+	if (!pipex->cmd_args)
 		handle_error("Memory allocation failed for cmd_args");
 	cmd_idx = 0;
 	i = 0;
 	while (tokens[i])
 	{
-		cmd = malloc(sizeof(t_cmd));
-		if (!cmd)
-			handle_error("Memory allocation failed for a command");
-		cmd->in_fd = STDIN_FILENO;
-		cmd->out_fd = STDOUT_FILENO;
 		arg_count = 0;
 		start = i;
-		temp = i;
-		while (tokens[temp] && ft_strcmp(tokens[temp], "|") != 0)
+		while (tokens[i] && ft_strcmp(tokens[i], "|") != 0)
 		{
-			if (ft_strcmp(tokens[temp], "<") == 0 || ft_strcmp(tokens[temp],
-					">") == 0 || ft_strcmp(tokens[temp], ">>") == 0
-				|| ft_strcmp(tokens[temp], "<<") == 0)
-				temp += 2;
-			else
-			{
-				arg_count++;
-				temp++;
-			}
+			arg_count++;
+			i++;
 		}
-		cmd->args = malloc(sizeof(char *) * (arg_count + 1));
-		if (!cmd->args)
+		pipex->cmd_args[cmd_idx] = malloc(sizeof(char *) * (arg_count + 1));
+		if (!pipex->cmd_args[cmd_idx])
 			handle_error("Memory allocation failed for a command");
 		j = 0;
 		while (j < arg_count)
@@ -247,21 +267,50 @@ void	*ft_bzero(void *s, size_t n)
 	return (s);
 }
 
-int	execution(char **tokens, t_env *env_copy)
+void	init_pipex_pids(t_pipex *pipex)
+{
+	pipex->pids = malloc(sizeof(pid_t) * pipex->cmd_count);
+	if (!pipex->pids)
+		handle_error("Failed to allocate memory for pids");
+}
+
+void	execute_pipeline(t_pipex *pipex, t_shell *shell)
+{
+	int	i;
+
+	init_pipex_pids(pipex);
+	for (i = 0; i < pipex->cmd_count; i++)
+	{
+		pipex->idx = i;
+		create_child_process(pipex, shell);
+		pipex->pids[i] = pipex->pid;
+	}
+	close_pipes(pipex);
+	for (i = 0; i < pipex->cmd_count; i++)
+	{
+		if (waitpid(pipex->pids[i], NULL, 0) == -1)
+			handle_error("waitpid failed");
+	}
+	free(pipex->pids);
+}
+
+int	execution(char **tokens, t_shell *shell)
 {
 	t_pipex	pipex;
 	int		status;
 	int		last_exit_status;
 	int		last_exit_id;
+	size_t	bytes;
 
-	ft_bzero(&pipex, sizeof(t_pipex));
+	ft_bzero(&pipex, sizeof(pipex));
 	last_exit_status = 0;
 	parse_cmds(&pipex, tokens);
-	parse_paths(&pipex, env_copy);
+	parse_paths(&pipex, shell);
 	if (pipex.cmd_count > 1)
 	{
 		pipex.pipe_count = pipex.cmd_count - 1;
-		pipex.pipes = malloc(sizeof(int) * 2 * (pipex.pipe_count));
+		bytes = sizeof(int) * 2 * pipex.pipe_count;
+		pipex.pipes = malloc(bytes);
 		if (!pipex.pipes)
 			handle_error("Memory allocation failed for pipes");
 		create_pipes(&pipex);
@@ -271,12 +320,10 @@ int	execution(char **tokens, t_env *env_copy)
 		pipex.in_fd = STDIN_FILENO;
 		pipex.out_fd = STDOUT_FILENO;
 	}
+	init_pipex_pids(&pipex);
 	pipex.idx = -1;
-	while (++(pipex.idx) < pipex.cmd_count)
-	{
-		printf("Creating child process for command %d\n", pipex.idx);
-		create_child_process(&pipex, env_copy);
-	}
+	while (++pipex.idx < pipex.cmd_count)
+		create_child_process(&pipex, shell);
 	close_pipes(&pipex);
 	last_exit_id = waitpid(-1, &status, 0);
 	while (last_exit_id > 0)

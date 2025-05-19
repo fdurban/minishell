@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:22:50 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/29 13:21:53 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/05/15 12:18:59 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,28 +68,29 @@ int	redirect_output_append(char *outfile)
 	close(fd);
 	return (STDOUT_FILENO);
 }
-void	process_redirection(char **tokens, int *i, t_cmd *cmd)
+
+void	process_redirection(char **tokens, int *i, t_pipex *pipex)
 {
 	if (!tokens[*i])
 		return ;
 	if (ft_strcmp(tokens[*i], "<") == 0)
 	{
-		cmd->in_fd = redirect_input(tokens[*i + 1]);
+		pipex->in_fd = redirect_input(tokens[*i + 1]);
 		*i += 2;
 	}
 	else if (ft_strcmp(tokens[*i], ">") == 0)
 	{
-		cmd->out_fd = redirect_output(tokens[*i + 1]);
+		pipex->out_fd = redirect_output(tokens[*i + 1]);
 		*i += 2;
 	}
 	else if (ft_strcmp(tokens[*i], ">>") == 0)
 	{
-		cmd->out_fd = redirect_output_append(tokens[*i + 1]);
+		pipex->out_fd = redirect_output_append(tokens[*i + 1]);
 		*i += 2;
 	}
 	else if (ft_strcmp(tokens[*i], "<<") == 0)
 	{
-		handle_heredoc(tokens[*i + 1], cmd);
+		handle_heredoc(tokens[*i + 1], pipex);
 		*i += 2;
 	}
 }
