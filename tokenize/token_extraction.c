@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_extraction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:30:02 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/16 17:32:02 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/19 19:50:15 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ char	*extract_word(t_word_type word_type, int *i, char *str, const int matrix[W_
 	while (word_type == W_DOUBQ || word_type == W_SINGQ || word_type == W_STNDR)
 	{
 		(*i)++;
+		printf("El valor de i iterando la palabra es %d\n", (*i));
 		word_type = matrix[word_type][get_token_type(str[*i])];
 	}
 	if (word_type == W_EOFDQ || word_type == W_EOFSQ)
@@ -116,7 +117,10 @@ char	*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][NUM_INPUT
 	if (result)
 		return (result);
 	result = extract_word(word_type, i, str, matrix, previous_word_type);
-	return (result);
+	if (result)
+		return (result);
+	else
+		return (NULL);
 }
 
 // void	print_tokens_by_space(char ***parsed_tokens, int token_number)

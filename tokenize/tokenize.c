@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/16 18:03:32 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:12:49 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,9 +72,14 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 		}
 		if (word_type == W___END)
 			break;
-		printf("Valor de i antes de extaer el valor del token %d\n", i);
-		command_token = extract_token_value(valid_command, &i, matrix, word_type, previous_word_type);
-		printf("Valor de i despues de extaer el valor del token %d\n", i);
+		if (word_type == W_SINGQ || word_type == W_DOUBQ || word_type == W_STNDR || word_type == W_SARED || word_type == W_SPACE || word_type == W_REDIN || word_type == W_REDOU)
+		{
+			printf("Valor de i antes de extaer el valor del token %d\n", i);
+			command_token = extract_token_value(valid_command, &i, matrix, word_type, previous_word_type);
+			printf("Valor de i despues de extaer el valor del token %d\n", i);
+		}
+		else
+			command_token = NULL;
 		if (command_token)
 		{
 			command_node = create_command_node(command_token, word_type);
@@ -88,6 +93,8 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 			printf("El tipo del comando es %u\n", command_node->type);
 			add_command_part_to_list(&lst, command_node);
 		}
+		if (word_type == W_EOFDQ || word_type == W_EOFSQ || word_type == W_EOSTD || word_type == W_EOSTS)
+			i++;
 	}
 	return (lst);
 }
@@ -123,7 +130,7 @@ t_command_part	**tokenize(char *valid_command, t_env *env)
 	{W_START, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, //W_START
 	{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_EOFST, W_EOFST}, // W_STNDR
 	{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ}, // WORD_SINGLE QUOTE
-	{W_DOUBQ, W_DOUBQ, W_STNDR, W_DOUBQ, W_EOFDQ, W_DOUBQ, W_DOUBQ}, // WORD_DOUBLE QUOTE
+	{W_DOUBQ, W_DOUBQ, W_ERROR, W_DOUBQ, W_EOFDQ, W_DOUBQ, W_DOUBQ}, // WORD_DOUBLE QUOTE
 	{W_SPACE, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_HRDOC, W_ERROR}, // REDIRECT_IN
 	{W_SARED, W_STNDR, W___END, W_REDOU, W_REDOU, W_REDIN, W_REDAP}, // REDIRECT_OUT
 	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR}, // REDIRECT_APPEND
@@ -135,8 +142,22 @@ t_command_part	**tokenize(char *valid_command, t_env *env)
 	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // END OF STANDARD
 	{W_DOUBQ, W_DOUBQ, W___END, W_EOFDQ, W_EOFDQ, W_DOUBQ, W_DOUBQ}, // END OF STANDARD TO DOUBLE QUOTE
 	{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ} //  END OF STANDARD TO SINGLE QUOTE
-	};
-	token = split_and_tokenize(matrix, valid_command, env);
+};
+token = split_and_tokenize(matrix, valid_command, env);
+int i = 0;
+t_command_part *current;
+
+while (token[i])
+{
+	printf("Comando %d:\n", i);
+	current = token[i];
+	while (current)
+	{
+		printf("  value: %s, type: %d\n", current->value, current->type);
+		current = current->next;
+	}
+	i++;
+}
 	return (token);
 }
 
