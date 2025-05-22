@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   variable_expansion.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/16 13:49:55 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/20 16:48:04 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,12 @@ char	*expand_token(t_command_part *word, t_env *env)
 	{
 		start = i;
 		while (word->value[i] && word->value[i] != '$')
-			i++;
+		i++;
 		result = append_prefix(result, word->value, start, i);
 		if (word->value[i] == '$')
-			result = append_variable(result, &i, word, env);
+		result = append_variable(result, &i, word, env);
+		if(!result)
+			result = ft_strjoin(result, "\n");
 	}
 	return (result);
 }

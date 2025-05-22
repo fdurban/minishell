@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 19:48:26 by fernando          #+#    #+#             */
-/*   Updated: 2025/05/15 15:54:19 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/05/22 20:43:56 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 void	checkposition(t_word_type word_type, char *valid_command, int i)
 {
 	//--------------------------------------------------------------------
-	printf("---------------------------------------\n");
 	printf("Letra %c\n", valid_command[i]);
 	if(word_type == W___END)
 		printf("word_type END and i value is : %d\n", i);
@@ -29,11 +28,13 @@ void	checkposition(t_word_type word_type, char *valid_command, int i)
 	if(word_type == W_DOUBQ)
 		printf("word_type DOUBLE and i value is : %d\n", i);
 	if(word_type == W_REDIN)
-		printf("word_type REDIR in and i value is : %d\n", i);
+		printf("word_type REDIN and i value is : %d\n", i);
 	if(word_type == W_REDOU)
-		printf("word_type REDIR out and i value is : %d\n", i);
+		printf("word_type REDOU and i value is : %d\n", i);
 	if(word_type == W_REDAP)
-		printf("word_type REDIR append and i value is : %d\n", i);
+		printf("word_type REDAP and i value is : %d\n", i);
+	if(word_type == W_HRDOC)
+		printf("word_type HRDOC (valor %d) and i value is : %d\n",word_type, i);
 	if(word_type == W_SPACE)
 		printf("word_type SPACE AFTER WORD and i value is : %d\n", i);
 	if(word_type == W_SARED)
@@ -49,6 +50,24 @@ void	checkposition(t_word_type word_type, char *valid_command, int i)
 	if(word_type == W_EOSTD)
 		printf("word_type END OF STANDARD TO DOUBLE QUOTE and i value is : %d\n", i);
 	//----------------------------------------------------------------------------
+}
+
+void	checkinput(t_input_tokenizer input)
+{
+	if(input == TOKEN_SPACE)
+		printf("INPUT SPACE\n");
+	if(input == TOKEN_IN_SINGLE_QUOTE)
+		printf("INPUT TOKEN_IN_SINGLE_QUOTE\n");
+	if(input == TOKEN_IN_DOUBLE_QUOTE)
+		printf("INPUT TOKEN_IN_DOUBLE_QUOTE\n");
+	if(input == TOKEN_LETTER)
+		printf("INPUT_TOKEN_LETTER\n");
+	if(input == TOKEN_REDIRECT_IN)
+		printf("INPUT_TOKEN_REDIRECT_IN\n");
+	if(input == TOKEN_REDIRECT_OUT)
+		printf("INPUT_TOKEN_REDIRECT_OUT\n");
+	if(input == TOKEN_END)
+		printf("INPUT_TOKEN_END\n");
 }
 
 void	print_values(t_command_part **results)
