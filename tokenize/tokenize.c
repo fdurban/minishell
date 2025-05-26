@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/22 21:45:38 by fernando         ###   ########.fr       */
+/*   Updated: 2025/05/26 21:24:26 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 			command_token = NULL;
 		if (command_token)
 		{
-			command_node = create_command_node(command_token, word_type);
+			command_node = create_command_node(command_token, previous_word_type);
 			if (word_type == W_STNDR || word_type == W_DOUBQ)
 			{
 				char *expanded = expand_token(command_node, env);
@@ -141,7 +141,7 @@ t_command_part	**tokenize(char *valid_command, t_env *env)
 	{W_SARED, W_STNDR, W___END, W_REDOU, W_REDOU, W_REDIN, W_REDAP}, // REDIRECT_OUT
 	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR}, // REDIRECT_APPEND
 	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR}, // HERE_DOC
-	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_EOFST, W_REDOU}, // SPACE AFTER WORD
+	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_EOFST, W_EOFST}, // SPACE AFTER WORD
 	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // SPACE AFTER REDIRECT
 	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // END OF SINGLE QUOTE
 	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // END OF DOUBLE QUOTE
@@ -153,28 +153,3 @@ token = split_and_tokenize(matrix, valid_command, env);
 print_values(token);
 	return (token);
 }
-
-
-
-//probar los siguientes comandos en casa
-// "abcde" abcd abcdef
-// "p"w'd'
-
-
-
-	// printf("valor de i es %d\n", *i);
-	// printf("valor de start es %d\n", start);
-	// printf("Numero de caracteres impresos son %d\n", *i - start);
-	// i = 0;
-	// while (results[i])
-	// {
-	// 	t_command_part *curr = results[i];
-	// 	printf("Segmento %d:\n", i);
-	// 	while (curr)
-	// 	{
-	// 	    printf("  token: %s\n", curr->value);
-	// 	    curr = curr->next;
-	// 	}
-	// 	i++;
-	// }
-	// results[i] = NULL;
