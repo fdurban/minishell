@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/26 21:24:26 by fernando         ###   ########.fr       */
+/*   Updated: 2025/05/26 23:39:59 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,11 @@ t_command_part	*create_command_node(char *value, t_word_type type)
 	return (new);
 }
 
+void	skip_start()
+{
+	
+}
+
 t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char *valid_command, t_env *env)
 {
 	t_input_tokenizer	input;
@@ -54,6 +59,8 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 	t_word_type			previous_word_type;
 	t_command_part		*command_node;
 	t_command_part		*lst = NULL;
+	char				*partial_token = NULL;
+	t_word_type partial_type = W_START;
 
 	i = 0;	
 	command_token = NULL;
@@ -67,8 +74,6 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 		printf("---------------------------------------\n");
 		checkposition(word_type, valid_command, i);
 		checkinput(input);
-		if(word_type == W_REDIN)
-			printf("Sigo estando en REDIN\n");
 		if (word_type == W_ERROR)
 		{
 			printf("Error!\n");
@@ -77,22 +82,44 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 		if (word_type == W___END)
 			break;
 		if (word_type == W_SINGQ || word_type == W_DOUBQ || word_type == W_STNDR || word_type == W_SARED || word_type == W_SPACE || word_type == W_REDIN || word_type == W_REDOU)
-		{
-			printf("Extrayendo comando\n");
 			command_token = extract_token_value(valid_command, &i, matrix, &word_type, &previous_word_type);
-			printf("El valor de wordtype después de extraer es %d\n", word_type);
-		}
 		else
 			command_token = NULL;
 		if (command_token)
 		{
 			command_node = create_command_node(command_token, previous_word_type);
-			if (word_type == W_STNDR || word_type == W_DOUBQ)
+			if (previous_word_type == W_STNDR || previous_word_type == W_DOUBQ)
 			{
 				char *expanded = expand_token(command_node, env);
 				free(command_node->value);
 				command_node->value = expanded;
 			}
+			//PARTE DE UNION DE PALABRAS 
+			if (previous_word_type == W_STNDR || previous_word_type == W_DOUBQ || previous_word_type == W_SINGQ)
+			{
+				if (partial_token == NULL)
+					partial_token = ft_strdup(command_node->value);
+				else
+				{
+					char	*joined = ft_strjoin(partial_token, command_node->value);
+					free(partial_token);
+					partial_token = joined;
+				}
+				partial_type = W_STNDR;
+				free(command_node->value);
+				free(command_node);
+			}
+			else
+			{
+				if (partial_token)
+				{
+					t_command_part	*joined_mode = create_command_node(partial_token, partial_type);
+					add_command_part_to_list(&lst, joined_mode);
+					free(partial_token);
+					partial_token = NULL;
+				}
+			}
+			/////////////
 			add_command_part_to_list(&lst, command_node);
 		}
 		if (word_type == W_START)
