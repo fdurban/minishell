@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/26 23:39:59 by fernando         ###   ########.fr       */
+/*   Updated: 2025/05/30 23:51:47 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_command_part	*create_command_node(char *value, t_word_type type)
 	if (!type)
 		printf("There is no type\n");
 	new = malloc(sizeof(t_command_part));
-	new->value = value;
+	new->value = ft_strdup(value);
 	new->type = type;
 	new->next = NULL;
 	return (new);
@@ -60,7 +60,6 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 	t_command_part		*command_node;
 	t_command_part		*lst = NULL;
 	char				*partial_token = NULL;
-	t_word_type partial_type = W_START;
 
 	i = 0;	
 	command_token = NULL;
@@ -69,19 +68,23 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 	while (word_type != W___END)
 	{
 		previous_word_type = word_type;
-		input = get_token_type(valid_command[i]);
-		word_type = matrix[word_type][input];
-		printf("---------------------------------------\n");
-		checkposition(word_type, valid_command, i);
-		checkinput(input);
+		if(word_type != W_REDIN)
+		{
+			input = get_token_type(valid_command[i]);
+			word_type = matrix[word_type][input];
+		}
+		if (word_type == W_START)
+		{
+			i++;
+			input = get_token_type(valid_command[i]);
+			word_type = matrix[word_type][input];
+		}
 		if (word_type == W_ERROR)
 		{
 			printf("Error!\n");
 			break;
 		}
-		if (word_type == W___END)
-			break;
-		if (word_type == W_SINGQ || word_type == W_DOUBQ || word_type == W_STNDR || word_type == W_SARED || word_type == W_SPACE || word_type == W_REDIN || word_type == W_REDOU)
+		if (word_type == W_SINGQ || word_type == W_DOUBQ || word_type == W_STNDR || word_type == W_SARED || word_type == W_SPACE || word_type == W_REDIN|| word_type == W_REDOU)
 			command_token = extract_token_value(valid_command, &i, matrix, &word_type, &previous_word_type);
 		else
 			command_token = NULL;
@@ -94,7 +97,6 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 				free(command_node->value);
 				command_node->value = expanded;
 			}
-			//PARTE DE UNION DE PALABRAS 
 			if (previous_word_type == W_STNDR || previous_word_type == W_DOUBQ || previous_word_type == W_SINGQ)
 			{
 				if (partial_token == NULL)
@@ -104,29 +106,17 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 					char	*joined = ft_strjoin(partial_token, command_node->value);
 					free(partial_token);
 					partial_token = joined;
-				}
-				partial_type = W_STNDR;
-				free(command_node->value);
-				free(command_node);
+				};
 			}
-			else
+			if ((word_type == W_SPACE || word_type == W_REDIN || word_type == W_REDOU || word_type == W___END) && partial_token)
 			{
-				if (partial_token)
-				{
-					t_command_part	*joined_mode = create_command_node(partial_token, partial_type);
-					add_command_part_to_list(&lst, joined_mode);
-					free(partial_token);
-					partial_token = NULL;
-				}
+				printf("AQUí ENTRA con un valor de word_type de %d\n", word_type);
+				t_command_part *joined_node = create_command_node(partial_token, previous_word_type);
+				add_command_part_to_list(&lst, joined_node);
+				printf("Command Added!\n");
+				free(partial_token);
+				partial_token = NULL;
 			}
-			/////////////
-			add_command_part_to_list(&lst, command_node);
-		}
-		if (word_type == W_START)
-		{
-			i++;
-			input = get_token_type(valid_command[i]);
-			word_type = matrix[word_type][input];
 		}
 	}
 	return (lst);

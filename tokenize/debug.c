@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 19:48:26 by fernando          #+#    #+#             */
-/*   Updated: 2025/05/22 20:43:56 by fernando         ###   ########.fr       */
+/*   Updated: 2025/05/28 18:08:13 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,8 @@ void	print_values(t_command_part **results)
 	{
 		t_command_part *tmp = results[j];
 		printf("Comando #%d:\n", j);
+		if(!results[j])
+			printf("Nothing to print\n");
 		while (tmp)
 		{
 			printf("  Valor: %s, Tipo: %d\n", tmp->value, tmp->type);
