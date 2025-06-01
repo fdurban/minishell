@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:30:02 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/30 23:48:50 by fernando         ###   ########.fr       */
+/*   Updated: 2025/05/31 02:56:39 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,20 +70,22 @@ char	*extract_redirect(t_word_type *word_type, int *i, char *str, const int matr
 	start = 0;
 	if (*word_type == W_REDIN || *word_type == W_REDOU)
 	{
+		printf("AQUI ENTRAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\n");
 		*previous_word_type = *word_type;
 		start = *i;
-		(*i)++;
-		*word_type = matrix[*word_type][get_token_type(str[*i])];
 		printf("---------------(extract redirect)------------------------\n");
 		checkposition(*word_type, str, *i);
 		checkinput(get_token_type(str[*i]));
+		(*i)++;
+		*word_type = matrix[*word_type][get_token_type(str[*i])];
 		if(*word_type == W_REDAP || *word_type == W_HRDOC)
 		{
-			(*i)++;
-			*word_type = matrix[*word_type][get_token_type(str[*i])];
+			*previous_word_type = *word_type;
 			printf("---------------(extract append o hrdoc)------------------------\n");
 			checkposition(*word_type, str, *i);
 			checkinput(get_token_type(str[*i]));
+			(*i)++;
+			*word_type = matrix[*word_type][get_token_type(str[*i])];
 		}
 		result = ft_substr(str, start, *i - start);
 		printf("value of extracted result when redirect is %s\n", result);
