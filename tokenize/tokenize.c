@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/31 03:35:41 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/02 18:40:52 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,13 @@ t_command_part	*create_command_node(char *value, t_word_type type)
 	return (new);
 }
 
-void	skip_start()
+void	skip_start(t_word_type	word_type,int i, const int matrix[W_TOTAL][NUM_INPUT], char *valid_command)
 {
-	
+	if (word_type == W_START)
+	{
+		i++;
+		word_type = matrix[word_type][get_token_type(valid_command[i])];
+	}
 }
 
 t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char *valid_command, t_env *env)
@@ -106,28 +110,25 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 					char	*joined = ft_strjoin(partial_token, command_node->value);
 					free(partial_token);
 					partial_token = joined;
-				};
+				}
 			}
-			printf("El valor de command_node value ANTES DECUALQUIER AÑADIDO es %s jujnto con el valor de joined es %s junto con eml valor de word_type de %d\n", command_node->value, partial_token, word_type);
-			if ((word_type == W_SPACE || word_type == W_REDIN || word_type == W_REDOU || word_type == W___END) && partial_token)
+			if ((word_type == W_SPACE || word_type == W_SARED || word_type == W_REDIN || word_type == W_REDOU || word_type == W___END) && partial_token)
 			{
-				printf("AQUí ENTRA con un valor de word_type de %d\n", word_type);
-				printf("El valor de command_node value AL AÑADIR JOINED es %s\n", command_node->value);
 				t_command_part *joined_node = create_command_node(partial_token, previous_word_type);
 				add_command_part_to_list(&lst, joined_node);
-				printf("COMMAND ADDED OF JOINED! with a value of %s\n", joined_node->value);
 				free(partial_token);
 				partial_token = NULL;
 			}
-			else if ((previous_word_type == W_HRDOC || previous_word_type == W_REDIN || previous_word_type == W_REDOU || previous_word_type == W_SARED || word_type == W___END) && !partial_token)
+			else if ((previous_word_type == W_REDAP || previous_word_type == W_HRDOC || previous_word_type == W_REDIN || previous_word_type == W_REDOU || word_type == W___END) && !partial_token)
 			{
-				printf("ENTRAAAAAAAAAAAAAA\n");
-				printf("El valor de command_node value AL AÑADIR COMMAND NODE TAL CUAL es %s\n", command_node->value);
 				add_command_part_to_list(&lst, command_node);
-				printf("COMMAND ADDED OF NOT JOINED with value of %s\n", command_node->value);
 				command_node = NULL;
 			}
-
+		}
+		if (word_type == W_ERROR)
+		{
+			printf("Error!\n");
+			break;
 		}
 	}
 	return (lst);
@@ -165,12 +166,12 @@ t_command_part	**tokenize(char *valid_command, t_env *env)
 	{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_REDIN, W_REDOU}, // W_STNDR
 	{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ}, // WORD_SINGLE QUOTE
 	{W_DOUBQ, W_DOUBQ, W_ERROR, W_DOUBQ, W_EOFDQ, W_DOUBQ, W_DOUBQ}, // WORD_DOUBLE QUOTE
-	{W_SPACE, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_HRDOC, W_ERROR}, // REDIRECT_IN
+	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_HRDOC, W_ERROR}, // REDIRECT_IN
 	{W_SARED, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDAP}, // REDIRECT_OUT
 	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR}, // REDIRECT_APPEND
 	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR}, // HERE_DOC
 	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // SPACE AFTER WORD
-	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // SPACE AFTER REDIRECT
+	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR}, // SPACE AFTER REDIRECT
 	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // END OF SINGLE QUOTE
 	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // END OF DOUBLE QUOTE
 	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // END OF STANDARD
@@ -178,6 +179,5 @@ t_command_part	**tokenize(char *valid_command, t_env *env)
 	{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ} //  END OF STANDARD TO SINGLE QUOTE
 };
 token = split_and_tokenize(matrix, valid_command, env);
-print_values(token);
 	return (token);
 }
