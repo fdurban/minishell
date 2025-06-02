@@ -1,31 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/09 20:11:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/13 16:36:43 by igngonza         ###   ########.fr       */
+/*   Created: 2025/04/14 11:42:16 by igngonza          #+#    #+#             */
+/*   Updated: 2025/05/12 18:09:44 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+int	builtin_pwd(char **args, t_shell *shell)
 {
-	t_shell	shell;
+	int length;
+	int i;
+	char *pwd;
 
-	(void)argc;
-	(void)argv;
-	shell.exit_status = 0;
-	shell.env = copy_env(envp);
-	if (!shell.env)
+	(void)args;
+	i = 0;
+	length = ft_strlen(get_env_var(shell->env, "PWD"));
+	pwd = ft_strdup(get_env_var(shell->env, "PWD"));
+	while (i < length)
 	{
-		fprintf(stderr, "Failed to copy environment\n");
-		return (1);
+		write(1, &pwd[i], 1);
+		i++;
 	}
-	shell_loop(&shell);
-	free_env(shell.env);
+	write(1, "\n", 1);
 	return (0);
 }

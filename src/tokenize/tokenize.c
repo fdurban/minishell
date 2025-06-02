@@ -6,14 +6,13 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/02 18:40:52 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:15:45 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/tokenizer.h"
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-//modificar en funcion de los estados
+// modificar en funcion de los estados
 
 void	add_command_part_to_list(t_command_part **lst, t_command_part *new)
 {
@@ -135,11 +134,11 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char
 }
 t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][NUM_INPUT], char *valid_command, t_env *env)
 {
-	char				**tokens;
-	int					count;
-	int					i;
-	t_command_part		**results;
-	
+	char			**tokens;
+	int				count;
+	int				i;
+	t_command_part	**results;
+
 	count = 0;
 	i = 0;
 	tokens = ft_split(valid_command, '|');

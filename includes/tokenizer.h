@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/26 23:03:52 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/02 19:28:53 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ typedef enum e_word_type
 	W___END,
 	W_ERROR,
 	W_TOTAL
-} t_word_type;
+}							t_word_type;
 
 typedef enum e_input_tokenizer
 {
@@ -48,14 +48,14 @@ typedef enum e_input_tokenizer
 	TOKEN_REDIRECT_IN,
 	TOKEN_REDIRECT_OUT,
 	TOKEN_NUM_INPUT
-}	t_input_tokenizer;
+}							t_input_tokenizer;
 
 typedef struct s_command_part
 {
-	char	*value;
-	t_word_type	type;
+	char					*value;
+	t_word_type				type;
 	struct s_command_part	*next;
-} t_command_part;
+}							t_command_part;
 
 t_command_part	**tokenize(char *valid_command, t_env *env);
 char	*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][NUM_INPUT], t_word_type *word_type, t_word_type *previous_word_type);
@@ -67,7 +67,8 @@ void			print_values(t_command_part **results);
 
 #endif
 
-// space //letter // end // single quote //double quote //redirect IN // redirect out
+// space //letter // end // single quote //double quote //redirect IN
+	// redirect out
 /*
 	WORD_START ->						W_START
 	WORD_STANDARD->						W_STNDR

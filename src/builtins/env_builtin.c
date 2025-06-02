@@ -1,31 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   env_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/09 20:11:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/13 16:36:43 by igngonza         ###   ########.fr       */
+/*   Created: 2025/04/15 15:31:10 by igngonza          #+#    #+#             */
+/*   Updated: 2025/05/12 18:09:03 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../includes/minishell.h"
 
-int	main(int argc, char **argv, char **envp)
+int	builtin_env(char **args, t_shell *shell)
 {
-	t_shell	shell;
+	int i;
 
-	(void)argc;
-	(void)argv;
-	shell.exit_status = 0;
-	shell.env = copy_env(envp);
-	if (!shell.env)
+	(void)args;
+	i = 0;
+	while (i < shell->env->count)
 	{
-		fprintf(stderr, "Failed to copy environment\n");
-		return (1);
+		if (ft_strchr(shell->env->vars[i], '='))
+			printf("%s\n", shell->env->vars[i]);
+		i++;
 	}
-	shell_loop(&shell);
-	free_env(shell.env);
 	return (0);
 }

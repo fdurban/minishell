@@ -3,17 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
+<<<<<<< HEAD:src/shell_loop.c
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
 /*   Updated: 2025/05/12 16:34:59 by fdurban-         ###   ########.fr       */
+=======
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
+/*   Updated: 2025/05/13 16:38:46 by igngonza         ###   ########.fr       */
+>>>>>>> master:src/shell_loop/shell_loop.c
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
-#include "../includes/tokenizer.h"
+#include "../../includes/minishell.h"
 
-static char	*get_hostname(t_env *env)
+char	*get_hostname(t_env *env)
 {
 	char	*sessionmanager;
 	char	*start;
@@ -31,7 +37,7 @@ static char	*get_hostname(t_env *env)
 	return (hostname);
 }
 
-static char	*get_current_pwd(t_env *env)
+char	*get_current_pwd(t_env *env)
 {
 	char	*home;
 	char	*pwd;
@@ -45,7 +51,7 @@ static char	*get_current_pwd(t_env *env)
 	return (currentpwd);
 }
 
-static char	*build_user_prompt(t_env *env, char *hostname, char *currentpwd)
+char	*build_user_prompt(t_env *env, char *hostname, char *currentpwd)
 {
 	char	*username;
 	char	*tmp;
@@ -65,7 +71,7 @@ static char	*build_user_prompt(t_env *env, char *hostname, char *currentpwd)
 	return (prompt);
 }
 
-static char	*build_prompt(t_env *env)
+char	*build_prompt(t_env *env)
 {
 	char	*hostname;
 	char	*currentpwd;
@@ -83,24 +89,16 @@ static char	*build_prompt(t_env *env)
 	return (prompt);
 }
 
-void	shell_loop(t_env *env)
+void	shell_loop(t_shell *shell)
 {
-	char			*input;
-	char			*prompt;
-	int				i;
-	t_command_part	**tokens;
-	int				token_num;
+	char	*input;
 
 	while (1)
 	{
-		prompt = build_prompt(env);
-		input = readline(prompt);
-		token_num = parse(input);
-		if (!token_num)
-			break;
-		free(prompt);
+		input = get_user_input(shell->env);
 		if (!input)
 			break ;
+<<<<<<< HEAD:src/shell_loop.c
 		if (*input)
 			add_history(input);
 		tokens = tokenize(input, env);
@@ -108,6 +106,14 @@ void	shell_loop(t_env *env)
 		while (tokens && tokens[i])
 			free(tokens[i++]);
 		free(tokens);
+=======
+		if (*input == '\0')
+		{
+			free(input);
+			continue ;
+		}
+		process_command_line(input, shell);
+>>>>>>> master:src/shell_loop/shell_loop.c
 		free(input);
 	}
 }
