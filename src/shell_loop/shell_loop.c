@@ -3,17 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-<<<<<<< HEAD:src/shell_loop.c
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/12 16:34:59 by fdurban-         ###   ########.fr       */
-=======
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/13 16:38:46 by igngonza         ###   ########.fr       */
->>>>>>> master:src/shell_loop/shell_loop.c
+/*   Updated: 2025/06/02 20:08:03 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,22 +91,12 @@ void	shell_loop(t_shell *shell)
 		input = get_user_input(shell->env);
 		if (!input)
 			break ;
-<<<<<<< HEAD:src/shell_loop.c
-		if (*input)
-			add_history(input);
-		tokens = tokenize(input, env);
-		i = 0;
-		while (tokens && tokens[i])
-			free(tokens[i++]);
-		free(tokens);
-=======
 		if (*input == '\0')
 		{
 			free(input);
 			continue ;
 		}
 		process_command_line(input, shell);
->>>>>>> master:src/shell_loop/shell_loop.c
 		free(input);
 	}
 }

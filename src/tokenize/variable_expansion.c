@@ -6,12 +6,12 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/05/20 16:48:04 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/02 20:45:46 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/tokenizer.h"
-#include "../includes/minishell.h"
+#include "../../includes/tokenizer.h"
+#include "../../includes/minishell.h"
 
 char	*append_prefix(char *result, char *word_value, int start, int end)
 {
@@ -35,7 +35,8 @@ char	*append_variable(char *result, int *i, t_command_part *word, t_env *env)
 
 	start = *i + 1;
 	len = 0;
-	while (ft_isalnum(word->value[start + len]) || word->value[start + len] == '_')
+	while (ft_isalnum(word->value[start + len]) || \
+	word->value[start + len] == '_')
 		len++ ;
 	var_name = ft_substr(word->value, start, len);
 	expanded_token = get_env_var(env, var_name);
@@ -58,11 +59,11 @@ char	*expand_token(t_command_part *word, t_env *env)
 	{
 		start = i;
 		while (word->value[i] && word->value[i] != '$')
-		i++;
+			i++ ;
 		result = append_prefix(result, word->value, start, i);
 		if (word->value[i] == '$')
-		result = append_variable(result, &i, word, env);
-		if(!result)
+			result = append_variable(result, &i, word, env);
+		if (!result)
 			result = ft_strjoin(result, "\n");
 	}
 	return (result);

@@ -6,12 +6,12 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 19:48:26 by fernando          #+#    #+#             */
-/*   Updated: 2025/05/28 18:08:13 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/02 22:44:51 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/tokenizer.h"
-#include "../includes/minishell.h"
+#include "../../includes/tokenizer.h"
+#include "../../includes/minishell.h"
 
 void	checkposition(t_word_type word_type, char *valid_command, int i)
 {
@@ -72,6 +72,7 @@ void	checkinput(t_input_tokenizer input)
 
 void	print_values(t_command_part **results)
 {
+	printf("Commands:\n");
 	for (int j = 0; results[j]; j++)
 	{
 		t_command_part *tmp = results[j];

@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/02 19:15:45 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/03 04:53:58 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,94 +44,105 @@ t_command_part	*create_command_node(char *value, t_word_type type)
 	return (new);
 }
 
-void	skip_start(t_word_type	word_type,int i, const int matrix[W_TOTAL][NUM_INPUT], char *valid_command)
+void	handle_token_expansion(t_word_type previous_word_type, t_command_part **command_node, t_env *env)
 {
-	if (word_type == W_START)
+	if (previous_word_type == W_STNDR || previous_word_type == W_DOUBQ)
 	{
-		i++;
-		word_type = matrix[word_type][get_token_type(valid_command[i])];
+		char *expanded = expand_token(*command_node, env);
+		free((*command_node)->value);
+		(*command_node)->value = expanded;
+	}
+}
+static t_word_type	get_next_word_type(const int matrix[W_TOTAL][NUM_INPUT], char *str, int *i, t_word_type current)
+{
+	t_input_tokenizer input;
+
+	if (current != W_REDOU && current != W_REDIN)
+	{
+		input = get_token_type(str[*i]);
+		current = matrix[current][input];
+	}
+
+	if (current == W_START)
+	{
+		(*i)++;
+		input = get_token_type(str[*i]);
+		current = matrix[current][input];
+	}
+	return current;
+}
+void	handle_token_join(t_word_type previous_word_type, t_word_type word_type, t_command_part **command_node,t_command_part **lst, char	**partial_token)
+{
+	if (previous_word_type == W_STNDR || previous_word_type == W_DOUBQ || previous_word_type == W_SINGQ)
+	{
+		if (*partial_token == NULL)
+			*partial_token = ft_strdup((*command_node)->value);
+		else
+		{
+			char	*joined = ft_strjoin(*partial_token, (*command_node)->value);
+			free(*partial_token);
+			*partial_token = joined;
+		}
+	}
+	if ((word_type == W_SPACE || word_type == W_SARED || word_type == W_REDIN || word_type == W_REDOU || word_type == W___END) && *partial_token)
+	{
+		t_command_part *joined_node = create_command_node(*partial_token, previous_word_type);
+		add_command_part_to_list(lst, joined_node);
+		free(*partial_token);
+		*partial_token = NULL;
+	}
+	else if ((previous_word_type == W_REDAP || previous_word_type == W_HRDOC || previous_word_type == W_REDIN || previous_word_type == W_REDOU || word_type == W___END) && !*partial_token)
+	{
+		add_command_part_to_list(lst, *command_node);
+		*command_node = NULL;
 	}
 }
 
 t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char *valid_command, t_env *env)
 {
-	t_input_tokenizer	input;
 	int					i;
 	t_word_type			word_type;
 	char				*command_token;
 	t_word_type			previous_word_type;
 	t_command_part		*command_node;
-	t_command_part		*lst = NULL;
-	char				*partial_token = NULL;
+	t_command_part		*lst;
+	char				*partial_token;;
 
 	i = 0;	
 	command_token = NULL;
 	command_node = NULL;
 	word_type = W_START;
+	partial_token = NULL;
+	lst = NULL;
 	while (word_type != W___END)
 	{
 		previous_word_type = word_type;
-		if(word_type != W_REDOU && word_type != W_REDIN)
-		{
-			input = get_token_type(valid_command[i]);
-			word_type = matrix[word_type][input];
-		}
-		if (word_type == W_START)
-		{
-			i++;
-			input = get_token_type(valid_command[i]);
-			word_type = matrix[word_type][input];
-		}
+		word_type = get_next_word_type(matrix, valid_command, &i, word_type);
 		if (word_type == W_ERROR)
 		{
-			printf("Error!\n");
+			printf("Syntax error!\n");
 			break;
 		}
-		if (word_type == W_SINGQ || word_type == W_DOUBQ || word_type == W_STNDR || word_type == W_SARED || word_type == W_SPACE || word_type == W_REDIN|| word_type == W_REDOU)
+		if (word_type == W_SINGQ || word_type == W_DOUBQ || word_type == W_STNDR || word_type == W_SARED \
+		|| word_type == W_SPACE || word_type == W_REDIN|| word_type == W_REDOU)
 			command_token = extract_token_value(valid_command, &i, matrix, &word_type, &previous_word_type);
 		else
 			command_token = NULL;
 		if (command_token)
 		{
 			command_node = create_command_node(command_token, previous_word_type);
-			if (previous_word_type == W_STNDR || previous_word_type == W_DOUBQ)
-			{
-				char *expanded = expand_token(command_node, env);
-				free(command_node->value);
-				command_node->value = expanded;
-			}
-			if (previous_word_type == W_STNDR || previous_word_type == W_DOUBQ || previous_word_type == W_SINGQ)
-			{
-				if (partial_token == NULL)
-					partial_token = ft_strdup(command_node->value);
-				else
-				{
-					char	*joined = ft_strjoin(partial_token, command_node->value);
-					free(partial_token);
-					partial_token = joined;
-				}
-			}
-			if ((word_type == W_SPACE || word_type == W_SARED || word_type == W_REDIN || word_type == W_REDOU || word_type == W___END) && partial_token)
-			{
-				t_command_part *joined_node = create_command_node(partial_token, previous_word_type);
-				add_command_part_to_list(&lst, joined_node);
-				free(partial_token);
-				partial_token = NULL;
-			}
-			else if ((previous_word_type == W_REDAP || previous_word_type == W_HRDOC || previous_word_type == W_REDIN || previous_word_type == W_REDOU || word_type == W___END) && !partial_token)
-			{
-				add_command_part_to_list(&lst, command_node);
-				command_node = NULL;
-			}
+			handle_token_expansion(previous_word_type, &command_node, env);
+			handle_token_join(previous_word_type, word_type, &command_node, &lst, &partial_token);
 		}
 		if (word_type == W_ERROR)
 		{
-			printf("Error!\n");
+			printf("Syntax Error!\n");
 			break;
 		}
 	}
 	return (lst);
 }
+
 t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][NUM_INPUT], char *valid_command, t_env *env)
 {
 	char			**tokens;
@@ -178,5 +189,6 @@ t_command_part	**tokenize(char *valid_command, t_env *env)
 	{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ} //  END OF STANDARD TO SINGLE QUOTE
 };
 token = split_and_tokenize(matrix, valid_command, env);
+print_values(token);
 	return (token);
 }

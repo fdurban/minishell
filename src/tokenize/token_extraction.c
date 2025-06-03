@@ -6,12 +6,12 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:30:02 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/02 18:37:22 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/02 22:38:18 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/tokenizer.h"
-#include "../includes/minishell.h"
+#include "../../includes/tokenizer.h"
+#include "../../includes/minishell.h"
 
 int	get_token_type(char c)
 {
@@ -69,9 +69,12 @@ char	*extract_redirect(t_word_type *word_type, int *i, char *str, const int matr
 	{
 		*previous_word_type = *word_type;
 		start = *i;
+		printf("---------------(extract redirect)------------------------\n");
+		checkposition(*word_type, str, *i);
+		checkinput(get_token_type(str[*i]));
 		(*i)++;
 		*word_type = matrix[*word_type][get_token_type(str[*i])];
-		if(*word_type == W_REDAP || *word_type == W_HRDOC)
+		if (*word_type == W_REDAP || *word_type == W_HRDOC)
 		{
 			*previous_word_type = *word_type;
 			(*i)++;
@@ -81,27 +84,30 @@ char	*extract_redirect(t_word_type *word_type, int *i, char *str, const int matr
 		return (result);
 	}
 	else
-	return (NULL);
+		return (NULL);
 }
 
 char	*extract_word(t_word_type *word_type, int *i, char *str, const int matrix[W_TOTAL][NUM_INPUT], t_word_type *previous_word_type)
 {
 	int		start;
 	char	*result;
-	
+
 	start = *i;
 	if ((*word_type == W_DOUBQ || *word_type == W_SINGQ) && (*previous_word_type == W_EOSTD || *previous_word_type == W_EOSTS))
-	start = *i - 1;
+		start = *i - 1;
 	while (*word_type == W_DOUBQ || *word_type == W_SINGQ || *word_type == W_STNDR)
 	{
 		*previous_word_type = *word_type;
+		printf("---------------(extract_word)------------------------\n");
+		checkposition(*word_type, str, *i);
+		checkinput(get_token_type(str[*i]));
 		(*i)++;
 		*word_type = matrix[*word_type][get_token_type(str[*i])];
 	}
 	if (*word_type == W_EOFDQ || *word_type == W_EOFSQ)
-	result = ft_substr(str, start + 1, *i - start - 1);
+		result = ft_substr(str, start + 1, *i - start - 1);
 	else
-	result = ft_substr(str, start, *i - start);
+		result = ft_substr(str, start, *i - start);
 	if (*word_type == W_EOFDQ || *word_type == W_EOFSQ)
 	{
 		(*i)++;
@@ -115,32 +121,28 @@ char	*extract_word(t_word_type *word_type, int *i, char *str, const int matrix[W
 	return (result);
 }
 
-char	*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][NUM_INPUT], t_word_type *word_type, t_word_type *previous_word_type)
+char	*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][TOKEN_NUM_INPUT], t_word_type *word_type, t_word_type *previous_word_type)
 {
 	char	*result;
-	
+
 	result = extract_space_or_sared(word_type, i, str, matrix);
 	if (result)
-	return (result);
+		return (result);
 	result = extract_redirect(word_type, i, str, matrix, previous_word_type);
 	if (result)
-	return (result);
+		return (result);
 	result = extract_word(word_type, i, str, matrix, previous_word_type);
 	if (result)
-	return (result);
+		return (result);
 	else
-	return (NULL);
+		return (NULL);
 }
 
-// printf("---------------(extract redirect)------------------------\n");
-// checkposition(*word_type, str, *i);
-// checkinput(get_token_type(str[*i]));
+
 // printf("---------------(extract append o hrdoc)------------------------\n");
 // checkposition(*word_type, str, *i);
 // checkinput(get_token_type(str[*i]));
-// printf("---------------(extract_word)------------------------\n");
-// checkposition(*word_type, str, *i);
-// checkinput(get_token_type(str[*i]));
+
 // printf("value of extracted result when redirect is %s\n", result);
 // printf("---------------------------------------------------------------\n");
 // printf("------------------(extarct space or sared)---------------------\n");

@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/02 19:28:53 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/02 20:20:25 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,13 @@ typedef struct s_command_part
 }							t_command_part;
 
 t_command_part	**tokenize(char *valid_command, t_env *env);
-char	*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][NUM_INPUT], t_word_type *word_type, t_word_type *previous_word_type);
-char	*expand_token(t_command_part *word, t_env *env);
-int	get_token_type(char c);
+char			*extract_token_value(char *str, int *i, const int matrix[W_TOTAL][TOKEN_NUM_INPUT], t_word_type *word_type, t_word_type *previous_word_type);
+char			*expand_token(t_command_part *word, t_env *env);
+int				get_token_type(char c);
 void			checkposition(t_word_type word_type, char *valid_command, int i);
-void	checkinput(t_input_tokenizer input);
+void			checkinput(t_input_tokenizer input);
 void			print_values(t_command_part **results);
+char			**tokens_to_argv(t_command_part *lst);
 
 #endif
 

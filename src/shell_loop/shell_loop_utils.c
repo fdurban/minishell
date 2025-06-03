@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:11:33 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/13 15:55:49 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/02 20:21:13 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	process_command_line(char *input, t_shell *shell)
 	t_command_part *command_tokens;
 	char **argv;
 
-	tokens_array = tokenize(input);
+	tokens_array = tokenize(input, shell->env);
 	command_tokens = tokens_array[0];
 	if (command_tokens)
 	{
@@ -40,8 +40,8 @@ void	process_command_line(char *input, t_shell *shell)
 		{
 			if (is_builtin(argv[0]))
 				exec_builtin(argv, shell);
-			else
-				; // Later: call function to handle external execution (execve)
+			// else
+			// 	; // Later: call function to handle external execution (execve)
 		}
 		for (int i = 0; argv && argv[i]; i++)
 			free(argv[i]);
