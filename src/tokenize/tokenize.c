@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/03 04:53:58 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:47:36 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,136 +14,64 @@
 
 // modificar en funcion de los estados
 
-void	add_command_part_to_list(t_command_part **lst, t_command_part *new)
+static t_word_type	get_next_word_type(const int matrix[W_TOTAL][TOKEN_NUM_INPUT], char *str, int *i, t_word_type current)
 {
-	t_command_part	*last;
-
-	if (!new)
-		return ;
-	if (*lst == NULL)
-	{
-		*lst = new;
-		return ;
-	}
-	last = *lst;
-	while (last->next != NULL)
-		last = last->next;
-	last->next = new;
-}
-
-t_command_part	*create_command_node(char *value, t_word_type type)
-{
-	t_command_part	*new;
-
-	if (!type)
-		printf("There is no type\n");
-	new = malloc(sizeof(t_command_part));
-	new->value = ft_strdup(value);
-	new->type = type;
-	new->next = NULL;
-	return (new);
-}
-
-void	handle_token_expansion(t_word_type previous_word_type, t_command_part **command_node, t_env *env)
-{
-	if (previous_word_type == W_STNDR || previous_word_type == W_DOUBQ)
-	{
-		char *expanded = expand_token(*command_node, env);
-		free((*command_node)->value);
-		(*command_node)->value = expanded;
-	}
-}
-static t_word_type	get_next_word_type(const int matrix[W_TOTAL][NUM_INPUT], char *str, int *i, t_word_type current)
-{
-	t_input_tokenizer input;
+	t_input_tokenizer	input;
 
 	if (current != W_REDOU && current != W_REDIN)
 	{
 		input = get_token_type(str[*i]);
 		current = matrix[current][input];
 	}
-
 	if (current == W_START)
 	{
 		(*i)++;
 		input = get_token_type(str[*i]);
 		current = matrix[current][input];
 	}
-	return current;
-}
-void	handle_token_join(t_word_type previous_word_type, t_word_type word_type, t_command_part **command_node,t_command_part **lst, char	**partial_token)
-{
-	if (previous_word_type == W_STNDR || previous_word_type == W_DOUBQ || previous_word_type == W_SINGQ)
-	{
-		if (*partial_token == NULL)
-			*partial_token = ft_strdup((*command_node)->value);
-		else
-		{
-			char	*joined = ft_strjoin(*partial_token, (*command_node)->value);
-			free(*partial_token);
-			*partial_token = joined;
-		}
-	}
-	if ((word_type == W_SPACE || word_type == W_SARED || word_type == W_REDIN || word_type == W_REDOU || word_type == W___END) && *partial_token)
-	{
-		t_command_part *joined_node = create_command_node(*partial_token, previous_word_type);
-		add_command_part_to_list(lst, joined_node);
-		free(*partial_token);
-		*partial_token = NULL;
-	}
-	else if ((previous_word_type == W_REDAP || previous_word_type == W_HRDOC || previous_word_type == W_REDIN || previous_word_type == W_REDOU || word_type == W___END) && !*partial_token)
-	{
-		add_command_part_to_list(lst, *command_node);
-		*command_node = NULL;
-	}
+	return (current);
 }
 
-t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][NUM_INPUT], char *valid_command, t_env *env)
+t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][TOKEN_NUM_INPUT], char *valid_command, t_env *env)
 {
-	int					i;
-	t_word_type			word_type;
-	char				*command_token;
-	t_word_type			previous_word_type;
-	t_command_part		*command_node;
-	t_command_part		*lst;
-	char				*partial_token;;
+	t_tokenizer_ctx	ctx;
 
-	i = 0;	
-	command_token = NULL;
-	command_node = NULL;
-	word_type = W_START;
-	partial_token = NULL;
-	lst = NULL;
-	while (word_type != W___END)
+	ctx.i = 0;
+	ctx.word_type = W_START;
+	ctx.command_token = NULL;
+	ctx.command_node = NULL;
+	ctx.partial_token = NULL;
+	ctx.lst = NULL;
+	while (ctx.word_type != W___END)
 	{
-		previous_word_type = word_type;
-		word_type = get_next_word_type(matrix, valid_command, &i, word_type);
-		if (word_type == W_ERROR)
+		ctx.previous_word_type = ctx.word_type;
+		ctx.word_type = get_next_word_type(matrix, valid_command, &ctx.i, ctx.word_type);
+		if (ctx.word_type == W_ERROR)
 		{
 			printf("Syntax error!\n");
-			break;
+			break ;
 		}
-		if (word_type == W_SINGQ || word_type == W_DOUBQ || word_type == W_STNDR || word_type == W_SARED \
-		|| word_type == W_SPACE || word_type == W_REDIN|| word_type == W_REDOU)
-			command_token = extract_token_value(valid_command, &i, matrix, &word_type, &previous_word_type);
+		if (ctx.word_type == W_SINGQ || ctx.word_type == W_DOUBQ || ctx.word_type == W_STNDR || ctx.word_type == W_SARED \
+		|| ctx.word_type == W_SPACE || ctx.word_type == W_REDIN || ctx.word_type == W_REDOU)
+			ctx.command_token = extract_token_value(valid_command, matrix, &ctx);
 		else
-			command_token = NULL;
-		if (command_token)
+			ctx.command_token = NULL;
+		if (ctx.command_token)
 		{
-			command_node = create_command_node(command_token, previous_word_type);
-			handle_token_expansion(previous_word_type, &command_node, env);
-			handle_token_join(previous_word_type, word_type, &command_node, &lst, &partial_token);
+			ctx.command_node = create_command_node(ctx.command_token, ctx.previous_word_type);
+			handle_token_expansion(ctx.previous_word_type, &ctx.command_node, env);
+			handle_token_join(&ctx);
 		}
-		if (word_type == W_ERROR)
+		if (ctx.word_type == W_ERROR)
 		{
 			printf("Syntax Error!\n");
-			break;
+			break ;
 		}
 	}
-	return (lst);
+	return (ctx.lst);
 }
 
-t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][NUM_INPUT], char *valid_command, t_env *env)
+t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][TOKEN_NUM_INPUT], char *valid_command, t_env *env)
 {
 	char			**tokens;
 	int				count;
@@ -170,8 +98,7 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][NUM_INPUT], char *
 t_command_part	**tokenize(char *valid_command, t_env *env)
 {
 	t_command_part	**token;
-	// space //letter // end // single quote //double quote //redirect IN // redirect out
-	const int	matrix[W_TOTAL][NUM_INPUT] = {
+	const int		matrix[W_TOTAL][TOKEN_NUM_INPUT] = {
 	{W_START, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, //W_START
 	{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_REDIN, W_REDOU}, // W_STNDR
 	{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ}, // WORD_SINGLE QUOTE
@@ -187,8 +114,11 @@ t_command_part	**tokenize(char *valid_command, t_env *env)
 	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // END OF STANDARD
 	{W_DOUBQ, W_DOUBQ, W___END, W_EOFDQ, W_EOFDQ, W_DOUBQ, W_DOUBQ}, // END OF STANDARD TO DOUBLE QUOTE
 	{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ} //  END OF STANDARD TO SINGLE QUOTE
-};
-token = split_and_tokenize(matrix, valid_command, env);
-print_values(token);
+	};
+
+	token = split_and_tokenize(matrix, valid_command, env);
+	print_values(token);
 	return (token);
 }
+
+	// space //letter // end // single quote //double quote //redirect IN // redirect out
