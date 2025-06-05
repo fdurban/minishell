@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:37:15 by fernando          #+#    #+#             */
-/*   Updated: 2025/06/04 17:38:30 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:24:41 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,25 +24,29 @@ void	handle_token_expansion(t_word_type previous_word_type, t_command_part **com
 	}
 }
 
-void	handle_token_join(t_tokenizer_ctx *ctx)
+static void	accumulate_partial_token(t_tokenizer_ctx *ctx)
 {
-	t_command_part	*joined_node;
 	char			*joined;
 
 	joined = NULL;
+	if (ctx->partial_token == NULL)
+		ctx->partial_token = ft_strdup(ctx->command_node->value);
+	else
+	{
+		joined = ft_strjoin(ctx->partial_token, ctx->command_node->value);
+		free(ctx->partial_token);
+		ctx->partial_token = joined;
+	}
+}
+
+void	handle_token_join(t_tokenizer_ctx *ctx)
+{
+	t_command_part	*joined_node;
+
 	joined_node = NULL;
 	if (ctx->previous_word_type == W_STNDR || \
 	ctx->previous_word_type == W_DOUBQ || ctx->previous_word_type == W_SINGQ)
-	{
-		if (ctx->partial_token == NULL)
-			ctx->partial_token = ft_strdup(ctx->command_node->value);
-		else
-		{
-			joined = ft_strjoin(ctx->partial_token, ctx->command_node->value);
-			free(ctx->partial_token);
-			ctx->partial_token = joined;
-		}
-	}
+		accumulate_partial_token(ctx);
 	if ((ctx->word_type == W_SPACE || ctx->word_type == W_SARED || ctx->word_type == W_REDIN \
 	|| ctx->word_type == W_REDOU || ctx->word_type == W___END) && ctx->partial_token)
 	{

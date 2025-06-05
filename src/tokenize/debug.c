@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 19:48:26 by fernando          #+#    #+#             */
-/*   Updated: 2025/06/02 22:44:51 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:40:49 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,19 +54,19 @@ void	checkposition(t_word_type word_type, char *valid_command, int i)
 
 void	checkinput(t_input_tokenizer input)
 {
-	if(input == TOKEN_SPACE)
+	if(input == I_SPACE)
 		printf("INPUT SPACE\n");
-	if(input == TOKEN_IN_SINGLE_QUOTE)
+	if(input == I_IN_SINGLE_QUOTE)
 		printf("INPUT TOKEN_IN_SINGLE_QUOTE\n");
-	if(input == TOKEN_IN_DOUBLE_QUOTE)
+	if(input == I_IN_DOUBLE_QUOTE)
 		printf("INPUT TOKEN_IN_DOUBLE_QUOTE\n");
-	if(input == TOKEN_LETTER)
+	if(input == I_LETTER)
 		printf("INPUT_TOKEN_LETTER\n");
-	if(input == TOKEN_REDIRECT_IN)
+	if(input == I_REDIRECT_IN)
 		printf("INPUT_TOKEN_REDIRECT_IN\n");
-	if(input == TOKEN_REDIRECT_OUT)
+	if(input == I_REDIRECT_OUT)
 		printf("INPUT_TOKEN_REDIRECT_OUT\n");
-	if(input == TOKEN_END)
+	if(input == I_END)
 		printf("INPUT_TOKEN_END\n");
 }
 

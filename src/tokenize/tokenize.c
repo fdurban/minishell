@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/04 18:47:36 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/05 18:52:51 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 // modificar en funcion de los estados
 
-static t_word_type	get_next_word_type(const int matrix[W_TOTAL][TOKEN_NUM_INPUT], char *str, int *i, t_word_type current)
+static t_word_type	get_next_word_type(const int matrix[W_TOTAL][I_NUM_INPUT], char *str, int *i, t_word_type current)
 {
 	t_input_tokenizer	input;
 
@@ -32,7 +32,23 @@ static t_word_type	get_next_word_type(const int matrix[W_TOTAL][TOKEN_NUM_INPUT]
 	return (current);
 }
 
-t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][TOKEN_NUM_INPUT], char *valid_command, t_env *env)
+static void	process_token(const int matrix[W_TOTAL][I_NUM_INPUT], char *valid_command, t_env *env, t_tokenizer_ctx *ctx)
+{
+	ctx->command_token = NULL;
+	if (ctx->word_type == W_SINGQ || ctx->word_type == W_DOUBQ ||
+	ctx->word_type == W_STNDR || ctx->word_type == W_SARED
+	|| ctx->word_type == W_SPACE || ctx->word_type == W_REDIN ||
+	ctx->word_type == W_REDOU)
+		ctx->command_token = extract_token_value(valid_command, matrix, ctx);
+	if (ctx->command_token)
+	{
+		ctx->command_node = create_command_node(ctx->command_token, ctx->previous_word_type);
+		handle_token_expansion(ctx->previous_word_type, &ctx->command_node, env);
+		handle_token_join(ctx);
+	}
+}
+
+t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT], char *valid_command, t_env *env)
 {
 	t_tokenizer_ctx	ctx;
 
@@ -51,17 +67,7 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][TOKEN_NUM_INPUT]
 			printf("Syntax error!\n");
 			break ;
 		}
-		if (ctx.word_type == W_SINGQ || ctx.word_type == W_DOUBQ || ctx.word_type == W_STNDR || ctx.word_type == W_SARED \
-		|| ctx.word_type == W_SPACE || ctx.word_type == W_REDIN || ctx.word_type == W_REDOU)
-			ctx.command_token = extract_token_value(valid_command, matrix, &ctx);
-		else
-			ctx.command_token = NULL;
-		if (ctx.command_token)
-		{
-			ctx.command_node = create_command_node(ctx.command_token, ctx.previous_word_type);
-			handle_token_expansion(ctx.previous_word_type, &ctx.command_node, env);
-			handle_token_join(&ctx);
-		}
+		process_token(matrix, valid_command, env, &ctx);
 		if (ctx.word_type == W_ERROR)
 		{
 			printf("Syntax Error!\n");
@@ -71,7 +77,7 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][TOKEN_NUM_INPUT]
 	return (ctx.lst);
 }
 
-t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][TOKEN_NUM_INPUT], char *valid_command, t_env *env)
+t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT], char *valid_command, t_env *env)
 {
 	char			**tokens;
 	int				count;
@@ -98,7 +104,7 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][TOKEN_NUM_INPUT], 
 t_command_part	**tokenize(char *valid_command, t_env *env)
 {
 	t_command_part	**token;
-	const int		matrix[W_TOTAL][TOKEN_NUM_INPUT] = {
+	const int		matrix[W_TOTAL][I_NUM_INPUT] = {
 	{W_START, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, //W_START
 	{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_REDIN, W_REDOU}, // W_STNDR
 	{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ}, // WORD_SINGLE QUOTE
@@ -113,7 +119,7 @@ t_command_part	**tokenize(char *valid_command, t_env *env)
 	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // END OF DOUBLE QUOTE
 	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU}, // END OF STANDARD
 	{W_DOUBQ, W_DOUBQ, W___END, W_EOFDQ, W_EOFDQ, W_DOUBQ, W_DOUBQ}, // END OF STANDARD TO DOUBLE QUOTE
-	{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ} //  END OF STANDARD TO SINGLE QUOTE
+	{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ} // END OF STANDARD TO SINGLE QUOTE
 	};
 
 	token = split_and_tokenize(matrix, valid_command, env);

@@ -15,9 +15,6 @@ ENV_FILES = $(ENV_DIR)/env.c $(ENV_DIR)/env_utils.c
 LOOP_DIR  = $(SRC_DIR)/shell_loop
 LOOP_FILES = $(LOOP_DIR)/shell_loop.c $(ENV_DIR)/shell_loop_utils.c 
 
-PARSE_DIR = $(SRC_DIR)/parse
-PARSE_FILES = $(PARSE_DIR)/automats.c
-
 TOKEN_DIR = $(SRC_DIR)/tokenize
 TOKEN_FILES = $(TOKEN_DIR)/tokenize.c $(TOKEN_DIR)/tokenize_utils.c \
 			  $(TOKEN_DIR)/token_extraction.c $(TOKEN_DIR)/variable_expansion.c \
