@@ -1,16 +1,21 @@
 NAME = minishell
 CC = cc
-CFLAGS = -g -O0 -Wall -Wextra -Werror
-
+CFLAGS  = -g -O0 -Wall -Wextra -Werror \
 
 LIBFT_DIR = ./libft
-LIBFT_PATH= $(LIBFT_DIR)/libft.a
+LIBFT_PATH = $(LIBFT_DIR)/libft.a
 
 SRC_DIR = ./src
 SRC_FILES = $(SRC_DIR)/main.c
 
 ENV_DIR  = $(SRC_DIR)/env
 ENV_FILES = $(ENV_DIR)/env.c $(ENV_DIR)/env_utils.c 
+
+EXE_DIR  = $(SRC_DIR)/execution
+EXE_FILES = $(EXE_DIR)/cleanup.c $(EXE_DIR)/errors.c $(EXE_DIR)/exec.c \
+						$(EXE_DIR)/execution.c $(EXE_DIR)/here_doc.c $(EXE_DIR)/redirections.c \
+						$(EXE_DIR)/paths.c $(EXE_DIR)/utils.c $(EXE_DIR)/free.c \
+						$(EXE_DIR)/childs.c $(EXE_DIR)/parse.c 
 
 LOOP_DIR  = $(SRC_DIR)/shell_loop
 LOOP_FILES = $(LOOP_DIR)/shell_loop.c $(ENV_DIR)/shell_loop_utils.c 
@@ -34,18 +39,24 @@ LOOP_OBJ = $(LOOP_FILES:$(ENV_DIR)/%.c=$(OBJ_DIR)/%.o)
 PARSE_OBJ = $(PARSE_FILES:$(PARSE_DIR)/%.c=$(OBJ_DIR)/%.o)
 TOKEN_OBJ = $(TOKEN_FILES:$(TOKEN_DIR)/%.c=$(OBJ_DIR)/%.o)
 BUILTINS_OBJ = $(BUILTINS_FILES:$(BUILTINS_DIR)/%.c=$(OBJ_DIR)/%.o)
+EXE_OBJ = $(EXE_FILES:$(EXE_DIR)/%.c=$(OBJ_DIR)/%.o)
+
 
 all: $(OBJ_DIR) $(NAME)
 
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-$(NAME): $(SRC_OBJ) $(ENV_OBJ) $(LOOP_OBJ) $(PARSE_OBJ) $(TOKEN_OBJ) $(BUILTINS_OBJ)
+$(NAME): $(SRC_OBJ) $(ENV_OBJ) $(LOOP_OBJ) $(PARSE_OBJ) $(EXE_OBJ) $(TOKEN_OBJ) $(BUILTINS_OBJ)
 	make -C $(LIBFT_DIR)
-	$(CC) $(CFLAGS) $(SRC_OBJ) $(LOOP_OBJ) $(PARSE_OBJ) $(TOKEN_OBJ) $(BUILTINS_OBJ) $(ENV_OBJ) $(LIBFT_PATH) -lreadline -o $(NAME)
+	$(CC) $(CFLAGS) \
+	$(SRC_OBJ) $(LOOP_OBJ) $(EXE_OBJ) $(PARSE_OBJ) $(TOKEN_OBJ) $(BUILTINS_OBJ) $(ENV_OBJ) \
+	$(LIBFT_PATH) -lreadline \
+	-o $(NAME) \
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
+		@mkdir -p $(dir $@)
+		$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: $(ENV_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -59,6 +70,9 @@ $(OBJ_DIR)/%.o: $(PARSE_DIR)/%.c
 $(OBJ_DIR)/%.o: $(TOKEN_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(OBJ_DIR)/%.o: $(EXE_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
 $(OBJ_DIR)/%.o: $(BUILTINS_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -66,14 +80,13 @@ norminette:
 	norminette $(SRC_FILES) minishell.h
 
 clean:
-	make clean -C $(LIBFT_DIR)
-	rm -rf $(OBJ_DIR)
+		rm -rf $(OBJ_DIR)
+		$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	make fclean -C $(LIBFT_DIR)
-	rm -rf $(OBJ_DIR)
-	rm -f $(NAME)
+		rm -f $(NAME)
+		$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re test_execution
