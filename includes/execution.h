@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/15 18:40:28 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/09 13:07:59 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,15 @@ void		parse_cmds(t_pipex *pipex, char **argv);
 void		parse_paths(t_pipex *pipex, t_shell *shell);
 void		create_child_process(t_pipex *pipex, t_shell *shell);
 
-void		safe_close(int *fd);
-void		cleanup_heredoc(t_pipex *pipex);
-void		free_cmd_paths(t_pipex *pipex);
-void		free_cmd_args(t_pipex *pipex);
 void		parent_free(t_pipex *pipex);
 
 void		handle_error(const char *message);
 int			handle_msg(char *err);
+void		print_error_and_exit(char *cmd, char *msg, int code);
+void		print_exec_error_and_exit(char *cmd);
+char		*join_path_cmd(char *dir, char *cmd);
+void		parse_cmds(t_pipex *pipex, char **tokens);
+void		cleanup_pipex(t_pipex *pipex);
+void		safe_close_fd(int *fd);
 
 #endif

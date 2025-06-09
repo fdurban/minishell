@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/24 10:24:52 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/09 11:19:15 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	finalize_heredoc(t_pipex *pipex)
 
 void	handle_heredoc(char *limiter, t_pipex *pipex)
 {
-	int fd;
+	int	fd;
 
 	fd = create_heredoc_file();
 	process_heredoc_input(limiter, fd);

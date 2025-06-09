@@ -14,6 +14,8 @@ ENV_FILES = $(ENV_DIR)/env.c $(ENV_DIR)/env_utils.c
 EXE_DIR  = $(SRC_DIR)/execution
 EXE_FILES = $(EXE_DIR)/cleanup.c $(EXE_DIR)/errors.c $(EXE_DIR)/exec.c \
 						$(EXE_DIR)/execution.c $(EXE_DIR)/here_doc.c $(EXE_DIR)/redirections.c \
+						$(EXE_DIR)/paths.c $(EXE_DIR)/utils.c $(EXE_DIR)/free.c \
+						$(EXE_DIR)/childs.c $(EXE_DIR)/parse.c 
 
 LOOP_DIR  = $(SRC_DIR)/shell_loop
 LOOP_FILES = $(LOOP_DIR)/shell_loop.c $(ENV_DIR)/shell_loop_utils.c 

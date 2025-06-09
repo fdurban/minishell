@@ -6,65 +6,48 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:21:47 by igngonza          #+#    #+#             */
-/*   Updated: 2025/04/23 10:22:20 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/09 12:15:13 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	safe_close(int *fd)
+static void	cleanup_heredoc(t_pipex *pipex)
 {
-	if (*fd >= 0)
+	if (pipex && pipex->here_doc)
+		unlink(".heredoc_tmp");
+}
+
+void	safe_close_fd(int *fd)
+{
+	if (fd && *fd >= 0)
 	{
 		close(*fd);
 		*fd = -1;
 	}
 }
 
-void	cleanup_heredoc(t_pipex *pipex)
+void	close_all_pipes(t_pipex *pipex)
 {
-	if (pipex->here_doc)
-		unlink(".heredoc_tmp");
-}
-
-void	free_cmd_paths(t_pipex *pipex)
-{
+	int	total_fds;
 	int	i;
 
-	if (!pipex->cmd_paths)
+	if (!pipex)
 		return ;
+	total_fds = pipex->pipe_count * 2;
 	i = 0;
-	while (i < pipex->cmd_count)
+	while (i < total_fds)
 	{
-		free(pipex->cmd_paths[i]);
-		pipex->cmd_paths[i] = NULL;
+		safe_close_fd(&pipex->pipes[i]);
 		i++;
 	}
-	free(pipex->cmd_paths);
-	pipex->cmd_paths = NULL;
 }
 
-void	free_cmd_args(t_pipex *pipex)
+void	cleanup_pipex(t_pipex *pipex)
 {
-	int i;
-	int j;
-
-	if (!pipex->cmd_args)
+	if (!pipex)
 		return ;
-	i = 0;
-	while (i < pipex->cmd_count && pipex->cmd_args[i])
-	{
-		j = 0;
-		while (pipex->cmd_args[i][j])
-		{
-			free(pipex->cmd_args[i][j]);
-			pipex->cmd_args[i][j] = NULL;
-			j++;
-		}
-		free(pipex->cmd_args[i]);
-		pipex->cmd_args[i] = NULL;
-		i++;
-	}
-	free(pipex->cmd_args);
-	pipex->cmd_args = NULL;
+	cleanup_heredoc(pipex);
+	close_all_pipes(pipex);
+	parent_free(pipex);
 }
