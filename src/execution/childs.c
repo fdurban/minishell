@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_childs.c                                      :+:      :+:    :+:   */
+/*   childs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:35:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/09 11:38:37 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/09 16:15:43 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,26 +23,6 @@ void	execute_child_command(t_pipex *pipex, t_env *envp)
 	{
 		perror("execve failed");
 		exit(EXIT_FAILURE);
-	}
-}
-
-static void	setup_child_redirection(t_pipex *px)
-{
-	int	idx;
-
-	idx = px->idx;
-	if (idx == 0)
-	{
-		dup2(px->pipes[1], STDOUT_FILENO);
-	}
-	else if (idx == px->cmd_count - 1)
-	{
-		dup2(px->pipes[2 * (idx - 1)], STDIN_FILENO);
-	}
-	else
-	{
-		dup2(px->pipes[2 * (idx - 1)], STDIN_FILENO);
-		dup2(px->pipes[2 * idx + 1], STDOUT_FILENO);
 	}
 }
 
@@ -94,6 +74,7 @@ void	create_child_process(t_pipex *px, t_shell *shell)
 	char	**cmd;
 	char	*raw;
 	char	*path;
+	int		i;
 
 	pid = fork();
 	if (pid < 0)
@@ -101,10 +82,27 @@ void	create_child_process(t_pipex *px, t_shell *shell)
 	px->pids[px->idx] = pid;
 	if (pid == 0)
 	{
-		if (px->cmd_count > 1)
-			setup_child_redirection(px);
-		close_pipes(px);
+		/* 1) parse and apply all file redirections for this command */
 		cmd = px->cmd_args[px->idx];
+		i = 0;
+		// Debug before stripping
+		fprintf(stderr, "[DEBUG before] cmd[%d]:", px->idx);
+		for (int k = 0; cmd[k]; k++)
+			fprintf(stderr, " '%s'", cmd[k]);
+		fprintf(stderr, "\n");
+		while (cmd[i])
+			process_redirection(cmd, &i, px);
+		// Debug after stripping
+		fprintf(stderr, "[DEBUG after ] cmd[%d]:", px->idx);
+		for (int k = 0; cmd[k]; k++)
+			fprintf(stderr, " '%s'", cmd[k]);
+		fprintf(stderr, "\n");
+		/* 2) setup pipeline redirections if needed */
+		if (px->cmd_count > 1)
+			setup_child_io(px);
+		/* 3) close remaining pipe fds */
+		close_pipes(px);
+		/* 4) execute builtin or external */
 		raw = cmd[0];
 		if (is_builtin(raw))
 			exit(exec_builtin(cmd, shell));

@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/09 13:07:59 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/10 15:24:29 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PIPEX_H
 
 # include "minishell.h"
+# include "tokenizer.h"
 # include <errno.h>
 # include <fcntl.h>
 # include <stdio.h>
@@ -46,7 +47,7 @@ typedef struct s_pipex
 	pid_t	*pids;
 }			t_pipex;
 
-int			execution(char **tokens, t_shell *shell);
+int			execution(t_command_part **cmd_segs, t_shell *shell);
 
 void		*ft_bzero(void *s, size_t n);
 void		init_files(char **tokens, int tokens_length, t_pipex *pipex);
@@ -81,5 +82,7 @@ char		*join_path_cmd(char *dir, char *cmd);
 void		parse_cmds(t_pipex *pipex, char **tokens);
 void		cleanup_pipex(t_pipex *pipex);
 void		safe_close_fd(int *fd);
+void		process_redirection(char **tokens, int *i, t_pipex *pipex);
+void		parse_redirections(t_pipex *px);
 
 #endif
