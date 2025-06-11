@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 19:33:14 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/12 18:18:02 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/11 15:09:21 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,11 @@ char	*get_env_var(t_env *env, const char *key)
 		return (NULL);
 	key_len = strlen(key);
 	i = 0;
+	if (!env || !env->vars || !key)
+		return (NULL);
 	while (i < env->count)
 	{
-		if (strncmp(env->vars[i], key, key_len) == 0
+		if (env->vars &&strncmp(env->vars[i], key, key_len) == 0
 			&& env->vars[i][key_len] == '=')
 			return (env->vars[i] + key_len + 1);
 		i++;

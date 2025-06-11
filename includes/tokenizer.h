@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/05 18:40:08 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/11 14:15:06 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ typedef struct s_tokenizer_ctx
 
 t_command_part	**tokenize(char *valid_command, t_env *env);
 char			*extract_token_value(char *str, const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx);
-char			*expand_token(t_command_part *word, t_env *env);
+char			*expand_token(t_command_part *word, t_shell *shell);
 int				get_token_type(char c);
 void			checkposition(t_word_type word_type, char *valid_command, int i);
 void			checkinput(t_input_tokenizer input);
