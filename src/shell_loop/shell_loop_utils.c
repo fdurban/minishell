@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:11:33 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/19 18:46:22 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/11 11:01:59 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	process_command_line(char *input, t_shell *shell)
 	int				segs;
 
 	segs = 0;
-	tok = tokenize(input);
+	tok = tokenize(input, shell);
 	if (!tok[0])
 	{
 		free(tok);

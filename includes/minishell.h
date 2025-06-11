@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/20 18:12:28 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/11 10:56:48 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,36 +36,5 @@
 # include "../libft/standard/libft.h"
 # include <stdio.h>
 # include <string.h>
-
-typedef enum e_state
-{
-	START,
-	WORD,
-	IN_SINGLE_QUOTE,
-	IN_DOUBLE_QUOTE,
-	PIPE,
-	REDIR,
-	SPACE_AFTER_WORD,
-	END_OF_SINGLE_QUOTE,
-	END_OF_DOUBLE_QUOTE,
-	END,
-	ERROR,
-	NUM_STATES
-}	t_state;
-
-typedef enum e_input_parse
-{
-	INPUT_PIPE,
-	INPUT_SPACE,
-	INPUT_LETTER,
-	INPUT_END,
-	INPUT_IN_SINGLE_QUOTE,
-	INPUT_IN_DOUBLE_QUOTE,
-	INPUT_REDIRECT,
-	NUM_INPUT
-}	t_input_parse;
-
-int	parse(char *readline);
-int	get_input_type(char c);
 
 #endif

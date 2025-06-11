@@ -20,11 +20,10 @@ EXE_FILES = $(EXE_DIR)/cleanup.c $(EXE_DIR)/errors.c $(EXE_DIR)/exec.c \
 LOOP_DIR  = $(SRC_DIR)/shell_loop
 LOOP_FILES = $(LOOP_DIR)/shell_loop.c $(ENV_DIR)/shell_loop_utils.c 
 
-PARSE_DIR = $(SRC_DIR)/parse
-PARSE_FILES = $(PARSE_DIR)/automats.c
-
 TOKEN_DIR = $(SRC_DIR)/tokenize
-TOKEN_FILES = $(TOKEN_DIR)/tokenize.c $(TOKEN_DIR)/tokenize_utils.c 
+TOKEN_FILES = $(TOKEN_DIR)/tokenize.c $(TOKEN_DIR)/tokenize_utils.c \
+			  $(TOKEN_DIR)/token_extraction.c $(TOKEN_DIR)/variable_expansion.c \
+			  $(TOKEN_DIR)/debug.c $(TOKEN_DIR)/token_node.c $(TOKEN_DIR)/token_handlers.c
 
 BUILTINS_DIR = $(SRC_DIR)/builtins
 BUILTINS_FILES = $(BUILTINS_DIR)/unset.c $(BUILTINS_DIR)/pwd.c $(BUILTINS_DIR)/export_print.c \
