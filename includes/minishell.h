@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/20 18:12:28 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/10 16:12:24 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "env.h"
 # include "execution.h"
 # include "shell_loop.h"
+# include "signal.h"
 # include "tokenizer.h"
 
 /* Standard libraries */

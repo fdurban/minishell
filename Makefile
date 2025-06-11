@@ -1,12 +1,16 @@
 NAME = minishell
 CC = cc
-CFLAGS  = -g -O0 -Wall -Wextra -Werror \
+CFLAGS  = -g -O0 -Wall -Wextra -Werror -I/opt/homebrew/opt/readline/include
+LDFLAGS = -L/opt/homebrew/opt/readline/lib -lreadline
 
 LIBFT_DIR = ./libft
 LIBFT_PATH = $(LIBFT_DIR)/libft.a
 
 SRC_DIR = ./src
 SRC_FILES = $(SRC_DIR)/main.c
+
+SIG_DIR  = $(SRC_DIR)/signals
+SIG_FILES = $(SIG_DIR)/signal.c
 
 ENV_DIR  = $(SRC_DIR)/env
 ENV_FILES = $(ENV_DIR)/env.c $(ENV_DIR)/env_utils.c 
@@ -40,6 +44,8 @@ PARSE_OBJ = $(PARSE_FILES:$(PARSE_DIR)/%.c=$(OBJ_DIR)/%.o)
 TOKEN_OBJ = $(TOKEN_FILES:$(TOKEN_DIR)/%.c=$(OBJ_DIR)/%.o)
 BUILTINS_OBJ = $(BUILTINS_FILES:$(BUILTINS_DIR)/%.c=$(OBJ_DIR)/%.o)
 EXE_OBJ = $(EXE_FILES:$(EXE_DIR)/%.c=$(OBJ_DIR)/%.o)
+SIG_OBJ = $(SIG_FILES:$(SIG_DIR)/%.c=$(OBJ_DIR)/%.o)
+
 
 
 all: $(OBJ_DIR) $(NAME)
@@ -47,12 +53,12 @@ all: $(OBJ_DIR) $(NAME)
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-$(NAME): $(SRC_OBJ) $(ENV_OBJ) $(LOOP_OBJ) $(PARSE_OBJ) $(EXE_OBJ) $(TOKEN_OBJ) $(BUILTINS_OBJ)
+$(NAME): $(SRC_OBJ) $(ENV_OBJ) $(LOOP_OBJ) $(PARSE_OBJ) $(EXE_OBJ) $(TOKEN_OBJ) $(BUILTINS_OBJ) $(SIG_OBJ)
 	make -C $(LIBFT_DIR)
-	$(CC) $(CFLAGS) \
-	$(SRC_OBJ) $(LOOP_OBJ) $(EXE_OBJ) $(PARSE_OBJ) $(TOKEN_OBJ) $(BUILTINS_OBJ) $(ENV_OBJ) \
-	$(LIBFT_PATH) -lreadline \
-	-o $(NAME) \
+	$(CC) $(CFLAGS) $(LDFLAGS) \
+	$(SRC_OBJ) $(LOOP_OBJ) $(EXE_OBJ) $(PARSE_OBJ) $(TOKEN_OBJ) $(BUILTINS_OBJ) $(ENV_OBJ) $(SIG_OBJ) \
+	$(LIBFT_PATH) \
+	-o $(NAME)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 		@mkdir -p $(dir $@)
@@ -74,6 +80,9 @@ $(OBJ_DIR)/%.o: $(EXE_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: $(BUILTINS_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(SIG_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 norminette:

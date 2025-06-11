@@ -1,33 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   signals.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/09 20:11:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/10 16:35:04 by igngonza         ###   ########.fr       */
+/*   Created: 2025/06/10 16:09:08 by igngonza          #+#    #+#             */
+/*   Updated: 2025/06/10 17:14:03 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
-#include "../includes/signals.h"
+#ifndef SIGNALS_H
+# define SIGNALS_H
 
-int	main(int argc, char **argv, char **envp)
+# include "minishell.h"
+# include <readline/history.h>
+# include <readline/readline.h>
+# include <signal.h>
+# include <stdio.h>
+# include <sys/ioctl.h>
+
+typedef enum e_signal
 {
-	t_shell	shell;
+	S_BASE,
+	S_HEREDOC,
+	S_HEREDOC_END,
+	S_SIGINT,
+	S_SIGINT_CMD,
+	S_CMD,
+	S_CANCEL_EXEC,
+	S_SIZE
+}		t_signal;
 
-	(void)argc;
-	(void)argv;
-	shell.exit_status = 0;
-	shell.env = copy_env(envp);
-	if (!shell.env)
-	{
-		fprintf(stderr, "Failed to copy environment\n");
-		return (1);
-	}
-	signal_init();
-	shell_loop(&shell);
-	free_env(shell.env);
-	return (0);
-}
+void	signal_init(void);
+
+#endif
