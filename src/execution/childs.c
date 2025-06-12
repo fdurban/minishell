@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_childs.c                                      :+:      :+:    :+:   */
+/*   childs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:35:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/09 11:38:37 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/11 17:59:17 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,34 +82,57 @@ static char	*get_executable_path(t_pipex *px, const char *raw)
 	return (path);
 }
 
-static void	launch_command(char **cmd, char *path, t_shell *shell)
-{
-	execve(path, cmd, shell->env->vars);
-	print_exec_error_and_exit(path);
-}
+// static void	launch_command(char **cmd, char *path, t_shell *shell)
+//{
+//	execve(path, cmd, shell->env->vars);
+//	print_exec_error_and_exit(path);
+//}
 
 void	create_child_process(t_pipex *px, t_shell *shell)
 {
-	pid_t	pid;
-	char	**cmd;
-	char	*raw;
-	char	*path;
-
-	pid = fork();
+	pid_t pid = fork();
 	if (pid < 0)
 		handle_error("fork failed");
 	px->pids[px->idx] = pid;
+
 	if (pid == 0)
 	{
+		char **cmd;
+		char *path;
+
+		/* Restore default signal handling in the child */
+		signal(SIGINT, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
+
+		/* Apply file-based redirections */
+		if (px->in_fd >= 0)
+		{
+			if (dup2(px->in_fd, STDIN_FILENO) < 0)
+				handle_error("dup2 infile");
+			close(px->in_fd);
+		}
+		if (px->out_fd >= 0)
+		{
+			if (dup2(px->out_fd, STDOUT_FILENO) < 0)
+				handle_error("dup2 outfile");
+			close(px->out_fd);
+		}
+
+		/* Pipe redirections (only if a pipeline) */
 		if (px->cmd_count > 1)
 			setup_child_redirection(px);
+
+		/* Close all pipe fds */
 		close_pipes(px);
+
+		/* Execute the command */
 		cmd = px->cmd_args[px->idx];
-		raw = cmd[0];
-		if (is_builtin(raw))
+		if (is_builtin(cmd[0]))
 			exit(exec_builtin(cmd, shell));
-		path = get_executable_path(px, raw);
-		launch_command(cmd, path, shell);
+
+		path = get_executable_path(px, cmd[0]);
+		execve(path, cmd, shell->env->vars);
+		print_exec_error_and_exit(path);
 	}
 	else
 	{
