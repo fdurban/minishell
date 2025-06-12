@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:11:33 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/11 11:01:59 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/12 12:02:09 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ void	process_command_line(char *input, t_shell *shell)
 	char			**flat;
 	char			**argv;
 	int				segs;
+	int				i;
 
 	segs = 0;
 	tok = tokenize(input, shell);
@@ -107,6 +108,19 @@ void	process_command_line(char *input, t_shell *shell)
 	if (segs == 1)
 	{
 		argv = tokens_to_argv(tok[0]);
+		if (argv && argv[0] && argv[0][0] == '\0')
+		{
+			shell->exit_status = 0;
+			i = 0;
+			while (argv[i])
+			{
+				free(argv[i]);
+				i++;
+			}
+			free(argv);
+			free(tok);
+			return ;
+		}
 		if (argv && argv[0])
 		{
 			if (strcmp(argv[0], "cd") == 0 || strcmp(argv[0], "export") == 0

@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/05 18:40:08 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/12 11:19:29 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef TOKENIZER_H
-#define TOKENIZER_H
+# define TOKENIZER_H
 # include "env.h"
 # include "minishell.h"
 
@@ -36,7 +36,7 @@ typedef enum e_word_type
 	W___END,
 	W_ERROR,
 	W_TOTAL
-}	t_word_type;
+}							t_word_type;
 
 typedef enum e_input_tokenizer
 {
@@ -48,40 +48,45 @@ typedef enum e_input_tokenizer
 	I_REDIRECT_IN,
 	I_REDIRECT_OUT,
 	I_NUM_INPUT
-}	t_input_tokenizer;
+}							t_input_tokenizer;
 
 typedef struct s_command_part
 {
 	char					*value;
 	t_word_type				type;
 	struct s_command_part	*next;
-}	t_command_part;
+}							t_command_part;
 
 typedef struct s_tokenizer_ctx
 {
-	int					i;
-	t_word_type			word_type;
-	t_word_type			previous_word_type;
-	char				*command_token;
-	t_command_part		*command_node;
-	char				*partial_token;
-	t_command_part		*lst;
-}	t_tokenizer_ctx;
+	int						i;
+	t_word_type				word_type;
+	t_word_type				previous_word_type;
+	char					*command_token;
+	t_command_part			*command_node;
+	char					*partial_token;
+	t_command_part			*lst;
+}							t_tokenizer_ctx;
 
-t_command_part	**tokenize(char *valid_command, t_env *env);
-char			*extract_token_value(char *str, const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx);
-char			*expand_token(t_command_part *word, t_env *env);
-int				get_token_type(char c);
-void			checkposition(t_word_type word_type, char *valid_command, int i);
-void			checkinput(t_input_tokenizer input);
-void			print_values(t_command_part **results);
-char			**tokens_to_argv(t_command_part *lst);
-t_command_part	*create_command_node(char *value, t_word_type type);
-void			add_command_part_to_list(t_command_part **lst, t_command_part *new);
-void			handle_token_join(t_tokenizer_ctx *ctx);
-void			handle_token_expansion(t_word_type previous_word_type, t_command_part **command_node, t_env *env);
+t_command_part				**tokenize(char *valid_command, t_shell *shell);
+char						*extract_token_value(char *str,
+								const int matrix[W_TOTAL][I_NUM_INPUT],
+								t_tokenizer_ctx *ctx);
+char						*expand_token(t_command_part *word, t_shell *shell);
+int							get_token_type(char c);
+void						checkposition(t_word_type word_type,
+								char *valid_command, int i);
+void						checkinput(t_input_tokenizer input);
+void						print_values(t_command_part **results);
+char						**tokens_to_argv(t_command_part *lst);
+t_command_part				*create_command_node(char *value, t_word_type type);
+void						add_command_part_to_list(t_command_part **lst,
+								t_command_part *new);
+void						handle_token_join(t_tokenizer_ctx *ctx);
+void						handle_token_expansion(t_word_type previous_word_type,
+								t_command_part **command_node, t_shell *shell);
 
 #endif
 
 // space //letter // end // single quote //double quote //redirect IN
-	// redirect out
+// redirect out

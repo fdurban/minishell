@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   variable_expansion.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/02 20:45:46 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/12 12:11:17 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/tokenizer.h"
 #include "../../includes/minishell.h"
+#include "../../includes/tokenizer.h"
 
 char	*append_prefix(char *result, char *word_value, int start, int end)
 {
@@ -25,29 +25,60 @@ char	*append_prefix(char *result, char *word_value, int start, int end)
 	return (tmp);
 }
 
-char	*append_variable(char *result, int *i, t_command_part *word, t_env *env)
+static int	get_var_name_length(const char *s, int start)
+{
+	int	length;
+
+	length = 0;
+	if (s[start] == '?')
+		return (1);
+	while (ft_isalnum(s[start + length]) || s[start + length] == '_')
+		length++;
+	return (length);
+}
+
+static char	*extract_var_name(const char *s, int start, int len)
+{
+	return (ft_substr(s, start, len));
+}
+
+static char	*get_var_value(const char *var_name, t_shell *shell)
+{
+	char	*env_val;
+	char	*value;
+
+	if (ft_strcmp(var_name, "?") == 0)
+		return (ft_itoa(shell->exit_status));
+	env_val = get_env_var(shell->env, var_name);
+	if (env_val != NULL)
+		value = ft_strdup(env_val);
+	else
+		value = ft_strdup("");
+	return (value);
+}
+
+char	*append_variable(char *result, int *i, t_command_part *word,
+		t_shell *shell)
 {
 	int		start;
 	int		len;
-	char	*expanded_token;
-	char	*tmp;
 	char	*var_name;
+	char	*value;
+	char	*new_result;
 
 	start = *i + 1;
-	len = 0;
-	while (ft_isalnum(word->value[start + len]) || \
-	word->value[start + len] == '_')
-		len++ ;
-	var_name = ft_substr(word->value, start, len);
-	expanded_token = get_env_var(env, var_name);
-	free(var_name);
-	tmp = ft_strjoin(result, expanded_token);
+	len = get_var_name_length(word->value, start);
+	var_name = extract_var_name(word->value, start, len);
+	value = get_var_value(var_name, shell);
+	new_result = ft_strjoin(result, value);
 	free(result);
-	*i += len + 1;
-	return (tmp);
+	free(var_name);
+	free(value);
+	*i = start + len;
+	return (new_result);
 }
 
-char	*expand_token(t_command_part *word, t_env *env)
+char	*expand_token(t_command_part *word, t_shell *shell)
 {
 	char	*result;
 	int		i;
@@ -59,10 +90,10 @@ char	*expand_token(t_command_part *word, t_env *env)
 	{
 		start = i;
 		while (word->value[i] && word->value[i] != '$')
-			i++ ;
+			i++;
 		result = append_prefix(result, word->value, start, i);
 		if (word->value[i] == '$')
-			result = append_variable(result, &i, word, env);
+			result = append_variable(result, &i, word, shell);
 		if (!result)
 			result = ft_strjoin(result, "\n");
 	}
