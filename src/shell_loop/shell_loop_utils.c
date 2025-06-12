@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:11:33 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/12 12:32:06 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/12 12:49:36 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,16 @@ char	*get_user_input(t_env *env)
 void	process_command_line(char *input, t_shell *shell)
 {
 	t_command_part	**tok;
-	char			**flat;
-	char			**argv;
-	int				segs;
 
-	tok = tokenize(input, shell->env);
+	tok = tokenize(input, shell);
 	if (!tok[0])
 	{
+		free(tok);
+		return ;
+	}
+	if (!tok[1] && tok[0]->value[0] == '\0')
+	{
+		shell->exit_status = 0;
 		free(tok);
 		return ;
 	}
