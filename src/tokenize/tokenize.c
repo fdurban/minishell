@@ -5,14 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/16 12:55:33 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/12 11:58:12 by igngonza         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/06/12 12:37:31 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-// modificar en funcion de los estados
 
 static t_word_type	get_next_word_type(const int matrix[W_TOTAL][I_NUM_INPUT],
 		char *str, int *i, t_word_type current)
@@ -34,7 +32,7 @@ static t_word_type	get_next_word_type(const int matrix[W_TOTAL][I_NUM_INPUT],
 }
 
 static void	process_token(const int matrix[W_TOTAL][I_NUM_INPUT],
-		char *valid_command, t_shell *shell, t_tokenizer_ctx *ctx)
+		char *valid_command, t_env *env, t_tokenizer_ctx *ctx)
 {
 	ctx->command_token = NULL;
 	if (ctx->word_type == W_SINGQ || ctx->word_type == W_DOUBQ
@@ -47,13 +45,13 @@ static void	process_token(const int matrix[W_TOTAL][I_NUM_INPUT],
 		ctx->command_node = create_command_node(ctx->command_token,
 				ctx->previous_word_type);
 		handle_token_expansion(ctx->previous_word_type, &ctx->command_node,
-			shell);
+			env);
 		handle_token_join(ctx);
 	}
 }
 
 t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
-		char *valid_command, t_shell *shell)
+		char *valid_command, t_env *env)
 {
 	t_tokenizer_ctx	ctx;
 
@@ -73,7 +71,7 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 			printf("Syntax error!\n");
 			break ;
 		}
-		process_token(matrix, valid_command, shell, &ctx);
+		process_token(matrix, valid_command, env, &ctx);
 		if (ctx.word_type == W_ERROR)
 		{
 			printf("Syntax Error!\n");
@@ -84,7 +82,7 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 }
 
 t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT],
-		char *valid_command, t_shell *shell)
+		char *valid_command, t_env *env)
 {
 	char			**tokens;
 	int				count;
@@ -101,14 +99,14 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT],
 	results = malloc(sizeof(t_command_part *) * (count + 1));
 	while (tokens[i])
 	{
-		results[i] = tokenize_pipe_segment(matrix, tokens[i], shell);
+		results[i] = tokenize_pipe_segment(matrix, tokens[i], env);
 		i++;
 	}
 	results[i] = NULL;
 	return (results);
 }
 
-t_command_part	**tokenize(char *valid_command, t_shell *shell)
+t_command_part	**tokenize(char *valid_command, t_env *env)
 {
 	t_command_part	**token;
 
@@ -144,10 +142,12 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 		{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ}
 		// END OF STANDARD TO SINGLE QUOTE
 	};
-	token = split_and_tokenize(matrix, valid_command, shell);
+	token = split_and_tokenize(matrix, valid_command, env);
 	// print_values(token);
 	return (token);
 }
 
+// space //letter // end // single quote //double quote //redirect IN
+// redirect out
 // space //letter // end // single quote //double quote //redirect IN
 // redirect out
