@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/06/13 13:50:32 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/13 17:11:17 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,30 +93,35 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT], char
 	state = W_START;
 	start = 0;
 	i = 0;
-	count = 0;	
+	count = 0;
+	int token_index = 0;
 	while (valid_command[i])
 	{
+		i++;
 		int input = get_token_type(valid_command[i]);
 		state = matrix[state][input];
-		i++;
+		//checkposition(state, valid_command, i);
 		if (state == W___END)
 			count++;
 	}
+	printf("El valor final de count %d\n", count);
 	i = 0;
 	tokens = malloc(sizeof(char *) * (count + 1));
-	while (state != W___END)
+	while (valid_command[i])
 	{
-		if (state == W___END)
-		{	
-			tokens[i] = ft_substr(valid_command, start, i - start);
-			printf("valor de i al encontrar end es: %d\n", i);
-			start = i + 1 ;
-		}
+		i++;
 		int input = get_token_type(valid_command[i]);
 		state = matrix[state][input];
-		i++;
 		checkposition(state, valid_command, i);
+		if (state == W___END)
+		{	
+			tokens[token_index++] = ft_substr(valid_command, start, i - start);
+			printf("valor de i al encontrar end es: %d\n", i - start);
+			start = i + 1 ;
+			state = W_START;
+		}
 	}
+	tokens[token_index] = NULL;
 	i = 0;
 	results = malloc(sizeof(t_command_part *) * (count + 1));
 	while (tokens[i])
