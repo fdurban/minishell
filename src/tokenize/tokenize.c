@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/06/13 17:11:17 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:22:38 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,11 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT], char
 		i++;
 		int input = get_token_type(valid_command[i]);
 		state = matrix[state][input];
-		//checkposition(state, valid_command, i);
+		checkposition(state, valid_command, i);
 		if (state == W___END)
 			count++;
 	}
-	printf("El valor final de count %d\n", count);
+	printf("El valor total de count es %d\n", count);
 	i = 0;
 	tokens = malloc(sizeof(char *) * (count + 1));
 	while (valid_command[i])
@@ -112,11 +112,11 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT], char
 		i++;
 		int input = get_token_type(valid_command[i]);
 		state = matrix[state][input];
-		checkposition(state, valid_command, i);
+		//checkposition(state, valid_command, i);
 		if (state == W___END)
 		{	
 			tokens[token_index++] = ft_substr(valid_command, start, i - start);
-			printf("valor de i al encontrar end es: %d\n", i - start);
+			printf("valor de i - start al encontrar end es: %d\n", i - start);
 			start = i + 1 ;
 			state = W_START;
 		}
@@ -138,21 +138,21 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 	t_command_part	**token;
 
 	const int matrix[W_TOTAL][I_NUM_INPUT] = {
-		{W_START, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},// W_START
-		{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_REDIN, W_REDOU},// W_STNDR
-		{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ},// WORD_SINGLE QUOTE
-		{W_DOUBQ, W_DOUBQ, W_ERROR, W_DOUBQ, W_EOFDQ, W_DOUBQ, W_DOUBQ},// WORD_DOUBLE QUOTE
-		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_HRDOC, W_ERROR},// REDIRECT_IN
-		{W_SARED, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDAP},// REDIRECT_OUT
-		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR},// REDIRECT_APPEND
-		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR},// HERE_DOC
-		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},// SPACE AFTER WORD
-		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR},// SPACE AFTER REDIRECT
-		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},// END OF SINGLE QUOTE
-		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},// END OF DOUBLE QUOTE
-		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU},// END OF STANDARD
-		{W_DOUBQ, W_DOUBQ, W___END, W_EOFDQ, W_EOFDQ, W_DOUBQ, W_DOUBQ},// END OF STANDARD TO DOUBLE QUOTE
-		{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ}// END OF STANDARD TO SINGLE QUOTE
+		{W_START, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W_ERROR},// W_START
+		{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_REDIN, W_REDOU, W_STNDR},// W_STNDR
+		{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ, W_SINGQ},// WORD_SINGLE QUOTE
+		{W_DOUBQ, W_DOUBQ, W_ERROR, W_DOUBQ, W_EOFDQ, W_DOUBQ, W_DOUBQ, W_DOUBQ},// WORD_DOUBLE QUOTE
+		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_HRDOC, W_ERROR, W_ERROR},// REDIRECT_IN
+		{W_SARED, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDAP, W_ERROR},// REDIRECT_OUT
+		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR, W_ERROR},// REDIRECT_APPEND
+		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR, W_ERROR},// HERE_DOC
+		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},// SPACE AFTER WORD
+		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR, W_ERROR},// SPACE AFTER REDIRECT
+		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},// END OF SINGLE QUOTE
+		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},// END OF DOUBLE QUOTE
+		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},// END OF STANDARD
+		{W_DOUBQ, W_DOUBQ, W___END, W_EOFDQ, W_EOFDQ, W_DOUBQ, W_DOUBQ, W_ERROR},// END OF STANDARD TO DOUBLE QUOTE
+		{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ, W_ERROR}// END OF STANDARD TO SINGLE QUOTE
 	};
 	token = split_and_tokenize(matrix, valid_command, shell);
 	print_values(token);
@@ -160,5 +160,4 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 }
 
 // space //letter // end // single quote //double quote //redirect IN// redirect out
-// space //letter // end // single quote //double quote //redirect IN
-// redirect out
+// space //letter // end // single quote //double quote //redirect IN// redirect out

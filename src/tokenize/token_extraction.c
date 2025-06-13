@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_extraction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:30:02 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/13 01:31:54 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:12:36 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,10 @@ int	get_token_type(char c)
 		return (I_REDIRECT_OUT);
 	else if (c == '"')
 		return (I_IN_DOUBLE_QUOTE);
-	else if (c == '\0' || c == '|')
+	else if (c == '\0')
 		return (I_END);
+	else if (c == '|')
+		return (I_PIPE);
 	else if (c >= 33 && c <= 126)
 		return (I_LETTER);
 	else
