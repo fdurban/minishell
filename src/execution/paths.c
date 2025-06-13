@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exec_paths.c                                       :+:      :+:    :+:   */
+/*   paths.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:27:23 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/09 11:29:20 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/13 09:18:03 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,11 +59,15 @@ void	parse_paths(t_pipex *pipex, t_shell *shell)
 	int		i;
 
 	path_env = get_env_var(shell->env, "PATH");
-	if (!path_env)
-		handle_error("Error: PATH not found");
-	paths = ft_split(path_env, ':');
-	if (!paths)
-		handle_error("Error: Failed to split PATH");
+	if (path_env)
+		paths = ft_split(path_env, ':');
+	else
+	{
+		paths = malloc(sizeof(char *));
+		if (!paths)
+			handle_error("malloc paths fallback");
+		paths[0] = NULL;
+	}
 	pipex->cmd_paths = malloc(sizeof(char *) * (pipex->cmd_count + 1));
 	if (!pipex->cmd_paths)
 		handle_error("Error: Memory allocation failed for cmd_paths");

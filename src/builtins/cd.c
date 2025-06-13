@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/14 13:08:07 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/13 09:42:40 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,14 +107,26 @@ static int	change_directory(const char *arg, t_shell *shell)
 
 int	builtin_cd(char **argv, t_shell *shell)
 {
-	int	i;
+	char	*home;
 
-	i = 1;
-	while (argv[i])
+	if (!argv[1])
 	{
-		if (!change_directory(argv[i], shell))
+		home = get_env_var(shell->env, "HOME");
+		if (!home)
+		{
+			ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
+			shell->exit_status = 1;
 			return (1);
-		i++;
+		}
+		if (!change_directory(home, shell))
+		{
+			free(home);
+			return (1);
+		}
+		free(home);
+		return (0);
 	}
-	return (0);
+	if (change_directory(argv[1], shell))
+		return (0);
+	return (1);
 }

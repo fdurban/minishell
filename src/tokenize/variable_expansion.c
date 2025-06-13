@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/12 12:11:17 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/13 08:49:16 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,20 +62,29 @@ char	*append_variable(char *result, int *i, t_command_part *word,
 {
 	int		start;
 	int		len;
+	char	*new_result;
 	char	*var_name;
 	char	*value;
-	char	*new_result;
 
 	start = *i + 1;
 	len = get_var_name_length(word->value, start);
-	var_name = extract_var_name(word->value, start, len);
-	value = get_var_value(var_name, shell);
-	new_result = ft_strjoin(result, value);
-	free(result);
-	free(var_name);
-	free(value);
-	*i = start + len;
-	return (new_result);
+	if (len == 0)
+	{
+		new_result = ft_strjoin(result, "$");
+		free(result);
+		*i = start;
+		return (new_result);
+	}
+	{
+		var_name = extract_var_name(word->value, start, len);
+		value = get_var_value(var_name, shell);
+		new_result = ft_strjoin(result, value);
+		free(result);
+		free(var_name);
+		free(value);
+		*i = start + len;
+		return (new_result);
+	}
 }
 
 char	*expand_token(t_command_part *word, t_shell *shell)
