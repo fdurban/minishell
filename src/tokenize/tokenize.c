@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/06/13 02:04:31 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/13 13:50:32 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,21 +81,43 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 	return (ctx.lst);
 }
 
-t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT],
-		char *valid_command, t_shell *shell)
+t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT], char *valid_command, t_shell *shell)
 {
 	char			**tokens;
+	int				state;
 	int				count;
 	int				i;
 	t_command_part	**results;
-
-	count = 0;
+	int				start;
+	
+	state = W_START;
+	start = 0;
 	i = 0;
-	tokens = ft_split(valid_command, '|');
-	if (!tokens)
-		return (NULL);
-	while (tokens[count])
-		count++;
+	count = 0;	
+	while (valid_command[i])
+	{
+		int input = get_token_type(valid_command[i]);
+		state = matrix[state][input];
+		i++;
+		if (state == W___END)
+			count++;
+	}
+	i = 0;
+	tokens = malloc(sizeof(char *) * (count + 1));
+	while (state != W___END)
+	{
+		if (state == W___END)
+		{	
+			tokens[i] = ft_substr(valid_command, start, i - start);
+			printf("valor de i al encontrar end es: %d\n", i);
+			start = i + 1 ;
+		}
+		int input = get_token_type(valid_command[i]);
+		state = matrix[state][input];
+		i++;
+		checkposition(state, valid_command, i);
+	}
+	i = 0;
 	results = malloc(sizeof(t_command_part *) * (count + 1));
 	while (tokens[i])
 	{
@@ -128,11 +150,10 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 		{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ}// END OF STANDARD TO SINGLE QUOTE
 	};
 	token = split_and_tokenize(matrix, valid_command, shell);
-	// print_values(token);
+	print_values(token);
 	return (token);
 }
 
-// space //letter // end // single quote //double quote //redirect IN
-// redirect out
+// space //letter // end // single quote //double quote //redirect IN// redirect out
 // space //letter // end // single quote //double quote //redirect IN
 // redirect out
