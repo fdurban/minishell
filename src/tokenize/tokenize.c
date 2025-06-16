@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/06/16 01:16:48 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/16 14:46:43 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,53 +81,62 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 	return (ctx.lst);
 }
 
-t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT], char *valid_command, t_shell *shell)
+int	count_tokens(const char *cmd, const int matrix[W_TOTAL][I_NUM_INPUT])
 {
-	char			**tokens;
-	int				state;
-	int				count;
-	int				i;
-	t_command_part	**results;
-	int				start;
-	
-	state = W_START;
-	start = 0;
-	i = 0;
-	count = 1;
-	int token_index = 0;
-	while (valid_command[i])
+	int i = 0;
+	int state = W_START;
+	int count = 1;
+
+	while (cmd[i])
 	{
-		//printf("El valor de i es de %d\n", i);
-		int input = get_token_type(valid_command[i]);
+		int input = get_token_type(cmd[i]);
 		state = matrix[state][input];
-		//checkposition(state, valid_command, i);
 		i++;
 		if (state == W___END)
 			count++;
 	}
-	printf("El valor total de count es %d\n", count);
-	i = 0;
-	tokens = malloc(sizeof(char *) * (count + 1));
-	while (valid_command[i])
-	{
-		int input = get_token_type(valid_command[i]);
-		state = matrix[state][input];
-		checkposition(state, valid_command, i);
-		i++;
-		if (state == W___END || valid_command[i] == '\0')
-		{	
-			tokens[token_index++] = ft_substr(valid_command, start, i - start);
+	return count;
+}
 
+
+void	fill_segments(char **segments, const char *cmd, const int matrix[W_TOTAL][I_NUM_INPUT])
+{
+	int i = 0;
+	int state = W_START;
+	int start = 0;
+	int segment_index = 0;
+
+	while (cmd[i])
+	{
+		int input = get_token_type(cmd[i]);
+		state = matrix[state][input];
+		i++;
+		if (state == W___END || cmd[i] == '\0')
+		{
+			segments[segment_index++] = ft_substr(cmd, start, i - start);
 			start = i;
 			state = W_START;
 		}
 	}
-	tokens[token_index] = NULL;
+	segments[segment_index] = NULL;
+}
+
+
+t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT], char *valid_command, t_shell *shell)
+{
+	char			**segments;
+	int				count;
+	t_command_part	**results;
+	int				i;
+
+	count = count_tokens(valid_command, matrix);
+	segments = malloc(sizeof(char *) * (count + 1));
+	fill_segments(segments, valid_command, matrix);
 	i = 0;
 	results = malloc(sizeof(t_command_part *) * (count + 1));
-	while (tokens[i])
+	while (segments[i])
 	{
-		results[i] = tokenize_pipe_segment(matrix, tokens[i], shell);
+		results[i] = tokenize_pipe_segment(matrix, segments[i], shell);
 		i++;
 	}
 	results[i] = NULL;
