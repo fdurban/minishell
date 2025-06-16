@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/06/13 18:22:38 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/16 01:16:48 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,14 +93,15 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT], char
 	state = W_START;
 	start = 0;
 	i = 0;
-	count = 0;
+	count = 1;
 	int token_index = 0;
 	while (valid_command[i])
 	{
-		i++;
+		//printf("El valor de i es de %d\n", i);
 		int input = get_token_type(valid_command[i]);
 		state = matrix[state][input];
-		checkposition(state, valid_command, i);
+		//checkposition(state, valid_command, i);
+		i++;
 		if (state == W___END)
 			count++;
 	}
@@ -109,15 +110,15 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT], char
 	tokens = malloc(sizeof(char *) * (count + 1));
 	while (valid_command[i])
 	{
-		i++;
 		int input = get_token_type(valid_command[i]);
 		state = matrix[state][input];
-		//checkposition(state, valid_command, i);
-		if (state == W___END)
+		checkposition(state, valid_command, i);
+		i++;
+		if (state == W___END || valid_command[i] == '\0')
 		{	
 			tokens[token_index++] = ft_substr(valid_command, start, i - start);
-			printf("valor de i - start al encontrar end es: %d\n", i - start);
-			start = i + 1 ;
+
+			start = i;
 			state = W_START;
 		}
 	}
@@ -139,7 +140,7 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 
 	const int matrix[W_TOTAL][I_NUM_INPUT] = {
 		{W_START, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W_ERROR},// W_START
-		{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_REDIN, W_REDOU, W_STNDR},// W_STNDR
+		{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_REDIN, W_REDOU, W___END},// W_STNDR
 		{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ, W_SINGQ},// WORD_SINGLE QUOTE
 		{W_DOUBQ, W_DOUBQ, W_ERROR, W_DOUBQ, W_EOFDQ, W_DOUBQ, W_DOUBQ, W_DOUBQ},// WORD_DOUBLE QUOTE
 		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_HRDOC, W_ERROR, W_ERROR},// REDIRECT_IN
@@ -159,5 +160,5 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 	return (token);
 }
 
-// space //letter // end // single quote //double quote //redirect IN// redirect out
+// space //letter // end // single quote //double quote //redirect IN// redirect out/pipe
 // space //letter // end // single quote //double quote //redirect IN// redirect out
