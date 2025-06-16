@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/06/16 14:46:43 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/16 15:07:15 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,20 @@ static void	process_token(const int matrix[W_TOTAL][I_NUM_INPUT],
 	}
 }
 
+void	free_command_part_list(t_command_part *lst)
+{
+	t_command_part *tmp;
+
+	while (lst)
+	{
+		tmp = lst->next;
+		free(lst->value);
+		free(lst);
+		lst = tmp;
+	}
+}
+
+
 t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 		char *valid_command, t_shell *shell)
 {
@@ -69,12 +83,14 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 		if (ctx.word_type == W_ERROR)
 		{
 			printf("Syntax error!\n");
+			free_command_part_list(ctx.lst);
 			break ;
 		}
 		process_token(matrix, valid_command, shell, &ctx);
 		if (ctx.word_type == W_ERROR)
 		{
 			printf("Syntax Error!\n");
+			free_command_part_list(ctx.lst);
 			break ;
 		}
 	}
@@ -98,7 +114,6 @@ int	count_tokens(const char *cmd, const int matrix[W_TOTAL][I_NUM_INPUT])
 	return count;
 }
 
-
 void	fill_segments(char **segments, const char *cmd, const int matrix[W_TOTAL][I_NUM_INPUT])
 {
 	int i = 0;
@@ -120,7 +135,6 @@ void	fill_segments(char **segments, const char *cmd, const int matrix[W_TOTAL][I
 	}
 	segments[segment_index] = NULL;
 }
-
 
 t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT], char *valid_command, t_shell *shell)
 {
@@ -165,9 +179,8 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 		{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ, W_ERROR}// END OF STANDARD TO SINGLE QUOTE
 	};
 	token = split_and_tokenize(matrix, valid_command, shell);
-	print_values(token);
+	//print_values(token);
 	return (token);
 }
 
 // space //letter // end // single quote //double quote //redirect IN// redirect out/pipe
-// space //letter // end // single quote //double quote //redirect IN// redirect out
