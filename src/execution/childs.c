@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:35:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/16 10:33:53 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/16 10:48:32 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,26 +25,6 @@ void	execute_child_command(t_pipex *pipex, t_env *envp)
 		exit(EXIT_FAILURE);
 	}
 }
-
-// static void	setup_child_redirection(t_pipex *px)
-//{
-//	int	idx;
-
-//	idx = px->idx;
-//	if (idx == 0)
-//	{
-//		dup2(px->pipes[1], STDOUT_FILENO);
-//	}
-//	else if (idx == px->cmd_count - 1)
-//	{
-//		dup2(px->pipes[2 * (idx - 1)], STDIN_FILENO);
-//	}
-//	else
-//	{
-//		dup2(px->pipes[2 * (idx - 1)], STDIN_FILENO);
-//		dup2(px->pipes[2 * idx + 1], STDOUT_FILENO);
-//	}
-//}
 
 static void	cleanup_parent_pipes(t_pipex *px)
 {
@@ -82,75 +62,118 @@ static char	*get_executable_path(t_pipex *px, const char *raw)
 	return (path);
 }
 
-// static void	launch_command(char **cmd, char *path, t_shell *shell)
-//{
-//	execve(path, cmd, shell->env->vars);
-//	print_exec_error_and_exit(path);
-//}
+void	setup_child_signals(void)
+{
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+}
+
+void	setup_child_pipes(t_pipex *px)
+{
+	int	rd;
+	int	wr;
+
+	if (px->cmd_count > 1)
+	{
+		if (px->idx > 0)
+		{
+			rd = px->pipes[2 * (px->idx - 1)];
+			dup2(rd, STDIN_FILENO);
+		}
+		if (px->idx < px->cmd_count - 1)
+		{
+			wr = px->pipes[2 * px->idx + 1];
+			dup2(wr, STDOUT_FILENO);
+		}
+	}
+}
+
+static int	open_redirection_fd(t_command_part *node, t_pipex *px)
+{
+	char	*path;
+	int		fd;
+
+	path = node->next->value;
+	fd = -1;
+	if (node->type == W_REDIN)
+		fd = open(path, O_RDONLY);
+	else if (node->type == W_REDOU)
+		fd = open(path, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	else if (node->type == W_REDAP)
+		fd = open(path, O_CREAT | O_WRONLY | O_APPEND, 0644);
+	else if (node->type == W_HRDOC)
+	{
+		handle_heredoc(path, px);
+		fd = open(".heredoc_tmp", O_RDONLY);
+	}
+	return (fd);
+}
+
+static void	apply_fd_redirection(int fd, int type)
+{
+	if (type == W_REDIN || type == W_HRDOC)
+		dup2(fd, STDIN_FILENO);
+	else
+		dup2(fd, STDOUT_FILENO);
+}
+
+void	handle_redirections(t_pipex *px)
+{
+	t_command_part	*node;
+	int				fd;
+
+	node = px->cmd_segs[px->idx];
+	while (node)
+	{
+		if ((node->type == W_REDIN || node->type == W_REDOU
+				|| node->type == W_REDAP || node->type == W_HRDOC)
+			&& node->next)
+		{
+			fd = open_redirection_fd(node, px);
+			if (fd < 0)
+				exit(1);
+			apply_fd_redirection(fd, node->type);
+			close(fd);
+			node = node->next; // skip filename
+		}
+		node = node->next;
+	}
+}
+
+void	execute_command(t_pipex *px, t_shell *shell)
+{
+	char	**cmd;
+	char	*path;
+
+	cmd = px->cmd_args[px->idx];
+	if (!cmd || !cmd[0])
+		exit(1);
+	if (is_builtin(cmd[0]))
+		exit(exec_builtin(cmd, shell));
+	path = get_executable_path(px, cmd[0]);
+	execve(path, cmd, shell->env->vars);
+	print_exec_error_and_exit(path);
+}
 
 void	create_child_process(t_pipex *px, t_shell *shell)
 {
-	pid_t pid = fork();
+	pid_t	pid;
+
+	pid = fork();
 	if (pid < 0)
 		handle_error("fork failed");
 	px->pids[px->idx] = pid;
-
 	if (pid == 0)
 	{
-		/* 0) default signals */
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		if (px->cmd_count > 1)
-		{
-			if (px->idx > 0)
-			{
-				int rd = px->pipes[2 * (px->idx - 1)];
-				dup2(rd, STDIN_FILENO);
-			}
-			if (px->idx < px->cmd_count - 1)
-			{
-				int wr = px->pipes[2 * px->idx + 1];
-				dup2(wr, STDOUT_FILENO);
-			}
-		}
-		t_command_part *node = px->cmd_segs[px->idx];
-		while (node)
-		{
-			if ((node->type == W_REDIN || node->type == W_REDOU
-					|| node->type == W_REDAP || node->type == W_HRDOC)
-				&& node->next)
-			{
-				char *path = node->next->value;
-				int fd;
-				if (node->type == W_REDIN)
-					fd = open(path, O_RDONLY);
-				else if (node->type == W_REDOU)
-					fd = open(path, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-				else if (node->type == W_REDAP)
-					fd = open(path, O_CREAT | O_WRONLY | O_APPEND, 0644);
-				else
-				{
-					handle_heredoc(path, px);
-					fd = open(".heredoc_tmp", O_RDONLY);
-				}
-				if (fd < 0)
-					exit(1);
-				if (node->type == W_REDIN || node->type == W_HRDOC)
-					dup2(fd, STDIN_FILENO);
-				else
-					dup2(fd, STDOUT_FILENO);
-				close(fd);
-				node = node->next;
-			}
-			node = node->next;
-		}
+		setup_child_signals();
+		setup_child_pipes(px);
+		handle_redirections(px);
+		if (px->redir_failures && px->redir_failures[px->idx])
+			exit(1);
+		if (!px->cmd_args || !px->cmd_args[px->idx])
+			exit(1);
 		close_pipes(px);
-		char **cmd = px->cmd_args[px->idx];
-		if (is_builtin(cmd[0]))
-			exit(exec_builtin(cmd, shell));
-		char *path = get_executable_path(px, cmd[0]);
-		execve(path, cmd, shell->env->vars);
-		print_exec_error_and_exit(path);
+		execute_command(px, shell);
 	}
 	else
 	{
