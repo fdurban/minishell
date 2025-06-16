@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:10:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/11 17:42:49 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/16 10:33:23 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,6 +190,7 @@ int	execution(t_command_part **cmd_segs, t_shell *shell)
 	px.out_fd = -1;
 	px.here_doc = 0;
 	parse_cmds_from_tokens(&px, cmd_segs);
+	px.cmd_segs = cmd_segs;
 	if (px.cmd_count == 0)
 	{
 		cleanup_pipex(&px);

@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:35:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/11 17:59:17 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/16 10:33:53 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,25 +26,25 @@ void	execute_child_command(t_pipex *pipex, t_env *envp)
 	}
 }
 
-static void	setup_child_redirection(t_pipex *px)
-{
-	int	idx;
+// static void	setup_child_redirection(t_pipex *px)
+//{
+//	int	idx;
 
-	idx = px->idx;
-	if (idx == 0)
-	{
-		dup2(px->pipes[1], STDOUT_FILENO);
-	}
-	else if (idx == px->cmd_count - 1)
-	{
-		dup2(px->pipes[2 * (idx - 1)], STDIN_FILENO);
-	}
-	else
-	{
-		dup2(px->pipes[2 * (idx - 1)], STDIN_FILENO);
-		dup2(px->pipes[2 * idx + 1], STDOUT_FILENO);
-	}
-}
+//	idx = px->idx;
+//	if (idx == 0)
+//	{
+//		dup2(px->pipes[1], STDOUT_FILENO);
+//	}
+//	else if (idx == px->cmd_count - 1)
+//	{
+//		dup2(px->pipes[2 * (idx - 1)], STDIN_FILENO);
+//	}
+//	else
+//	{
+//		dup2(px->pipes[2 * (idx - 1)], STDIN_FILENO);
+//		dup2(px->pipes[2 * idx + 1], STDOUT_FILENO);
+//	}
+//}
 
 static void	cleanup_parent_pipes(t_pipex *px)
 {
@@ -97,40 +97,58 @@ void	create_child_process(t_pipex *px, t_shell *shell)
 
 	if (pid == 0)
 	{
-		char **cmd;
-		char *path;
-
-		/* Restore default signal handling in the child */
+		/* 0) default signals */
 		signal(SIGINT, SIG_DFL);
 		signal(SIGQUIT, SIG_DFL);
-
-		/* Apply file-based redirections */
-		if (px->in_fd >= 0)
-		{
-			if (dup2(px->in_fd, STDIN_FILENO) < 0)
-				handle_error("dup2 infile");
-			close(px->in_fd);
-		}
-		if (px->out_fd >= 0)
-		{
-			if (dup2(px->out_fd, STDOUT_FILENO) < 0)
-				handle_error("dup2 outfile");
-			close(px->out_fd);
-		}
-
-		/* Pipe redirections (only if a pipeline) */
 		if (px->cmd_count > 1)
-			setup_child_redirection(px);
-
-		/* Close all pipe fds */
+		{
+			if (px->idx > 0)
+			{
+				int rd = px->pipes[2 * (px->idx - 1)];
+				dup2(rd, STDIN_FILENO);
+			}
+			if (px->idx < px->cmd_count - 1)
+			{
+				int wr = px->pipes[2 * px->idx + 1];
+				dup2(wr, STDOUT_FILENO);
+			}
+		}
+		t_command_part *node = px->cmd_segs[px->idx];
+		while (node)
+		{
+			if ((node->type == W_REDIN || node->type == W_REDOU
+					|| node->type == W_REDAP || node->type == W_HRDOC)
+				&& node->next)
+			{
+				char *path = node->next->value;
+				int fd;
+				if (node->type == W_REDIN)
+					fd = open(path, O_RDONLY);
+				else if (node->type == W_REDOU)
+					fd = open(path, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+				else if (node->type == W_REDAP)
+					fd = open(path, O_CREAT | O_WRONLY | O_APPEND, 0644);
+				else
+				{
+					handle_heredoc(path, px);
+					fd = open(".heredoc_tmp", O_RDONLY);
+				}
+				if (fd < 0)
+					exit(1);
+				if (node->type == W_REDIN || node->type == W_HRDOC)
+					dup2(fd, STDIN_FILENO);
+				else
+					dup2(fd, STDOUT_FILENO);
+				close(fd);
+				node = node->next;
+			}
+			node = node->next;
+		}
 		close_pipes(px);
-
-		/* Execute the command */
-		cmd = px->cmd_args[px->idx];
+		char **cmd = px->cmd_args[px->idx];
 		if (is_builtin(cmd[0]))
 			exit(exec_builtin(cmd, shell));
-
-		path = get_executable_path(px, cmd[0]);
+		char *path = get_executable_path(px, cmd[0]);
 		execve(path, cmd, shell->env->vars);
 		print_exec_error_and_exit(path);
 	}
