@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 12:32:46 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/13 16:11:13 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/16 16:14:50 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	is_builtin(const char *cmd)
 int	exec_builtin(char **args, t_shell *shell)
 {
 	int i;
+	int status;
 	t_builtin *builtins;
 
 	i = 0;
@@ -48,7 +49,12 @@ int	exec_builtin(char **args, t_shell *shell)
 	while (builtins[i].name)
 	{
 		if (strcmp(builtins[i].name, args[0]) == 0)
-			return (builtins[i].func(args, shell));
+		{
+			status = builtins[i].func(args, shell);
+			if (status != 0)
+				shell->exit_status = status; // Preserve non-zero exit status
+			return (status);
+		}
 		i++;
 	}
 	return (-1);

@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:10:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/16 10:57:10 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/16 13:01:48 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,9 +147,9 @@ static void	process_segment(t_pipex *px, t_command_part *seg, int i)
 		{
 			if (p->type == W_REDIN && open_input_file(p->next->value) < 0)
 			{
-				px->cmd_args[i] = NULL;
-				px->cmd_count = i;
-				return ;
+				px->redir_failures[i] = 1; // Mark redirection failure
+				p = p->next;
+				continue ; // Skip this redirection but continue processing
 			}
 			p = p->next;
 		}
@@ -183,6 +183,10 @@ int	execution(t_command_part **cmd_segs, t_shell *shell)
 	px.in_fd = -1;
 	px.out_fd = -1;
 	px.here_doc = 0;
+	px.redir_failures = malloc(sizeof(int) * px.cmd_count);
+	if (!px.redir_failures)
+		handle_error("malloc redir_failures");
+	ft_bzero(px.redir_failures, sizeof(int) * px.cmd_count);
 	parse_cmds_from_tokens(&px, cmd_segs);
 	px.cmd_segs = cmd_segs;
 	if (px.cmd_count == 0)

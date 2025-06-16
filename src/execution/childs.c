@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:35:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/16 10:48:32 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/16 16:23:27 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,6 +152,8 @@ void	execute_command(t_pipex *px, t_shell *shell)
 		exit(exec_builtin(cmd, shell));
 	path = get_executable_path(px, cmd[0]);
 	execve(path, cmd, shell->env->vars);
+	fprintf(stderr, "Debug: execve failed with errno=%d\n", errno);
+		// Debug information
 	print_exec_error_and_exit(path);
 }
 
