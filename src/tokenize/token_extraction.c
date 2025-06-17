@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:30:02 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/13 18:12:36 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:51:19 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ int	get_token_type(char c)
 		return (0);
 }
 
-void	skip_space_or_sared(char *str, const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
+void	skip_space_or_sared(char *str, const int matrix[W_TOTAL][I_NUM_INPUT],
+t_tokenizer_ctx *ctx)
 {
 	while (ctx->word_type == W_SPACE || ctx->word_type == W_SARED)
 	{
@@ -43,7 +44,8 @@ void	skip_space_or_sared(char *str, const int matrix[W_TOTAL][I_NUM_INPUT], t_to
 	}
 }
 
-char	*extract_redirect(char *str, const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
+char	*extract_redirect(char *str, const int matrix[W_TOTAL][I_NUM_INPUT],
+t_tokenizer_ctx *ctx)
 {
 	int		start;
 	char	*result;
@@ -66,29 +68,31 @@ char	*extract_redirect(char *str, const int matrix[W_TOTAL][I_NUM_INPUT], t_toke
 	}
 	else
 		return (NULL);
-	}
+}
 
-char	*extract_word(char *str, const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
+char	*extract_word(char *str, const int matrix[W_TOTAL][I_NUM_INPUT],
+t_tokenizer_ctx *ctx)
 {
 	int		start;
 	char	*result;
-	
+
 	start = ctx->i;
-	if ((ctx->word_type == W_DOUBQ || ctx->word_type == W_SINGQ) && (ctx->previous_word_type == W_EOSTD || ctx->previous_word_type == W_EOSTS))
+	if ((ctx->word_type == W_DOUBQ || ctx->word_type == W_SINGQ)
+		&& (ctx->previous_word_type == W_EOSTD || ctx->previous_word_type == W_EOSTS))
 		start = ctx->i - 1;
 	while (ctx->word_type == W_DOUBQ || ctx->word_type == W_SINGQ || ctx->word_type == W_STNDR)
 	{
 		ctx->previous_word_type = ctx->word_type;
-	ctx->i++;
-	ctx->word_type = matrix[ctx->word_type][get_token_type(str[ctx->i])];
+		ctx->i++;
+		ctx->word_type = matrix[ctx->word_type][get_token_type(str[ctx->i])];
 	}
 	if (ctx->word_type == W_EOFDQ || ctx->word_type == W_EOFSQ)
 		result = ft_substr(str, start + 1, ctx->i - start - 1);
-		else
+	else
 		result = ft_substr(str, start, ctx->i - start);
-		if (ctx->word_type == W_EOFDQ || ctx->word_type == W_EOFSQ)
-		{
-			ctx->i++;
+	if (ctx->word_type == W_EOFDQ || ctx->word_type == W_EOFSQ)
+	{
+		ctx->i++;
 		ctx->word_type = matrix[ctx->word_type][get_token_type(str[ctx->i])];
 	}
 	if (!result)
@@ -96,20 +100,21 @@ char	*extract_word(char *str, const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenize
 	return (result);
 }
 
-char	*extract_token_value(char *str, const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
+char	*extract_token_value(char *str, const int matrix[W_TOTAL][I_NUM_INPUT],
+t_tokenizer_ctx *ctx)
 {
 	char	*result;
-	
+
 	result = NULL;
 	skip_space_or_sared(str, matrix, ctx);
 	result = extract_redirect(str, matrix, ctx);
 	if (result)
-	return (result);
+		return (result);
 	result = extract_word(str, matrix, ctx);
 	if (result)
-	return (result);
+		return (result);
 	else
-	return (NULL);
+		return (NULL);
 }
 
 // printf("---------------(extract append o hrdoc)------------------------\n");

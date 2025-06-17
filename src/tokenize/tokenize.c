@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/06/17 13:15:11 by fdurban-         ###   ########.fr       */
+/*   Created: 2025/06/17 15:08:26 by fdurban-          #+#    #+#             */
+/*   Updated: 2025/06/17 16:13:25 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static void	process_token(const int matrix[W_TOTAL][I_NUM_INPUT],
 
 void	free_command_part_list(t_command_part *lst)
 {
-	t_command_part *tmp;
+	t_command_part	*tmp;
 
 	while (lst)
 	{
@@ -62,7 +62,6 @@ void	free_command_part_list(t_command_part *lst)
 		lst = tmp;
 	}
 }
-
 
 t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 		char *valid_command, t_shell *shell)
@@ -97,33 +96,43 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 	return (ctx.lst);
 }
 
-int	count_tokens(const char *cmd, const int matrix[W_TOTAL][I_NUM_INPUT])
+int	count_segments(const char *cmd, const int matrix[W_TOTAL][I_NUM_INPUT])
 {
-	int i = 0;
-	int state = W_START;
-	int count = 1;
+	int	i;
+	int	state;
+	int	count;
+	int	input;
 
+	state = W_START;
+	count = 1;
+	i = 0;
 	while (cmd[i])
 	{
-		int input = get_token_type(cmd[i]);
+		input = get_token_type(cmd[i]);
 		state = matrix[state][input];
 		i++;
 		if (state == W___END)
 			count++;
 	}
-	return count;
+	return (count);
 }
 
-void	fill_segments(char **segments, const char *cmd, const int matrix[W_TOTAL][I_NUM_INPUT])
+void	fill_segments(char **segments, const char *cmd,
+const int matrix[W_TOTAL][I_NUM_INPUT])
 {
-	int i = 0;
-	int state = W_START;
-	int start = 0;
-	int segment_index = 0;
+	int	i;
+	int	state;
+	int	start;
+	int	segment_index;
+	int	input;
 
+	i = 0;
+	state = W_START;
+	start = 0;
+	segment_index = 0;
 	while (cmd[i])
 	{
-		int input = get_token_type(cmd[i]);
+		input = get_token_type(cmd[i]);
 		state = matrix[state][input];
 		i++;
 		if (state == W___END || cmd[i] == '\0')
@@ -136,14 +145,15 @@ void	fill_segments(char **segments, const char *cmd, const int matrix[W_TOTAL][I
 	segments[segment_index] = NULL;
 }
 
-t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT], char *valid_command, t_shell *shell)
+t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT],
+char *valid_command, t_shell *shell)
 {
 	char			**segments;
 	int				count;
 	t_command_part	**results;
 	int				i;
 
-	count = count_tokens(valid_command, matrix);
+	count = count_segments(valid_command, matrix);
 	segments = malloc(sizeof(char *) * (count + 1));
 	fill_segments(segments, valid_command, matrix);
 	i = 0;
@@ -160,27 +170,24 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT], char
 t_command_part	**tokenize(char *valid_command, t_shell *shell)
 {
 	t_command_part	**token;
-
-	const int matrix[W_TOTAL][I_NUM_INPUT] = {
-		{W_START, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W_ERROR},// W_START
-		{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_REDIN, W_REDOU, W___END},// W_STNDR
-		{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ, W_SINGQ},// WORD_SINGLE QUOTE
-		{W_DOUBQ, W_DOUBQ, W_ERROR, W_DOUBQ, W_EOFDQ, W_DOUBQ, W_DOUBQ, W_DOUBQ},// WORD_DOUBLE QUOTE
-		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_HRDOC, W_ERROR, W_ERROR},// REDIRECT_IN
-		{W_SARED, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDAP, W_ERROR},// REDIRECT_OUT
-		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR, W_ERROR},// REDIRECT_APPEND
-		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR, W_ERROR},// HERE_DOC
-		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},// SPACE AFTER WORD
-		{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR, W_ERROR},// SPACE AFTER REDIRECT
-		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},// END OF SINGLE QUOTE
-		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},// END OF DOUBLE QUOTE
-		{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},// END OF STANDARD
-		{W_DOUBQ, W_DOUBQ, W___END, W_EOFDQ, W_EOFDQ, W_DOUBQ, W_DOUBQ, W_ERROR},// END OF STANDARD TO DOUBLE QUOTE
-		{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ, W_ERROR}// END OF STANDARD TO SINGLE QUOTE
+	const int		matrix[W_TOTAL][I_NUM_INPUT] = {
+	{W_START, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W_ERROR},
+	{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_REDIN, W_REDOU, W___END},
+	{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ, W_SINGQ},
+	{W_DOUBQ, W_DOUBQ, W_ERROR, W_DOUBQ, W_EOFDQ, W_DOUBQ, W_DOUBQ, W_DOUBQ},
+	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_HRDOC, W_ERROR, W_ERROR},
+	{W_SARED, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDAP, W_ERROR},
+	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR, W_ERROR},
+	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR, W_ERROR},
+	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},
+	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR, W_ERROR},
+	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},
+	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},
+	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},
+	{W_DOUBQ, W_DOUBQ, W___END, W_EOFDQ, W_EOFDQ, W_DOUBQ, W_DOUBQ, W_ERROR},
+	{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ, W_ERROR}
 	};
+
 	token = split_and_tokenize(matrix, valid_command, shell);
-	//print_values(token);
 	return (token);
 }
-
-// space //letter // end // single quote //double quote //redirect IN// redirect out/pipe
