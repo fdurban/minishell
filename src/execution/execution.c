@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:10:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/17 12:54:18 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/17 15:26:51 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,16 +85,6 @@ static int	count_command_segments(t_command_part **segs)
 	return (count);
 }
 
-// static int	open_input_file(char *filename)
-//{
-//	int	fd;
-
-//	fd = open(filename, O_RDONLY);
-//	if (fd < 0)
-//		fprintf(stderr, "mini: %s: No such file or directory\n", filename);
-//	return (fd);
-//}
-
 static int	count_args(t_command_part *p)
 {
 	int	count;
@@ -126,7 +116,8 @@ static char	**build_argv(t_command_part *p, int argc)
 			p = p->next->next;
 			continue ;
 		}
-		if (p->type == W_STNDR || p->type == W_SINGQ || p->type == W_DOUBQ)
+		if ((p->type == W_STNDR || p->type == W_SINGQ || p->type == W_DOUBQ)
+			&& p->value && p->value[0] != '\0')
 			argv[j++] = p->value;
 		p = p->next;
 	}
@@ -142,7 +133,6 @@ static void	process_segment(t_pipex *px, t_command_part *seg, int i)
 	p = seg;
 	while (p)
 	{
-		// Skip redirection tokens and their targets (no opening here!)
 		if ((p->type == W_REDIN || p->type == W_REDOU || p->type == W_REDAP
 				|| p->type == W_HRDOC) && p->next)
 			p = p->next;
@@ -155,15 +145,33 @@ static void	process_segment(t_pipex *px, t_command_part *seg, int i)
 static void	parse_cmds_from_tokens(t_pipex *px, t_command_part **segs)
 {
 	int	cmd_count;
+	int	i;
+	int	j;
 
 	cmd_count = count_command_segments(segs);
-	px->cmd_count = cmd_count;
 	px->cmd_args = malloc(sizeof(char **) * (cmd_count + 1));
-	if (!px->cmd_args)
-		handle_error("malloc cmd_args");
-	for (int i = 0; i < cmd_count; i++)
-		process_segment(px, segs[i], i);
-	px->cmd_args[cmd_count] = NULL;
+	px->cmd_segs = malloc(sizeof(t_command_part *) * (cmd_count + 1));
+	if (!px->cmd_args || !px->cmd_segs)
+		handle_error("malloc cmd_args or cmd_segs");
+	i = 0;
+	j = 0;
+	while (i < cmd_count)
+	{
+		process_segment(px, segs[i], j);
+		if (px->cmd_args[j] && px->cmd_args[j][0])
+		{
+			px->cmd_segs[j] = segs[i];
+			j++;
+		}
+		else
+		{
+			free(px->cmd_args[j]);
+			px->cmd_args[j] = NULL;
+		}
+		i++;
+	}
+	px->cmd_args[j] = NULL;
+	px->cmd_count = j;
 }
 
 int	execution(t_command_part **cmd_segs, t_shell *shell)
@@ -185,8 +193,8 @@ int	execution(t_command_part **cmd_segs, t_shell *shell)
 	if (px.cmd_count == 0)
 	{
 		cleanup_pipex(&px);
-		shell->exit_status = 1;
-		return (1);
+		shell->exit_status = 0;
+		return (0);
 	}
 	parse_paths(&px, shell);
 	if (px.cmd_count == 1 && is_builtin(px.cmd_args[0][0]))

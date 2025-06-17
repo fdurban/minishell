@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:37:15 by fernando          #+#    #+#             */
-/*   Updated: 2025/06/12 12:42:08 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/17 14:54:27 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,16 @@ void	handle_token_join(t_tokenizer_ctx *ctx)
 			|| ctx->previous_word_type == W_REDOU || ctx->word_type == W___END)
 		&& !ctx->partial_token)
 	{
-		add_command_part_to_list(&ctx->lst, ctx->command_node);
-		ctx->command_node = NULL;
+		if (ctx->command_node && ctx->command_node->value[0] == '\0')
+		// Handle empty tokens
+		{
+			add_command_part_to_list(&ctx->lst, ctx->command_node);
+			ctx->command_node = NULL;
+		}
+		else
+		{
+			add_command_part_to_list(&ctx->lst, ctx->command_node);
+			ctx->command_node = NULL;
+		}
 	}
 }

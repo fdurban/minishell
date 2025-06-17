@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/13 08:49:16 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/17 14:41:16 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ char	*expand_token(t_command_part *word, t_shell *shell)
 	char	*result;
 	int		i;
 	int		start;
+			char *temp_result;
 
 	i = 0;
 	result = ft_strdup("");
@@ -102,9 +103,16 @@ char	*expand_token(t_command_part *word, t_shell *shell)
 			i++;
 		result = append_prefix(result, word->value, start, i);
 		if (word->value[i] == '$')
-			result = append_variable(result, &i, word, shell);
-		if (!result)
-			result = ft_strjoin(result, "\n");
+		{
+			temp_result = append_variable(result, &i, word, shell);
+			if (temp_result == NULL)
+			{
+				free(result);
+				result = ft_strdup("");
+			}
+			else
+				result = temp_result;
+		}
 	}
 	return (result);
 }
