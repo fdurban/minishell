@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:35:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/16 16:23:27 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/17 13:32:11 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ static int	open_redirection_fd(t_command_part *node, t_pipex *px)
 		handle_heredoc(path, px);
 		fd = open(".heredoc_tmp", O_RDONLY);
 	}
-	return (fd);
+	return (fd); // no exit here!
 }
 
 static void	apply_fd_redirection(int fd, int type)
@@ -131,10 +131,13 @@ void	handle_redirections(t_pipex *px)
 		{
 			fd = open_redirection_fd(node, px);
 			if (fd < 0)
-				exit(1);
+			{
+				handle_redirection_error(node->next->value);
+				exit(1); // ✅ abort immediately
+			}
 			apply_fd_redirection(fd, node->type);
 			close(fd);
-			node = node->next; // skip filename
+			node = node->next;
 		}
 		node = node->next;
 	}
@@ -152,8 +155,6 @@ void	execute_command(t_pipex *px, t_shell *shell)
 		exit(exec_builtin(cmd, shell));
 	path = get_executable_path(px, cmd[0]);
 	execve(path, cmd, shell->env->vars);
-	fprintf(stderr, "Debug: execve failed with errno=%d\n", errno);
-		// Debug information
 	print_exec_error_and_exit(path);
 }
 

@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/16 12:19:54 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/17 12:25:09 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,6 @@ void							parse_cmds(t_pipex *pipex, char **tokens);
 void							cleanup_pipex(t_pipex *pipex);
 void							safe_close_fd(int *fd);
 void							apply_redirections(t_pipex *px);
+void							handle_redirection_error(char *file);
 
 #endif
