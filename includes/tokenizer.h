@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/12 12:42:58 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/13 18:04:00 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef enum e_input_tokenizer
 	I_IN_DOUBLE_QUOTE,
 	I_REDIRECT_IN,
 	I_REDIRECT_OUT,
+	I_PIPE,
 	I_NUM_INPUT
 }							t_input_tokenizer;
 
