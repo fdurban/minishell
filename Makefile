@@ -50,12 +50,12 @@ $(NAME): $(SRC_OBJ) $(ENV_OBJ) $(LOOP_OBJ) $(PARSE_OBJ) $(EXE_OBJ) $(TOKEN_OBJ) 
 	make -C $(LIBFT_DIR)
 	$(CC) $(CFLAGS) \
 	$(SRC_OBJ) $(LOOP_OBJ) $(EXE_OBJ) $(PARSE_OBJ) $(TOKEN_OBJ) $(BUILTINS_OBJ) $(ENV_OBJ) \
-	$(LIBFT_PATH) -lreadline \
-	-o $(NAME) \
+	$(LIBFT_PATH) \
+	-o $(NAME) -lreadline
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-		@mkdir -p $(dir $@)
-		$(CC) $(CFLAGS) -c $< -o $@
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJ_DIR)/%.o: $(ENV_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
