@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:08:26 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/17 16:13:25 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/18 12:55:25 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 				ctx.word_type);
 		if (ctx.word_type == W_ERROR)
 		{
-			printf("Syntax error!\n");
 			free_command_part_list(ctx.lst);
+			printf("Syntax error!\n");
 			break ;
 		}
 		process_token(matrix, valid_command, shell, &ctx);
