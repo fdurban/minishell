@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:25:55 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/19 13:39:04 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/19 13:56:11 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,6 +164,7 @@ char *valid_command, t_shell *shell)
 		i++;
 	}
 	results[i] = NULL;
+	i = 0;
 	return (results);
 }
 
