@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:35:48 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/19 10:25:55 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/19 10:41:19 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,13 +44,9 @@ void	print_exec_error_and_exit(char *cmd)
 			print_error_and_exit(cmd, strerror(errno), 126);
 	}
 	else if (S_ISDIR(st.st_mode))
-	{
 		print_error_and_exit(cmd, "Is a directory", 126);
-	}
 	else if (!S_ISREG(st.st_mode))
-	{
 		print_error_and_exit(cmd, "command not found", 127);
-	}
 	else if (access(cmd, X_OK) == -1)
 	{
 		if (errno == EACCES)
@@ -59,9 +55,7 @@ void	print_exec_error_and_exit(char *cmd)
 			print_error_and_exit(cmd, strerror(errno), 126);
 	}
 	else
-	{
 		print_error_and_exit(cmd, "execution failed", 126);
-	}
 }
 
 void	handle_redirection_error(char *file)

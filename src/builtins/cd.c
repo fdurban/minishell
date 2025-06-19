@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/13 09:42:40 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/19 11:02:27 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,11 @@ int	builtin_cd(char **argv, t_shell *shell)
 {
 	char	*home;
 
+	if (argv[1] && argv[2])
+	{
+		ft_putendl_fd("cd: too many arguments", 2);
+		return (1);
+	}
 	if (!argv[1])
 	{
 		home = get_env_var(shell->env, "HOME");

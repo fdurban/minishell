@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:11:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/13 16:36:43 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/19 10:44:56 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,5 @@ int	main(int argc, char **argv, char **envp)
 	}
 	shell_loop(&shell);
 	free_env(shell.env);
-	return (0);
+	return (shell.exit_status);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/11 11:04:25 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/19 17:06:31 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,12 @@ char	*get_current_pwd(t_env *env)
 	home = get_env_var(env, "HOME");
 	pwd = get_env_var(env, "PWD");
 	currentpwd = NULL;
-	if (home && pwd)
+	if (home && pwd && ft_strncmp(home, pwd, ft_strlen(home)) == 0)
 		currentpwd = ft_strjoin("~", pwd + ft_strlen(home));
+	else if (pwd)
+		currentpwd = ft_strdup(pwd);
+	else
+		currentpwd = ft_strdup("");
 	return (currentpwd);
 }
 
@@ -52,6 +56,8 @@ char	*build_user_prompt(t_env *env, char *hostname, char *currentpwd)
 	char	*prompt;
 
 	username = get_env_var(env, "USER");
+	if (!username)
+		username = "";
 	tmp = ft_strjoin(username, "@");
 	tmp2 = ft_strjoin(tmp, hostname);
 	free(tmp);

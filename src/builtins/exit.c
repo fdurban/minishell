@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 16:06:57 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/14 12:39:05 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/19 11:03:37 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	builtin_exit(char **args, t_shell *shell)
 		ft_putstr_fd("exit: ", 2);
 		ft_putstr_fd(args[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
-		exit(255);
+		exit(2);
 	}
 	if (args[2])
 	{

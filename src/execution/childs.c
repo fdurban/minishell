@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:35:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/19 10:19:58 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/19 17:01:34 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,12 @@ void	execute_command(t_pipex *px, t_shell *shell)
 
 	cmd = px->cmd_args[px->idx];
 	if (!cmd || !cmd[0])
-		exit(1);
+	{
+		if (cmd && cmd[1])
+			cmd++;
+		else
+			exit(1);
+	}
 	if (is_builtin(cmd[0]))
 		exit(exec_builtin(cmd, shell));
 	path = get_executable_path(px, cmd[0]);

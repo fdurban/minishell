@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:10:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/19 10:25:00 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/19 16:59:59 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,8 @@ static char	**build_argv(t_command_part *p, int argc)
 			p = p->next->next;
 			continue ;
 		}
-		if (p->type == W_STNDR || p->type == W_SINGQ || p->type == W_DOUBQ)
+		if ((p->type == W_STNDR || p->type == W_SINGQ || p->type == W_DOUBQ)
+			&& p->value && p->value[0] != '\0')
 			argv[j++] = p->value;
 		p = p->next;
 	}
@@ -144,15 +145,33 @@ static void	process_segment(t_pipex *px, t_command_part *seg, int i)
 static void	parse_cmds_from_tokens(t_pipex *px, t_command_part **segs)
 {
 	int	cmd_count;
+	int	i;
+	int	j;
 
 	cmd_count = count_command_segments(segs);
-	px->cmd_count = cmd_count;
+	i = 0;
+	j = 0;
 	px->cmd_args = malloc(sizeof(char **) * (cmd_count + 1));
-	if (!px->cmd_args)
-		handle_error("malloc cmd_args");
-	for (int i = 0; i < cmd_count; i++)
-		process_segment(px, segs[i], i);
-	px->cmd_args[cmd_count] = NULL;
+	px->cmd_segs = malloc(sizeof(t_command_part *) * (cmd_count + 1));
+	if (!px->cmd_args || !px->cmd_segs)
+		handle_error("malloc cmd_args or cmd_segs");
+	while (i < cmd_count)
+	{
+		process_segment(px, segs[i], j);
+		if (px->cmd_args[j] && px->cmd_args[j][0])
+		{
+			px->cmd_segs[j] = segs[i];
+			j++;
+		}
+		else
+		{
+			free(px->cmd_args[j]);
+			px->cmd_args[j] = NULL;
+		}
+		i++;
+	}
+	px->cmd_args[j] = NULL;
+	px->cmd_count = j;
 }
 
 int	execution(t_command_part **cmd_segs, t_shell *shell)
@@ -160,6 +179,8 @@ int	execution(t_command_part **cmd_segs, t_shell *shell)
 	t_pipex	px;
 	pid_t	last_pid;
 	int		status;
+	int		saved_stdout;
+	int		saved_stdin;
 
 	ft_bzero(&px, sizeof(px));
 	px.in_fd = -1;
@@ -170,12 +191,23 @@ int	execution(t_command_part **cmd_segs, t_shell *shell)
 	if (px.cmd_count == 0)
 	{
 		cleanup_pipex(&px);
-		shell->exit_status = 1;
-		return (1);
+		shell->exit_status = 0;
+		return (0);
 	}
 	parse_paths(&px, shell);
 	if (px.cmd_count == 1 && is_builtin(px.cmd_args[0][0]))
-		return (exec_builtin(px.cmd_args[0], shell));
+	{
+		saved_stdout = dup(STDOUT_FILENO);
+		saved_stdin = dup(STDIN_FILENO);
+		handle_redirections(&px);
+		shell->exit_status = exec_builtin(px.cmd_args[0], shell);
+		dup2(saved_stdout, STDOUT_FILENO);
+		dup2(saved_stdin, STDIN_FILENO);
+		close(saved_stdout);
+		close(saved_stdin);
+		cleanup_pipex(&px);
+		return (shell->exit_status);
+	}
 	last_pid = spawn_pipeline(&px, shell);
 	status = collect_status(last_pid);
 	cleanup_pipex(&px);
