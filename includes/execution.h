@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/19 11:46:08 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/19 18:50:41 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,6 @@ int								execution(t_command_part **cmd_segs,
 									t_shell *shell);
 
 void							*ft_bzero(void *s, size_t n);
-void							init_files(char **tokens, int tokens_length,
-									t_pipex *pipex);
-void							get_infile(char **argv, t_pipex *pipex);
-void							get_outfile(char *argv, t_pipex *pipex);
 void							create_pipes(t_pipex *pipex);
 void							close_pipes(t_pipex *pipex);
 
@@ -69,8 +65,6 @@ void							execute_child_command(t_pipex *pipex,
 									t_env *envp);
 int								ft_strcmp(const char *s1, const char *s2);
 
-int								check_and_set_heredoc(char *arg,
-									t_pipex *pipex);
 int								create_heredoc_file(void);
 void							process_heredoc_input(char *limiter, int fd);
 void							finalize_heredoc(t_pipex *pipex);
@@ -84,7 +78,6 @@ void							create_child_process(t_pipex *pipex,
 void							parent_free(t_pipex *pipex);
 
 void							handle_error(const char *message);
-int								handle_msg(char *err);
 void							print_error_and_exit(char *cmd, char *msg,
 									int code);
 void							print_exec_error_and_exit(char *cmd);
@@ -94,5 +87,6 @@ void							cleanup_pipex(t_pipex *pipex);
 void							safe_close_fd(int *fd);
 void							handle_redirections(t_pipex *px);
 void							handle_redirection_error(char *file);
+void							init_signal_handlers(void);
 
 #endif
