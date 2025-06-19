@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:35:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/16 10:48:32 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/19 10:19:58 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,10 +131,13 @@ void	handle_redirections(t_pipex *px)
 		{
 			fd = open_redirection_fd(node, px);
 			if (fd < 0)
+			{
+				handle_redirection_error(node->next->value);
 				exit(1);
+			}
 			apply_fd_redirection(fd, node->type);
 			close(fd);
-			node = node->next; // skip filename
+			node = node->next;
 		}
 		node = node->next;
 	}

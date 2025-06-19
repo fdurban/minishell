@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:10:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/16 10:57:10 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/19 10:25:00 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,16 +85,6 @@ static int	count_command_segments(t_command_part **segs)
 	return (count);
 }
 
-static int	open_input_file(char *filename)
-{
-	int	fd;
-
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-		fprintf(stderr, "mini: %s: No such file or directory\n", filename);
-	return (fd);
-}
-
 static int	count_args(t_command_part *p)
 {
 	int	count;
@@ -144,15 +134,7 @@ static void	process_segment(t_pipex *px, t_command_part *seg, int i)
 	{
 		if ((p->type == W_REDIN || p->type == W_REDOU || p->type == W_REDAP
 				|| p->type == W_HRDOC) && p->next)
-		{
-			if (p->type == W_REDIN && open_input_file(p->next->value) < 0)
-			{
-				px->cmd_args[i] = NULL;
-				px->cmd_count = i;
-				return ;
-			}
 			p = p->next;
-		}
 		p = p->next;
 	}
 	argc = count_args(seg);
