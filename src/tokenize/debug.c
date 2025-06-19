@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 19:48:26 by fernando          #+#    #+#             */
-/*   Updated: 2025/06/11 12:36:45 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/19 13:07:14 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ void	checkposition(t_word_type word_type, char *valid_command, int i)
 	if (word_type == W_REDAP)
 		printf("word_type REDAP and i value is : %d\n", i);
 	if (word_type == W_HRDOC)
-		printf("word_type HRDOC (valor %d) and i value is : %d\n", word_type,
-			i);
+		printf("word_type HRDOC (valor %d) and i value is : %d\n", word_type, i);
 	if (word_type == W_SPACE)
 		printf("word_type SPACE AFTER WORD and i value is : %d\n", i);
 	if (word_type == W_SARED)
