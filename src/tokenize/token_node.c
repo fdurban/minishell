@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_node.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 19:32:26 by fernando          #+#    #+#             */
-/*   Updated: 2025/06/04 17:57:56 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/20 15:46:43 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ t_command_part	*create_command_node(char *value, t_word_type type)
 	if (!type)
 		printf("There is no type\n");
 	new = malloc(sizeof(t_command_part));
-	new->value = ft_strdup(value);
+	new->value = value;
 	new->type = type;
 	new->next = NULL;
 	return (new);

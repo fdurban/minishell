@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handlers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:37:15 by fernando          #+#    #+#             */
-/*   Updated: 2025/06/12 12:42:08 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/20 15:46:54 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,6 @@ void	handle_token_join(t_tokenizer_ctx *ctx)
 		joined_node = create_command_node(ctx->partial_token,
 				ctx->previous_word_type);
 		add_command_part_to_list(&ctx->lst, joined_node);
-		free(ctx->partial_token);
 		ctx->partial_token = NULL;
 	}
 	else if ((ctx->previous_word_type == W_REDAP

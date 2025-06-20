@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/19 12:47:16 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/20 14:12:51 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ void						add_command_part_to_list(t_command_part **lst,
 void						handle_token_join(t_tokenizer_ctx *ctx);
 void						handle_token_expansion(t_word_type previous_word_type,
 								t_command_part **command_node, t_shell *shell);
+void						free_command_part_array(t_command_part **arr);
 
 #endif
 
