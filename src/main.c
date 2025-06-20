@@ -6,12 +6,11 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:11:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/20 09:48:57 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/20 12:57:28 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-#include <editline/readline.h>
 
 int	main(int argc, char **argv, char **envp)
 {

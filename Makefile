@@ -1,6 +1,17 @@
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S),Linux)
+	READLINE_INCLUDE =
+	READLINE_LIB     = -lreadline
+else ifeq ($(UNAME_S),Darwin)  # macOS
+	READLINE_INCLUDE = -I/opt/homebrew/opt/readline/include
+	READLINE_LIB     = -L/opt/homebrew/opt/readline/lib -lreadline
+endif
+
+
 NAME = minishell
 CC = cc
-CFLAGS  = -g -O0 -Wall -Wextra -Werror \
+CFLAGS  = -g -O0 -Wall -Wextra -Werror $(READLINE_INCLUDE)
 
 LIBFT_DIR = ./libft
 LIBFT_PATH = $(LIBFT_DIR)/libft.a
@@ -50,8 +61,8 @@ $(NAME): $(SRC_OBJ) $(ENV_OBJ) $(LOOP_OBJ) $(PARSE_OBJ) $(EXE_OBJ) $(TOKEN_OBJ) 
 	make -C $(LIBFT_DIR)
 	$(CC) $(CFLAGS) \
 	$(SRC_OBJ) $(LOOP_OBJ) $(EXE_OBJ) $(PARSE_OBJ) $(TOKEN_OBJ) $(BUILTINS_OBJ) $(ENV_OBJ) \
-	$(LIBFT_PATH) -lreadline \
-	-o $(NAME) \
+	$(LIBFT_PATH) $(READLINE_LIB) \
+	-o $(NAME)
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 		@mkdir -p $(dir $@)
