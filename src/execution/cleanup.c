@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:21:47 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/09 12:15:13 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/20 09:42:40 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,6 @@ void	cleanup_pipex(t_pipex *pipex)
 		return ;
 	cleanup_heredoc(pipex);
 	close_all_pipes(pipex);
+	free_command_parts(pipex->cmd_segs);
 	parent_free(pipex);
 }
