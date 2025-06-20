@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:11:33 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/19 11:06:54 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/20 19:06:13 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,5 +33,6 @@ void	process_command_line(char *input, t_shell *shell)
 	if (!tok)
 		return ;
 	shell->exit_status = execution(tok, shell);
+	free_command_part_array(tok);
 	free(tok);
 }
