@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/17 15:08:26 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/18 12:55:25 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/18 19:54:00 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ static void	process_token(const int matrix[W_TOTAL][I_NUM_INPUT],
 			shell);
 		handle_token_join(ctx);
 	}
+
 }
 
 void	free_command_part_list(t_command_part *lst)
@@ -189,5 +190,6 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 	};
 
 	token = split_and_tokenize(matrix, valid_command, shell);
+	//print_values(token);
 	return (token);
 }

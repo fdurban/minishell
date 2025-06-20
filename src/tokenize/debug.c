@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/07 19:48:26 by fernando          #+#    #+#             */
-/*   Updated: 2025/06/16 15:03:52 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/18 19:46:24 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,22 +72,26 @@ void	checkinput(t_input_tokenizer input)
 		printf("INPUT_TOKEN_END\n");
 }
 
-void	print_values(t_command_part **results)
+void print_values(t_command_part **list_array)
 {
-	printf("Commands:\n");
-	for (int j = 0; results[j]; j++)
+	int i = 0;
+	while (list_array[i])
 	{
-		t_command_part *tmp = results[j];
-		printf("Comando #%d:\n", j);
-		if (!results[j] || results)
+		printf("Comando #%d:\n", i);
+		t_command_part *tmp = list_array[i];
+		if (!tmp)
 		{
 			printf("Nothing to print\n");
-			return ;
+			continue;
 		}
 		while (tmp)
 		{
-			printf("  Valor: %s, Tipo: %d\n", tmp->value, tmp->type);
+			if (tmp->value)
+				printf("  Token: %s with value %d\n", tmp->value, tmp->type);
+			else
+				printf("  (null token)\n");
 			tmp = tmp->next;
 		}
+		i++;
 	}
 }
