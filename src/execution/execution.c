@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:10:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/20 17:07:09 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/22 03:06:00 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,8 +186,10 @@ int	execution(t_command_part **cmd_segs, t_shell *shell)
 	px.in_fd = -1;
 	px.out_fd = -1;
 	px.here_doc = 0;
+	printf("AAAAAAAAAAAAAAAA\n");
 	parse_cmds_from_tokens(&px, cmd_segs);
 	px.cmd_segs = cmd_segs;
+	//free_command_part_array(cmd_segs);
 	if (px.cmd_count == 0)
 	{
 		cleanup_pipex(&px);
@@ -208,10 +210,10 @@ int	execution(t_command_part **cmd_segs, t_shell *shell)
 		cleanup_pipex(&px);
 		return (shell->exit_status);
 	}
+	print_values(cmd_segs);
 	last_pid = spawn_pipeline(&px, shell);
 	status = collect_status(last_pid);
 	cleanup_pipex(&px);
 	shell->exit_status = status;
-	free_command_part_array(cmd_segs);
 	return (status);
 }

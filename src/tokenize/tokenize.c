@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:25:55 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/20 19:15:26 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/22 01:53:16 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	free_command_part_list(t_command_part *lst)
 	while (lst)
 	{
 		tmp = lst->next;
-		printf("Valor que se va a liberar %s\n", lst->value);
 		free(lst->value);
 		free(lst);
 		lst = tmp;
