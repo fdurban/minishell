@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:21:57 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/20 13:01:32 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 11:32:03 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,13 @@
 
 static void	free_string_array(char **array)
 {
+	int	i;
+
+	i = 0;
 	if (!array)
 		return ;
+	while (array[i])
+		free(array[i++]);
 	free(array);
 }
 
