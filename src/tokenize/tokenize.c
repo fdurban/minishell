@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:25:55 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/19 18:42:18 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 10:12:17 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,15 @@ static void	process_token(const int matrix[W_TOTAL][I_NUM_INPUT],
 		|| ctx->word_type == W_STNDR || ctx->word_type == W_SARED
 		|| ctx->word_type == W_SPACE || ctx->word_type == W_REDIN
 		|| ctx->word_type == W_REDOU)
+	{
 		ctx->command_token = extract_token_value(valid_command, matrix, ctx);
+	}
 	if (ctx->command_token)
 	{
 		ctx->command_node = create_command_node(ctx->command_token,
 				ctx->previous_word_type);
+		free(ctx->command_token);
+		ctx->command_token = NULL;
 		handle_token_expansion(ctx->previous_word_type, &ctx->command_node,
 			shell);
 		handle_token_join(ctx);
@@ -164,6 +168,10 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT],
 		i++;
 	}
 	results[i] = NULL;
+	i = 0;
+	while (segments[i])
+		free(segments[i++]);
+	free(segments);
 	return (results);
 }
 

@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:35:48 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/19 10:41:19 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 10:05:09 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ void	print_error_and_exit(char *cmd, char *msg, int code)
 	ft_putstr_fd(cmd, 2);
 	ft_putstr_fd(": ", 2);
 	ft_putendl_fd(msg, 2);
+	free(cmd);
 	exit(code);
 }
 
