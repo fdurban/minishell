@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 11:42:16 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/12 18:09:44 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 18:02:49 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	builtin_pwd(char **args, t_shell *shell)
 {
-	int length;
-	int i;
-	char *pwd;
+	int		length;
+	int		i;
+	char	*pwd;
 
 	(void)args;
 	i = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/19 12:47:16 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/23 17:58:15 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,3 @@ void						handle_token_expansion(t_word_type previous_word_type,
 								t_command_part **command_node, t_shell *shell);
 
 #endif
-
-// space //letter // end // single quote //double quote //redirect IN
-// redirect out

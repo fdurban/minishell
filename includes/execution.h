@@ -6,12 +6,12 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/23 13:50:53 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 17:57:40 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef EXECUTION_H
+# define EXECUTION_H
 
 # include "builtins.h"
 # include "tokenizer.h"
@@ -30,7 +30,7 @@
 # define ERR_CMD "Command not found: "
 # define ERR_HEREDOC "here_doc"
 
-typedef int						pid_t;
+typedef int						t_pid;
 typedef struct s_command_part	t_command_part;
 typedef struct s_pipex
 {
@@ -45,8 +45,8 @@ typedef struct s_pipex
 	int							pipe_count;
 	int							*pipes;
 	int							idx;
-	pid_t						pid;
-	pid_t						*pids;
+	t_pid						pid;
+	t_pid						*pids;
 	t_command_part				**cmd_segs;
 }								t_pipex;
 

@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/19 11:02:27 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 16:23:24 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,11 +124,7 @@ int	builtin_cd(char **argv, t_shell *shell)
 			return (1);
 		}
 		if (!change_directory(home, shell))
-		{
-			free(home);
 			return (1);
-		}
-		free(home);
 		return (0);
 	}
 	if (change_directory(argv[1], shell))

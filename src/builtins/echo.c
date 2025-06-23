@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 12:29:56 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/11 16:21:43 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 17:59:48 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 int	builtin_echo(char **args, t_shell *shell)
 {
-	int newline;
-	int i;
+	int	newline;
+	int	i;
 
 	i = 1;
 	newline = 1;
@@ -25,7 +25,6 @@ int	builtin_echo(char **args, t_shell *shell)
 		newline = 0;
 		i++;
 	}
-
 	while (args[i])
 	{
 		ft_putstr_fd(args[i], STDOUT_FILENO);

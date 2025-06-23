@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 11:52:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/12 18:09:36 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 18:03:29 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,8 @@ static void	print_single_exported_env(char *var)
 
 void	print_exported_env(t_env *env)
 {
-	int i;
-	char **sorted;
+	int		i;
+	char	**sorted;
 
 	sorted = get_sorted_env(env);
 	if (sorted == NULL)

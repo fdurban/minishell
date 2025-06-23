@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 16:06:57 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/19 11:03:37 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 18:03:22 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static int	is_numeric(const char *str)
 
 int	builtin_exit(char **args, t_shell *shell)
 {
-	int exit_code;
+	int	exit_code;
 
 	ft_putstr_fd("exit\n", 1);
 	if (!args[1])
