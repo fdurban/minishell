@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:10:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/19 16:59:59 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 11:55:50 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ static char	**build_argv(t_command_part *p, int argc)
 		}
 		if ((p->type == W_STNDR || p->type == W_SINGQ || p->type == W_DOUBQ)
 			&& p->value && p->value[0] != '\0')
-			argv[j++] = p->value;
+			argv[j++] = ft_strdup(p->value);
 		p = p->next;
 	}
 	argv[j] = NULL;

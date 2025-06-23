@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:21:57 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/23 11:32:03 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 11:54:08 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,32 @@ void	close_pipes(t_pipex *pipex)
 		safe_close_fd(&pipex->pipes[i]);
 		i++;
 	}
+}
+
+void	free_token_list(t_command_part *node)
+{
+	t_command_part	*tmp;
+
+	while (node)
+	{
+		tmp = node->next;
+		free(node->value);
+		free(node);
+		node = tmp;
+	}
+}
+
+void	free_token_matrix(t_command_part **matrix)
+{
+	int	i;
+
+	i = 0;
+	if (!matrix)
+		return ;
+	while (matrix[i])
+	{
+		free_token_list(matrix[i]);
+		i++;
+	}
+	free(matrix);
 }
