@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/23 13:50:53 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 18:22:47 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,10 @@ void							execute_child_command(t_pipex *pipex,
 int								ft_strcmp(const char *s1, const char *s2);
 
 int								create_heredoc_file(void);
-void							process_heredoc_input(char *limiter, int fd);
+char							*create_heredoc_filename(void);
+void							process_heredoc_input(char *limiter, int type, int fd, t_shell *shell);
 void							finalize_heredoc(t_pipex *pipex);
-void							handle_heredoc(char *limiter, t_pipex *pipex);
+void							handle_heredoc(char *limiter, int type, t_pipex *pipex, t_shell *shell);
 
 void							parse_cmds(t_pipex *pipex, char **argv);
 void							parse_paths(t_pipex *pipex, t_shell *shell);
@@ -85,7 +86,7 @@ char							*join_path_cmd(char *dir, char *cmd);
 void							parse_cmds(t_pipex *pipex, char **tokens);
 void							cleanup_pipex(t_pipex *pipex);
 void							safe_close_fd(int *fd);
-void							handle_redirections(t_pipex *px);
+void							handle_redirections(t_pipex *px, t_shell *shell);
 void							handle_redirection_error(char *file);
 void							init_signal_handlers(void);
 void							free_token_matrix(t_command_part **matrix);

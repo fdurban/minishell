@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/19 12:47:16 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/23 17:16:20 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ t_command_part				**tokenize(char *valid_command, t_shell *shell);
 char						*extract_token_value(char *str,
 								const int matrix[W_TOTAL][I_NUM_INPUT],
 								t_tokenizer_ctx *ctx);
-char						*expand_token(t_command_part *word, t_shell *shell);
+char						*expand_token(char *word, t_shell *shell);
 int							get_token_type(char c);
 void						checkposition(t_word_type word_type,
 								char *valid_command, int i);

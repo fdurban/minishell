@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handlers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:37:15 by fernando          #+#    #+#             */
-/*   Updated: 2025/06/23 10:29:42 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 17:17:25 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	handle_token_expansion(t_word_type previous_word_type,
 
 	if (previous_word_type == W_STNDR || previous_word_type == W_DOUBQ)
 	{
-		expanded = expand_token(*command_node, shell);
+		expanded = expand_token((*command_node)->value, shell);
 		free((*command_node)->value);
 		(*command_node)->value = expanded;
 	}

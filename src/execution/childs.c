@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   childs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:35:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/19 17:01:34 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 18:23:10 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,13 +88,17 @@ void	setup_child_pipes(t_pipex *px)
 	}
 }
 
-static int	open_redirection_fd(t_command_part *node, t_pipex *px)
+static int	open_redirection_fd(t_command_part *node, t_pipex *px, t_shell *shell)
 {
 	char	*path;
 	int		fd;
+	int		path_type;
+	char	*here_doc_tmp;
 
 	path = node->next->value;
+	path_type = node->next->type;
 	fd = -1;
+	here_doc_tmp = create_heredoc_filename();
 	if (node->type == W_REDIN)
 		fd = open(path, O_RDONLY);
 	else if (node->type == W_REDOU)
@@ -103,8 +107,8 @@ static int	open_redirection_fd(t_command_part *node, t_pipex *px)
 		fd = open(path, O_CREAT | O_WRONLY | O_APPEND, 0644);
 	else if (node->type == W_HRDOC)
 	{
-		handle_heredoc(path, px);
-		fd = open(".heredoc_tmp", O_RDONLY);
+		handle_heredoc(path, path_type, px, shell);
+		fd = open(here_doc_tmp, O_RDONLY);
 	}
 	return (fd);
 }
@@ -117,7 +121,7 @@ static void	apply_fd_redirection(int fd, int type)
 		dup2(fd, STDOUT_FILENO);
 }
 
-void	handle_redirections(t_pipex *px)
+void	handle_redirections(t_pipex *px, t_shell *shell)
 {
 	t_command_part	*node;
 	int				fd;
@@ -129,7 +133,7 @@ void	handle_redirections(t_pipex *px)
 				|| node->type == W_REDAP || node->type == W_HRDOC)
 			&& node->next)
 		{
-			fd = open_redirection_fd(node, px);
+			fd = open_redirection_fd(node, px, shell);
 			if (fd < 0)
 			{
 				handle_redirection_error(node->next->value);
@@ -175,7 +179,7 @@ void	create_child_process(t_pipex *px, t_shell *shell)
 	{
 		setup_child_signals();
 		setup_child_pipes(px);
-		handle_redirections(px);
+		handle_redirections(px, shell);
 		if (px->redir_failures && px->redir_failures[px->idx])
 			exit(1);
 		if (!px->cmd_args || !px->cmd_args[px->idx])
