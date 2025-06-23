@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:21:57 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/23 11:54:08 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/23 13:50:47 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,11 @@ void	parent_free(t_pipex *pipex)
 		free(pipex->pipes);
 		pipex->pipes = NULL;
 	}
+	if (pipex->cmd_segs)
+	{
+		free(pipex->cmd_segs);
+		pipex->cmd_segs = NULL;
+	}
 }
 
 void	close_pipes(t_pipex *pipex)
@@ -80,7 +85,8 @@ void	free_token_list(t_command_part *node)
 	while (node)
 	{
 		tmp = node->next;
-		free(node->value);
+		if (node->value)
+			free(node->value);
 		free(node);
 		node = tmp;
 	}
