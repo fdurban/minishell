@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 09:51:04 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 12:32:27 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,6 @@
 # include <stdio.h>
 # include <string.h>
 
-extern int	g_in_prompt;
+extern volatile sig_atomic_t	g_signal_state;
 
 #endif

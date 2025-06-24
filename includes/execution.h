@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 11:22:55 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 12:47:23 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ void							print_error_and_exit(char *cmd, char *msg,
 									int code);
 void							print_exec_error_and_exit(char *cmd);
 char							*join_path_cmd(char *dir, char *cmd);
-void							parse_cmds(t_pipex *pipex, char **tokens);
 void							cleanup_pipex(t_pipex *pipex);
 void							safe_close_fd(int *fd);
 void							handle_redirections(t_pipex *px);

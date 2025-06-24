@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/13 10:56:36 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 12:30:46 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,32 @@ void	finalize_heredoc(t_pipex *pipex)
 
 void	handle_heredoc(char *limiter, t_pipex *pipex)
 {
-	int	fd;
+	pid_t	pid;
+	int		status;
+	int		fd;
 
-	fd = create_heredoc_file();
-	process_heredoc_input(limiter, fd);
-	close(fd);
-	finalize_heredoc(pipex);
+	pid = fork();
+	if (pid == -1)
+		handle_error("heredoc: fork failed");
+	if (pid == 0)
+	{
+		signal(SIGINT, SIG_DFL);
+		g_signal_state = 2;
+		fd = create_heredoc_file();
+		process_heredoc_input(limiter, fd);
+		close(fd);
+		exit(0);
+	}
+	else
+	{
+		waitpid(pid, &status, 0);
+		g_signal_state = 0;
+		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		{
+			unlink(".heredoc_tmp");
+			write(1, "\n", 1);
+			exit(1);
+		}
+		finalize_heredoc(pipex);
+	}
 }
