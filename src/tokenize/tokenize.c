@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:25:55 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/23 10:12:17 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 13:01:42 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,14 @@ void	free_command_part_list(t_command_part *lst)
 	}
 }
 
+static t_command_part	*handle_tokenize_error(
+t_tokenizer_ctx *ctx, const char *msg)
+{
+	free_command_part_list(ctx->lst);
+	printf("%s\n", msg);
+	return (NULL);
+}
+
 t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 		char *valid_command, t_shell *shell)
 {
@@ -84,18 +92,10 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 		ctx.word_type = get_next_word_type(matrix, valid_command, &ctx.i,
 				ctx.word_type);
 		if (ctx.word_type == W_ERROR)
-		{
-			free_command_part_list(ctx.lst);
-			printf("Syntax error!\n");
-			break ;
-		}
+			return (handle_tokenize_error(&ctx, "Syntax error\n"));
 		process_token(matrix, valid_command, shell, &ctx);
 		if (ctx.word_type == W_ERROR)
-		{
-			printf("Syntax Error!\n");
-			free_command_part_list(ctx.lst);
-			break ;
-		}
+			return (handle_tokenize_error(&ctx, "Syntax error\n"));
 	}
 	return (ctx.lst);
 }
@@ -178,51 +178,23 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT],
 t_command_part	**tokenize(char *valid_command, t_shell *shell)
 {
 	t_command_part	**token;
+	const int		matrix[W_TOTAL][I_NUM_INPUT] = {
+	{W_START, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W_ERROR},
+	{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_REDIN, W_REDOU, W___END},
+	{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ, W_SINGQ},
+	{W_DOUBQ, W_DOUBQ, W_ERROR, W_DOUBQ, W_EOFDQ, W_DOUBQ, W_DOUBQ, W_DOUBQ},
+	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_HRDOC, W_ERROR, W_ERROR},
+	{W_SARED, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDAP, W_ERROR},
+	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR, W_ERROR},
+	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR, W_ERROR},
+	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},
+	{W_SARED, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR, W_ERROR},
+	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},
+	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},
+	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W___END},
+	{W_DOUBQ, W_DOUBQ, W___END, W_EOFDQ, W_EOFDQ, W_DOUBQ, W_DOUBQ, W_ERROR},
+	{W_SINGQ, W_SINGQ, W___END, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ, W_ERROR}};
 
-	const int matrix[W_TOTAL][I_NUM_INPUT] = {{W_START, W_STNDR, W___END,
-		W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W_ERROR},
-												{W_SPACE, W_STNDR, W___END,
-													W_EOSTS, W_EOSTD, W_REDIN,
-													W_REDOU, W___END},
-												{W_SINGQ, W_SINGQ, W_ERROR,
-													W_EOFSQ, W_SINGQ, W_SINGQ,
-													W_SINGQ, W_SINGQ},
-												{W_DOUBQ, W_DOUBQ, W_ERROR,
-													W_DOUBQ, W_EOFDQ, W_DOUBQ,
-													W_DOUBQ, W_DOUBQ},
-												{W_SARED, W_STNDR, W_ERROR,
-													W_SINGQ, W_DOUBQ, W_HRDOC,
-													W_ERROR, W_ERROR},
-												{W_SARED, W_STNDR, W___END,
-													W_SINGQ, W_DOUBQ, W_REDIN,
-													W_REDAP, W_ERROR},
-												{W_SARED, W_STNDR, W_ERROR,
-													W_SINGQ, W_DOUBQ, W_ERROR,
-													W_ERROR, W_ERROR},
-												{W_SARED, W_STNDR, W_ERROR,
-													W_SINGQ, W_DOUBQ, W_ERROR,
-													W_ERROR, W_ERROR},
-												{W_SPACE, W_STNDR, W___END,
-													W_SINGQ, W_DOUBQ, W_REDIN,
-													W_REDOU, W___END},
-												{W_SARED, W_STNDR, W_ERROR,
-													W_SINGQ, W_DOUBQ, W_ERROR,
-													W_ERROR, W_ERROR},
-												{W_SPACE, W_STNDR, W___END,
-													W_SINGQ, W_DOUBQ, W_REDIN,
-													W_REDOU, W___END},
-												{W_SPACE, W_STNDR, W___END,
-													W_SINGQ, W_DOUBQ, W_REDIN,
-													W_REDOU, W___END},
-												{W_SPACE, W_STNDR, W___END,
-													W_SINGQ, W_DOUBQ, W_REDIN,
-													W_REDOU, W___END},
-												{W_DOUBQ, W_DOUBQ, W___END,
-													W_EOFDQ, W_EOFDQ, W_DOUBQ,
-													W_DOUBQ, W_ERROR},
-												{W_SINGQ, W_SINGQ, W___END,
-													W_EOFSQ, W_SINGQ, W_SINGQ,
-													W_SINGQ, W_ERROR}};
 	token = split_and_tokenize(matrix, valid_command, shell);
 	return (token);
 }

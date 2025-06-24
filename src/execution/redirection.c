@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 15:00:33 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/11 16:35:14 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 12:47:44 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,13 @@ void	setup_child_redirection(t_pipex *px)
 
 void	apply_redirections(t_pipex *px)
 {
+	char	*filename;
+
+	filename = create_heredoc_filename();
 	if (px->here_doc)
 	{
-		px->in_fd = open(".heredoc_tmp", O_RDONLY);
+		px->in_fd = open(filename, O_RDONLY);
+		free(filename);
 	}
 	else if (px->in_fd >= 0)
 	{

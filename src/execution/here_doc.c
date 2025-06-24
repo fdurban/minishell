@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/23 18:27:11 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/24 12:45:53 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ int	create_heredoc_file(void)
 	fd = open(filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd < 0)
 		handle_error(ERR_HEREDOC);
+	free(filename);
 	return (fd);
 }
 
@@ -80,6 +81,7 @@ void	finalize_heredoc(t_pipex *pipex)
 	if (pipex->in_fd < 0)
 	{
 		unlink(filename);
+		free(filename);
 		handle_error(ERR_HEREDOC);
 	}
 }
