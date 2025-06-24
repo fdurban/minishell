@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/23 16:23:24 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 10:04:20 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,15 +94,12 @@ static int	change_directory(const char *arg, t_shell *shell)
 		free(path);
 		return (1);
 	}
-	else
-	{
-		ft_putstr_fd("cd: ", STDERR_FILENO);
-		ft_putstr_fd((char *)arg, STDERR_FILENO);
-		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-		shell->exit_status = 1;
-		free(path);
-		return (0);
-	}
+	ft_putstr_fd("cd: ", STDERR_FILENO);
+	ft_putstr_fd((char *)arg, STDERR_FILENO);
+	ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+	shell->exit_status = 1;
+	free(path);
+	return (0);
 }
 
 int	builtin_cd(char **argv, t_shell *shell)

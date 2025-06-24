@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/19 17:06:31 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 09:51:55 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,9 @@ void	shell_loop(t_shell *shell)
 
 	while (1)
 	{
+		g_in_prompt = 1;
 		input = get_user_input(shell->env);
+		g_in_prompt = 0;
 		if (!input)
 			break ;
 		if (*input == '\0')

@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/20 09:48:20 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 09:51:04 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,7 @@
 # include "../libft/standard/libft.h"
 # include <stdio.h>
 # include <string.h>
+
+extern int	g_in_prompt;
 
 #endif

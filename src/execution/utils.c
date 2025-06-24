@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:20:57 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/09 12:04:25 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 10:16:21 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,18 @@ void	*ft_bzero(void *s, size_t n)
 	while (n--)
 		*ptr++ = 0;
 	return (s);
+}
+
+void	close_pipes(t_pipex *pipex)
+{
+	int	i;
+	int	total_fds;
+
+	i = 0;
+	total_fds = pipex->pipe_count * 2;
+	while (i < total_fds)
+	{
+		safe_close_fd(&pipex->pipes[i]);
+		i++;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:26:24 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/20 12:04:48 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 10:05:16 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static void	process_export_without_value(char *arg, t_shell *shell)
 
 int	builtin_export(char **args, t_shell *shell)
 {
-	int i;
+	int	i;
 
 	if (!args[1])
 	{

@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:35:48 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/23 10:05:09 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 10:21:02 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,14 @@ void	print_error_and_exit(char *cmd, char *msg, int code)
 	exit(code);
 }
 
+static void	exit_with_errno_message(char *cmd, int base_code)
+{
+	if (errno == EACCES)
+		print_error_and_exit(cmd, "Permission denied", base_code);
+	else
+		print_error_and_exit(cmd, strerror(errno), base_code);
+}
+
 void	print_exec_error_and_exit(char *cmd)
 {
 	struct stat	st;
@@ -36,27 +44,14 @@ void	print_exec_error_and_exit(char *cmd)
 	if (!has_slash)
 		print_error_and_exit(cmd, "command not found", 127);
 	if (lstat(cmd, &st) == -1)
-	{
-		if (errno == ENOENT)
-			print_error_and_exit(cmd, "No such file or directory", 127);
-		else if (errno == EACCES)
-			print_error_and_exit(cmd, "Permission denied", 126);
-		else
-			print_error_and_exit(cmd, strerror(errno), 126);
-	}
-	else if (S_ISDIR(st.st_mode))
+		return (exit_with_errno_message(cmd, 127));
+	if (S_ISDIR(st.st_mode))
 		print_error_and_exit(cmd, "Is a directory", 126);
-	else if (!S_ISREG(st.st_mode))
+	if (!S_ISREG(st.st_mode))
 		print_error_and_exit(cmd, "command not found", 127);
-	else if (access(cmd, X_OK) == -1)
-	{
-		if (errno == EACCES)
-			print_error_and_exit(cmd, "Permission denied", 126);
-		else
-			print_error_and_exit(cmd, strerror(errno), 126);
-	}
-	else
-		print_error_and_exit(cmd, "execution failed", 126);
+	if (access(cmd, X_OK) == -1)
+		return (exit_with_errno_message(cmd, 126));
+	print_error_and_exit(cmd, "execution failed", 126);
 }
 
 void	handle_redirection_error(char *file)
