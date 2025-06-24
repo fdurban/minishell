@@ -3,21 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   childs_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 10:06:17 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 18:10:17 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/24 18:29:08 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int	open_redirection_fd(t_command_part *node, t_pipex *px, t_shell *shell)
+static int	open_redirection_fd(t_command_part *node, t_pipex *px,
+		t_shell *shell)
 {
 	char	*path;
 	int		path_type;
 
 	(void)px;
+	(void)shell;
 	path = node->next->value;
 	path_type = node->next->type;
 	if (node->type == W_REDIN)
@@ -27,10 +29,7 @@ static int	open_redirection_fd(t_command_part *node, t_pipex *px, t_shell *shell
 	else if (node->type == W_REDAP)
 		return (open(path, O_CREAT | O_WRONLY | O_APPEND, 0644));
 	else if (node->type == W_HRDOC)
-	{
-		handle_heredoc(path, path_type, px, shell);
 		return (open(px->heredoc_filename, O_RDONLY));
-	}
 	return (-1);
 }
 

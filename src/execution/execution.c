@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:10:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 11:22:07 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 18:20:30 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	execution(t_command_part **cmd_segs, t_shell *shell)
 	int		status;
 
 	init_pipex(&px);
-	parse_cmds_from_tokens(&px, cmd_segs);
+	parse_cmds_from_tokens(&px, cmd_segs, shell);
 	if (handle_empty_command(&px, shell))
 		return (0);
 	parse_paths(&px, shell);

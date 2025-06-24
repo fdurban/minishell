@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 17:49:03 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/24 18:21:01 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,11 @@ int								ft_strcmp(const char *s1, const char *s2);
 
 int								create_heredoc_file(t_pipex *pipex);
 char							*create_heredoc_filename(void);
-void							process_heredoc_input(char *limiter, int type, int fd,  t_shell *shell);
+void							process_heredoc_input(char *limiter, int type,
+									int fd, t_shell *shell);
 void							finalize_heredoc(t_pipex *pipex);
-void							handle_heredoc(char *limiter, int type, t_pipex *pipex, t_shell *shell);
+void							handle_heredoc(char *limiter, int type,
+									t_pipex *pipex, t_shell *shell);
 
 void							parse_paths(t_pipex *pipex, t_shell *shell);
 void							create_child_process(t_pipex *pipex,
@@ -81,7 +83,8 @@ void							print_exec_error_and_exit(char *cmd);
 char							*join_path_cmd(char *dir, char *cmd);
 void							cleanup_pipex(t_pipex *pipex);
 void							safe_close_fd(int *fd);
-void							handle_redirections(t_pipex *px, t_shell *shell);
+void							handle_redirections(t_pipex *px,
+									t_shell *shell);
 void							handle_redirection_error(char *file);
 void							init_signal_handlers(void);
 void							free_token_matrix(t_command_part **matrix);
@@ -89,7 +92,7 @@ int								count_args(t_command_part *p);
 char							**build_argv(t_command_part *p, int argc);
 void							init_pipex(t_pipex *px);
 void							parse_cmds_from_tokens(t_pipex *px,
-									t_command_part **segs);
+									t_command_part **segs, t_shell *shell);
 int								handle_empty_command(t_pipex *px,
 									t_shell *shell);
 int								handle_single_builtin(t_pipex *px,

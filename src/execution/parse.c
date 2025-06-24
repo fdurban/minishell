@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:43:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 18:00:53 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 18:24:15 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	count_command_segments(t_command_part **segs)
 	return (count);
 }
 
-void	process_segment(t_pipex *px, t_command_part *seg, int i)
+void	process_segment(t_pipex *px, t_command_part *seg, int i, t_shell *shell)
 {
 	t_command_part	*p;
 	int				argc;
@@ -31,7 +31,7 @@ void	process_segment(t_pipex *px, t_command_part *seg, int i)
 	while (p)
 	{
 		if (p->type == W_HRDOC && p->next != NULL)
-			handle_heredoc(p->next->value, px);
+			handle_heredoc(p->next->value, seg->type, px, shell);
 		if ((p->type == W_REDIN || p->type == W_REDOU || p->type == W_REDAP)
 			&& p->next)
 			p = p->next;
@@ -41,7 +41,8 @@ void	process_segment(t_pipex *px, t_command_part *seg, int i)
 	px->cmd_args[i] = build_argv(seg, argc);
 }
 
-void	parse_cmds_from_tokens(t_pipex *px, t_command_part **segs)
+void	parse_cmds_from_tokens(t_pipex *px, t_command_part **segs,
+		t_shell *shell)
 {
 	int	cmd_count;
 	int	i;
@@ -56,7 +57,7 @@ void	parse_cmds_from_tokens(t_pipex *px, t_command_part **segs)
 		handle_error("malloc cmd_args or cmd_segs");
 	while (i < cmd_count)
 	{
-		process_segment(px, segs[i], j);
+		process_segment(px, segs[i], j, shell);
 		if (px->cmd_args[j] && px->cmd_args[j][0])
 			px->cmd_segs[j++] = segs[i];
 		else
