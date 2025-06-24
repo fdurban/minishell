@@ -1,0 +1,80 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   childs_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/06/24 10:06:17 by igngonza          #+#    #+#             */
+/*   Updated: 2025/06/24 11:29:58 by igngonza         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../../includes/minishell.h"
+
+static int	open_redirection_fd(t_command_part *node, t_pipex *px)
+{
+	char	*path;
+
+	path = node->next->value;
+	if (node->type == W_REDIN)
+		return (open(path, O_RDONLY));
+	else if (node->type == W_REDOU)
+		return (open(path, O_CREAT | O_WRONLY | O_TRUNC, 0644));
+	else if (node->type == W_REDAP)
+		return (open(path, O_CREAT | O_WRONLY | O_APPEND, 0644));
+	else if (node->type == W_HRDOC)
+	{
+		handle_heredoc(path, px);
+		return (open(".heredoc_tmp", O_RDONLY));
+	}
+	return (-1);
+}
+
+static void	apply_fd_redirection(int fd, int type)
+{
+	if (type == W_REDIN || type == W_HRDOC)
+		dup2(fd, STDIN_FILENO);
+	else
+		dup2(fd, STDOUT_FILENO);
+}
+
+void	handle_redirections(t_pipex *px)
+{
+	t_command_part	*node;
+	int				fd;
+
+	node = px->cmd_segs[px->idx];
+	while (node)
+	{
+		if ((node->type == W_REDIN || node->type == W_REDOU
+				|| node->type == W_REDAP || node->type == W_HRDOC)
+			&& node->next)
+		{
+			fd = open_redirection_fd(node, px);
+			if (fd < 0)
+			{
+				handle_redirection_error(node->next->value);
+				exit(1);
+			}
+			apply_fd_redirection(fd, node->type);
+			close(fd);
+			node = node->next;
+		}
+		node = node->next;
+	}
+}
+
+void	execute_child_command(t_pipex *px, t_env *envp)
+{
+	char	*cmd;
+	char	**args;
+
+	cmd = px->cmd_paths[px->idx];
+	args = px->cmd_args[px->idx];
+	if (execve(cmd, args, envp->vars) == -1)
+	{
+		perror("execve failed");
+		exit(EXIT_FAILURE);
+	}
+}

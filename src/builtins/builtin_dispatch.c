@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 12:32:46 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/23 18:02:13 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 11:33:01 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 static t_builtin	*get_builtins(void)
 {
 	static t_builtin	builtins[] = {{"echo", builtin_echo}, {"cd",
-			builtin_cd}, {"pwd", builtin_pwd}, {"export", builtin_export},
-			{"unset", builtin_unset}, {"env", builtin_env}, {"exit",
-			builtin_exit}, {NULL, NULL}};
+		builtin_cd}, {"pwd", builtin_pwd}, {"export", builtin_export},
+	{"unset", builtin_unset}, {"env", builtin_env}, {"exit",
+		builtin_exit}, {NULL, NULL}};
 
 	return (builtins);
 }

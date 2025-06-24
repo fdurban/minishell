@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/23 17:57:40 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 11:22:55 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,6 @@ void							*ft_bzero(void *s, size_t n);
 void							create_pipes(t_pipex *pipex);
 void							close_pipes(t_pipex *pipex);
 
-void							redirect_io(int input_fd, int output_fd);
-void							setup_child_io(t_pipex *pipex);
-void							handle_child_error(t_pipex *pipex,
-									int saved_stdout);
 void							execute_child_command(t_pipex *pipex,
 									t_env *envp);
 int								ft_strcmp(const char *s1, const char *s2);
@@ -70,7 +66,6 @@ void							process_heredoc_input(char *limiter, int fd);
 void							finalize_heredoc(t_pipex *pipex);
 void							handle_heredoc(char *limiter, t_pipex *pipex);
 
-void							parse_cmds(t_pipex *pipex, char **argv);
 void							parse_paths(t_pipex *pipex, t_shell *shell);
 void							create_child_process(t_pipex *pipex,
 									t_shell *shell);
@@ -89,5 +84,16 @@ void							handle_redirections(t_pipex *px);
 void							handle_redirection_error(char *file);
 void							init_signal_handlers(void);
 void							free_token_matrix(t_command_part **matrix);
+int								count_args(t_command_part *p);
+char							**build_argv(t_command_part *p, int argc);
+void							init_pipex(t_pipex *px);
+void							parse_cmds_from_tokens(t_pipex *px,
+									t_command_part **segs);
+int								handle_empty_command(t_pipex *px,
+									t_shell *shell);
+int								handle_single_builtin(t_pipex *px,
+									t_shell *shell);
+pid_t							spawn_pipeline(t_pipex *px, t_shell *shell);
+int								collect_status(pid_t last_pid);
 
 #endif

@@ -6,74 +6,64 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:43:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/09 12:45:42 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 11:16:20 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int	count_commands(char **tokens)
+int	count_command_segments(t_command_part **segs)
 {
 	int	count;
-	int	i;
 
-	i = 0;
-	count = 1;
-	while (tokens[i])
-	{
-		if (ft_strcmp(tokens[i], "|") == 0)
-			count++;
-		i++;
-	}
+	count = 0;
+	while (segs[count])
+		count++;
 	return (count);
 }
 
-static char	**extract_args_for_command(char **tokens, int *pos)
+void	process_segment(t_pipex *px, t_command_part *seg, int i)
 {
-	int		start;
-	int		argc;
-	char	**args;
-	int		j;
+	t_command_part	*p;
+	int				argc;
 
-	start = *pos;
-	argc = 0;
-	j = 0;
-	while (tokens[*pos] && ft_strcmp(tokens[*pos], "|") != 0)
+	p = seg;
+	while (p)
 	{
-		argc++;
-		(*pos)++;
+		if ((p->type == W_REDIN || p->type == W_REDOU || p->type == W_REDAP
+				|| p->type == W_HRDOC) && p->next)
+			p = p->next;
+		p = p->next;
 	}
-	args = malloc(sizeof(char *) * (argc + 1));
-	if (!args)
-		handle_error("Memory allocation failed for a command");
-	while (j < argc)
-	{
-		args[j] = ft_strdup(tokens[start + j]);
-		j++;
-	}
-	args[argc] = NULL;
-	if (tokens[*pos] && ft_strcmp(tokens[*pos], "|") == 0)
-		(*pos)++;
-	return (args);
+	argc = count_args(seg);
+	px->cmd_args[i] = build_argv(seg, argc);
 }
 
-void	parse_cmds(t_pipex *pipex, char **tokens)
+void	parse_cmds_from_tokens(t_pipex *px, t_command_part **segs)
 {
-	int	pos;
-	int	n_cmds;
-	int	idx;
+	int	cmd_count;
+	int	i;
+	int	j;
 
-	idx = 0;
-	pos = 0;
-	n_cmds = count_commands(tokens);
-	pipex->cmd_count = n_cmds;
-	pipex->cmd_args = malloc(sizeof(char **) * (n_cmds + 1));
-	if (!pipex->cmd_args)
-		handle_error("Memory allocation failed for cmd_args");
-	while (idx < n_cmds)
+	cmd_count = count_command_segments(segs);
+	i = 0;
+	j = 0;
+	px->cmd_args = malloc(sizeof(char **) * (cmd_count + 1));
+	px->cmd_segs = malloc(sizeof(t_command_part *) * (cmd_count + 1));
+	if (!px->cmd_args || !px->cmd_segs)
+		handle_error("malloc cmd_args or cmd_segs");
+	while (i < cmd_count)
 	{
-		pipex->cmd_args[idx] = extract_args_for_command(tokens, &pos);
-		idx++;
+		process_segment(px, segs[i], j);
+		if (px->cmd_args[j] && px->cmd_args[j][0])
+			px->cmd_segs[j++] = segs[i];
+		else
+		{
+			free(px->cmd_args[j]);
+			px->cmd_args[j] = NULL;
+		}
+		i++;
 	}
-	pipex->cmd_args[n_cmds] = NULL;
+	px->cmd_args[j] = NULL;
+	px->cmd_count = j;
 }

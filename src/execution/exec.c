@@ -6,43 +6,50 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:41:35 by igngonza          #+#    #+#             */
-/*   Updated: 2025/05/15 12:22:04 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 11:16:33 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	redirect_io(int input_fd, int output_fd)
+void	init_pipex(t_pipex *px)
 {
-	dup2(input_fd, STDIN_FILENO);
-	dup2(output_fd, STDOUT_FILENO);
+	ft_bzero(px, sizeof(t_pipex));
+	px->in_fd = -1;
+	px->out_fd = -1;
+	px->here_doc = 0;
 }
 
-void	setup_child_io(t_pipex *pipex)
+int	handle_empty_command(t_pipex *px, t_shell *shell)
 {
-	if (pipex->idx == 0)
+	if (px->cmd_count == 0)
 	{
-		dup2(pipex->pipes[1], STDOUT_FILENO);
+		cleanup_pipex(px);
+		shell->exit_status = 0;
+		return (1);
 	}
-	else if (pipex->idx == pipex->cmd_count - 1)
-	{
-		dup2(pipex->pipes[(pipex->idx - 1) * 2], STDIN_FILENO);
-	}
-	else
-	{
-		dup2(pipex->pipes[(pipex->idx - 1) * 2], STDIN_FILENO);
-		dup2(pipex->pipes[pipex->idx * 2 + 1], STDOUT_FILENO);
-	}
+	return (0);
 }
 
-void	handle_child_error(t_pipex *pipex, int saved_stdout)
+int	handle_single_builtin(t_pipex *px, t_shell *shell)
 {
-	if (!pipex->cmd_paths[pipex->idx])
+	int	saved_stdout;
+	int	saved_stdin;
+
+	saved_stdout = dup(STDOUT_FILENO);
+	saved_stdin = dup(STDIN_FILENO);
+	if (px->cmd_count == 1 && is_builtin(px->cmd_args[0][0]))
 	{
+		handle_redirections(px);
+		shell->exit_status = exec_builtin(px->cmd_args[0], shell);
 		dup2(saved_stdout, STDOUT_FILENO);
+		dup2(saved_stdin, STDIN_FILENO);
 		close(saved_stdout);
-		ft_printf("%s: command not found\n", pipex->cmd_args[pipex->idx][0]);
-		parent_free(pipex);
-		exit(127);
+		close(saved_stdin);
+		cleanup_pipex(px);
+		return (1);
 	}
+	close(saved_stdout);
+	close(saved_stdin);
+	return (0);
 }
