@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:21:47 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/20 13:01:33 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 17:42:44 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,10 @@
 static void	cleanup_heredoc(t_pipex *pipex)
 {
 	if (pipex && pipex->here_doc)
-		unlink(".heredoc_tmp");
+	{
+		unlink(pipex->heredoc_filename);
+		free(pipex->heredoc_filename);
+	}
 }
 
 void	safe_close_fd(int *fd)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   childs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:35:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 11:31:35 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 14:03:08 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	create_child_process(t_pipex *px, t_shell *shell)
 	{
 		setup_child_signals();
 		setup_child_pipes(px);
-		handle_redirections(px);
+		handle_redirections(px, shell);
 		if (px->redir_failures && px->redir_failures[px->idx])
 			exit(1);
 		if (!px->cmd_args || !px->cmd_args[px->idx])

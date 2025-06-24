@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   variable_expansion.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/13 08:49:16 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 13:49:04 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static char	*get_var_value(const char *var_name, t_shell *shell)
 	return (value);
 }
 
-char	*append_variable(char *result, int *i, t_command_part *word,
+char	*append_variable(char *result, int *i, char *word,
 		t_shell *shell)
 {
 	int		start;
@@ -67,7 +67,7 @@ char	*append_variable(char *result, int *i, t_command_part *word,
 	char	*value;
 
 	start = *i + 1;
-	len = get_var_name_length(word->value, start);
+	len = get_var_name_length(word, start);
 	if (len == 0)
 	{
 		new_result = ft_strjoin(result, "$");
@@ -76,7 +76,7 @@ char	*append_variable(char *result, int *i, t_command_part *word,
 		return (new_result);
 	}
 	{
-		var_name = extract_var_name(word->value, start, len);
+		var_name = extract_var_name(word, start, len);
 		value = get_var_value(var_name, shell);
 		new_result = ft_strjoin(result, value);
 		free(result);
@@ -87,7 +87,8 @@ char	*append_variable(char *result, int *i, t_command_part *word,
 	}
 }
 
-char	*expand_token(t_command_part *word, t_shell *shell)
+
+char	*expand_token(char *word, t_shell *shell)
 {
 	char	*result;
 	int		i;
@@ -95,13 +96,13 @@ char	*expand_token(t_command_part *word, t_shell *shell)
 
 	i = 0;
 	result = ft_strdup("");
-	while (word->value[i] != '\0')
+	while (word[i] != '\0')
 	{
 		start = i;
-		while (word->value[i] && word->value[i] != '$')
+		while (word[i] && word[i] != '$')
 			i++;
-		result = append_prefix(result, word->value, start, i);
-		if (word->value[i] == '$')
+		result = append_prefix(result, word, start, i);
+		if (word[i] == '$')
 			result = append_variable(result, &i, word, shell);
 		if (!result)
 			result = ft_strjoin(result, "\n");

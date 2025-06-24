@@ -3,21 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   childs_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 10:06:17 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 16:39:55 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 18:10:17 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static int	open_redirection_fd(t_command_part *node, t_pipex *px)
+static int	open_redirection_fd(t_command_part *node, t_pipex *px, t_shell *shell)
 {
 	char	*path;
+	int		path_type;
 
 	(void)px;
 	path = node->next->value;
+	path_type = node->next->type;
 	if (node->type == W_REDIN)
 		return (open(path, O_RDONLY));
 	else if (node->type == W_REDOU)
@@ -25,7 +27,10 @@ static int	open_redirection_fd(t_command_part *node, t_pipex *px)
 	else if (node->type == W_REDAP)
 		return (open(path, O_CREAT | O_WRONLY | O_APPEND, 0644));
 	else if (node->type == W_HRDOC)
-		return (open(".heredoc_tmp", O_RDONLY));
+	{
+		handle_heredoc(path, path_type, px, shell);
+		return (open(px->heredoc_filename, O_RDONLY));
+	}
 	return (-1);
 }
 
@@ -37,7 +42,7 @@ static void	apply_fd_redirection(int fd, int type)
 		dup2(fd, STDOUT_FILENO);
 }
 
-void	handle_redirections(t_pipex *px)
+void	handle_redirections(t_pipex *px, t_shell *shell)
 {
 	t_command_part	*node;
 	int				fd;
@@ -49,7 +54,7 @@ void	handle_redirections(t_pipex *px)
 				|| node->type == W_REDAP || node->type == W_HRDOC)
 			&& node->next)
 		{
-			fd = open_redirection_fd(node, px);
+			fd = open_redirection_fd(node, px, shell);
 			if (fd < 0)
 			{
 				handle_redirection_error(node->next->value);

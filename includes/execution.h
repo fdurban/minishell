@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 12:47:23 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 17:49:03 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_pipex
 	t_pid						pid;
 	t_pid						*pids;
 	t_command_part				**cmd_segs;
+	char						*heredoc_filename;
 }								t_pipex;
 
 int								execution(t_command_part **cmd_segs,
@@ -61,10 +62,11 @@ void							execute_child_command(t_pipex *pipex,
 									t_env *envp);
 int								ft_strcmp(const char *s1, const char *s2);
 
-int								create_heredoc_file(void);
-void							process_heredoc_input(char *limiter, int fd);
+int								create_heredoc_file(t_pipex *pipex);
+char							*create_heredoc_filename(void);
+void							process_heredoc_input(char *limiter, int type, int fd,  t_shell *shell);
 void							finalize_heredoc(t_pipex *pipex);
-void							handle_heredoc(char *limiter, t_pipex *pipex);
+void							handle_heredoc(char *limiter, int type, t_pipex *pipex, t_shell *shell);
 
 void							parse_paths(t_pipex *pipex, t_shell *shell);
 void							create_child_process(t_pipex *pipex,
@@ -79,7 +81,7 @@ void							print_exec_error_and_exit(char *cmd);
 char							*join_path_cmd(char *dir, char *cmd);
 void							cleanup_pipex(t_pipex *pipex);
 void							safe_close_fd(int *fd);
-void							handle_redirections(t_pipex *px);
+void							handle_redirections(t_pipex *px, t_shell *shell);
 void							handle_redirection_error(char *file);
 void							init_signal_handlers(void);
 void							free_token_matrix(t_command_part **matrix);
