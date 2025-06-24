@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 17:48:38 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/24 20:02:50 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*create_heredoc_filename(void)
 {
 	char		*pid_str;
 	static char	*filename;
-	size_t	total_len;
+	size_t		total_len;
 
 	pid_str = ft_itoa(getpid());
 	if (!pid_str)
@@ -36,9 +36,9 @@ char	*create_heredoc_filename(void)
 
 int	create_heredoc_file(t_pipex *pipex)
 {
-	int		fd;
-	// char	*filename;
+	int	fd;
 
+	// char	*filename;
 	// filename = create_heredoc_filename();
 	fd = open(pipex->heredoc_filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (fd < 0)
@@ -47,24 +47,29 @@ int	create_heredoc_file(t_pipex *pipex)
 	return (fd);
 }
 
-void	process_heredoc_input(char *limiter, int type, int fd,  t_shell *shell)
+void	process_heredoc_input(char *limiter, int type, int fd, t_shell *shell)
 {
 	char	*buf;
 	size_t	lim_len;
+	char	*expanded;
 
 	lim_len = ft_strlen(limiter);
 	while (1)
 	{
 		write(1, "heredoc> ", 9);
 		buf = get_next_line(STDIN_FILENO);
-		if (type == W_STNDR)
-			buf = expand_token(buf, shell);
 		if (!buf)
 			break ;
 		if (!ft_strncmp(limiter, buf, lim_len) && buf[lim_len] == '\n')
 		{
 			free(buf);
 			break ;
+		}
+		if (type == W_STNDR)
+		{
+			expanded = expand_token(buf, shell);
+			free(buf);
+			buf = expanded;
 		}
 		write(fd, buf, ft_strlen(buf));
 		free(buf);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   childs_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 10:06:17 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 18:29:08 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 20:04:50 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,10 @@ static int	open_redirection_fd(t_command_part *node, t_pipex *px,
 		t_shell *shell)
 {
 	char	*path;
-	int		path_type;
 
 	(void)px;
 	(void)shell;
 	path = node->next->value;
-	path_type = node->next->type;
 	if (node->type == W_REDIN)
 		return (open(path, O_RDONLY));
 	else if (node->type == W_REDOU)
