@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:43:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 11:16:20 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 18:00:53 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,10 @@ void	process_segment(t_pipex *px, t_command_part *seg, int i)
 	p = seg;
 	while (p)
 	{
-		if ((p->type == W_REDIN || p->type == W_REDOU || p->type == W_REDAP
-				|| p->type == W_HRDOC) && p->next)
+		if (p->type == W_HRDOC && p->next != NULL)
+			handle_heredoc(p->next->value, px);
+		if ((p->type == W_REDIN || p->type == W_REDOU || p->type == W_REDAP)
+			&& p->next)
 			p = p->next;
 		p = p->next;
 	}

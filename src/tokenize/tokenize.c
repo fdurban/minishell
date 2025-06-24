@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:25:55 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/23 10:12:17 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 18:02:03 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,18 @@ void	free_command_part_list(t_command_part *lst)
 	}
 }
 
+static void	cleanup_tokenizer_ctx(t_tokenizer_ctx *ctx)
+{
+	if (ctx->lst)
+		free_command_part_list(ctx->lst);
+	if (ctx->partial_token)
+		free(ctx->partial_token);
+	if (ctx->command_token)
+		free(ctx->command_token);
+	if (ctx->command_node)
+		free(ctx->command_node);
+}
+
 t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 		char *valid_command, t_shell *shell)
 {
@@ -85,15 +97,17 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 				ctx.word_type);
 		if (ctx.word_type == W_ERROR)
 		{
-			free_command_part_list(ctx.lst);
-			printf("Syntax error!\n");
+			printf("Syntax Error!\n");
+			cleanup_tokenizer_ctx(&ctx);
+			ctx.lst = NULL;
 			break ;
 		}
 		process_token(matrix, valid_command, shell, &ctx);
 		if (ctx.word_type == W_ERROR)
 		{
 			printf("Syntax Error!\n");
-			free_command_part_list(ctx.lst);
+			cleanup_tokenizer_ctx(&ctx);
+			ctx.lst = NULL;
 			break ;
 		}
 	}

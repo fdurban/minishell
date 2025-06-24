@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   childs_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 10:06:17 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 11:29:58 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 16:39:55 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ static int	open_redirection_fd(t_command_part *node, t_pipex *px)
 {
 	char	*path;
 
+	(void)px;
 	path = node->next->value;
 	if (node->type == W_REDIN)
 		return (open(path, O_RDONLY));
@@ -24,10 +25,7 @@ static int	open_redirection_fd(t_command_part *node, t_pipex *px)
 	else if (node->type == W_REDAP)
 		return (open(path, O_CREAT | O_WRONLY | O_APPEND, 0644));
 	else if (node->type == W_HRDOC)
-	{
-		handle_heredoc(path, px);
 		return (open(".heredoc_tmp", O_RDONLY));
-	}
 	return (-1);
 }
 
