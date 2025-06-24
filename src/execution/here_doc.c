@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 20:02:50 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/24 20:19:12 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,9 @@ void	handle_heredoc(char *limiter, int type, t_pipex *pipex, t_shell *shell)
 		{
 			unlink(pipex->heredoc_filename);
 			free(pipex->heredoc_filename);
+			pipex->heredoc_filename = NULL;
 			write(1, "\n", 1);
-			exit(1);
+			return ;
 		}
 		finalize_heredoc(pipex);
 	}
