@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 10:06:17 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 20:04:50 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/25 19:25:28 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,11 @@ static int	open_redirection_fd(t_command_part *node, t_pipex *px,
 	else if (node->type == W_REDAP)
 		return (open(path, O_CREAT | O_WRONLY | O_APPEND, 0644));
 	else if (node->type == W_HRDOC)
+	{
+		if (!px->heredoc_filename)
+			return (-1);
 		return (open(px->heredoc_filename, O_RDONLY));
+	}
 	return (-1);
 }
 

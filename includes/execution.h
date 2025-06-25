@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/25 02:48:35 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/25 19:37:16 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ typedef struct s_pipex
 	t_pid						*pids;
 	t_command_part				**cmd_segs;
 	char						*heredoc_filename;
+	int							heredoc_interrupted;
 }								t_pipex;
 
 int								execution(t_command_part **cmd_segs,
@@ -68,6 +69,9 @@ void							process_heredoc_input(char *limiter, int fd,
 									int type, t_shell *shell);
 void							finalize_heredoc(t_pipex *pipex);
 void							handle_heredoc(char *limiter, int type,
+									t_pipex *pipex, t_shell *shell);
+void							heredoc_parent(t_pipex *pipex, t_shell *shell);
+void							heredoc_child(char *limiter, int type,
 									t_pipex *pipex, t_shell *shell);
 
 void							parse_paths(t_pipex *pipex, t_shell *shell);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:41:35 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 14:00:12 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/25 19:33:04 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ void	init_pipex(t_pipex *px)
 	px->in_fd = -1;
 	px->out_fd = -1;
 	px->here_doc = 0;
+	px->heredoc_interrupted = 0;
 }
 
 int	handle_empty_command(t_pipex *px, t_shell *shell)

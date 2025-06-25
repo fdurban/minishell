@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/25 16:27:47 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/25 19:37:53 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,34 +90,13 @@ void	finalize_heredoc(t_pipex *pipex)
 void	handle_heredoc(char *limiter, int type, t_pipex *pipex, t_shell *shell)
 {
 	pid_t	pid;
-	int		status;
-	int		fd;
 
 	pipex->heredoc_filename = create_heredoc_filename();
 	pid = fork();
 	if (pid == -1)
 		handle_error("heredoc: fork failed");
 	if (pid == 0)
-	{
-		signal(SIGINT, SIG_DFL);
-		g_signal_state = 2;
-		fd = create_heredoc_file(pipex);
-		process_heredoc_input(limiter, fd, type, shell);
-		close(fd);
-		exit(0);
-	}
+		heredoc_child(limiter, type, pipex, shell);
 	else
-	{
-		waitpid(pid, &status, 0);
-		g_signal_state = 0;
-		if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
-		{
-			unlink(pipex->heredoc_filename);
-			free(pipex->heredoc_filename);
-			pipex->heredoc_filename = NULL;
-			write(1, "\n", 1);
-			return ;
-		}
-		finalize_heredoc(pipex);
-	}
+		heredoc_parent(pipex, shell);
 }
