@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handlers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:37:15 by fernando          #+#    #+#             */
-/*   Updated: 2025/06/25 02:23:13 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/25 15:49:55 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,9 @@ void	handle_token_join(t_tokenizer_ctx *ctx)
 	t_command_part	*joined_node;
 
 	joined_node = NULL;
-	if (ctx->previous_word_type == W_STNDR || ctx->previous_word_type == W_DOUBQ
-		|| ctx->previous_word_type == W_SINGQ)
+	if (should_accumulate_token(ctx->previous_word_type))
 		accumulate_partial_token(ctx);
-	if ((ctx->word_type == W_SPACE || ctx->word_type == W_SARED
-			|| ctx->word_type == W_REDIN || ctx->word_type == W_REDOU
-			|| ctx->word_type == W___END) && ctx->partial_token)
+	if (should_create_node_from_partial(ctx->word_type, ctx->partial_token))
 	{
 		joined_node = create_command_node(ctx->partial_token,
 				ctx->previous_word_type);
@@ -59,11 +56,8 @@ void	handle_token_join(t_tokenizer_ctx *ctx)
 		free(ctx->partial_token);
 		ctx->partial_token = NULL;
 	}
-	else if ((ctx->previous_word_type == W_REDAP
-			|| ctx->previous_word_type == W_HRDOC
-			|| ctx->previous_word_type == W_REDIN
-			|| ctx->previous_word_type == W_REDOU || ctx->word_type == W___END)
-		&& !ctx->partial_token)
+	else if (should_add_command_node(ctx->previous_word_type,
+			ctx->word_type, ctx->partial_token))
 	{
 		add_command_part_to_list(&ctx->lst, ctx->command_node);
 		ctx->command_node = NULL;
