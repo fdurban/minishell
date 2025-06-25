@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:25:55 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/25 02:57:02 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/25 12:18:39 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,11 +187,10 @@ int	validate_command_syntax(char *valid_command,
 	int	i;
 	int	state;
 	int	input;
-	int	j;
 
 	i = 0;
 	state = W_START;
-	while (valid_command[i])
+	while (state != W___END)
 	{
 		if (is_pipe_at_end(valid_command, i))
 			return (1);
