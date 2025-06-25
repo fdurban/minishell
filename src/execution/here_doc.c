@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/25 01:04:06 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/25 13:54:49 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,25 @@
 
 char	*create_heredoc_filename(void)
 {
-	char		*pid_str;
+	char		*num_str;
 	static char	*filename;
 	size_t		total_len;
+	static int	counter;
 
-	pid_str = ft_itoa(getpid());
-	if (!pid_str)
+	counter = 0;
+	num_str = ft_itoa(counter++);
+	if (!num_str)
 		return (NULL);
-	total_len = ft_strlen(".heredoc_") + ft_strlen(pid_str) + 1;
+	total_len = ft_strlen(".heredoc_") + ft_strlen(num_str) + 1;
 	filename = malloc(total_len);
 	if (!filename)
 	{
-		free(pid_str);
+		free(num_str);
 		return (NULL);
 	}
 	ft_strlcpy(filename, ".heredoc_", total_len);
-	ft_strlcat(filename, pid_str, total_len);
-	free(pid_str);
+	ft_strlcat(filename, num_str, total_len);
+	free(num_str);
 	return (filename);
 }
 

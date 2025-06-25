@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/25 02:47:18 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/25 16:12:42 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 # include "env.h"
 # include "minishell.h"
 
-// "state"
 typedef enum e_word_type
 {
 	W_START,
@@ -76,11 +75,6 @@ char						*extract_token_value(char *str,
 								t_tokenizer_ctx *ctx);
 char						*expand_token(char *word, t_shell *shell);
 int							get_token_type(char c);
-void						checkposition(t_word_type word_type,
-								char *valid_command, int i);
-void						checkinput(t_input_tokenizer input);
-void						print_values(t_command_part **results);
-char						**tokens_to_argv(t_command_part *lst);
 t_command_part				*create_command_node(char *value, t_word_type type);
 void						add_command_part_to_list(t_command_part **lst,
 								t_command_part *new);
@@ -89,4 +83,21 @@ void						handle_token_expansion(
 								t_word_type previous_word_type,
 								t_command_part **command_node,
 								t_shell *shell, t_tokenizer_ctx *ctx);
+int							validate_command_syntax(char *valid_command,
+								const int matrix[W_TOTAL][I_NUM_INPUT]);
+int							count_segments(const char *cmd,
+								const int matrix[W_TOTAL][I_NUM_INPUT]);
+void						fill_segments(char **segments, char *cmd,
+								const int matrix[W_TOTAL][I_NUM_INPUT]);
+void						free_command_part_list(t_command_part *lst);
+
+int							should_accumulate_token(int prev_type);
+int							should_create_node_from_partial(int type,
+								char *partial);
+int							should_add_command_node(int prev_type,
+								int type, char *partial);
+void						update_word_type(const char *str,
+								t_tokenizer_ctx *ctx,
+								const int matrix[W_TOTAL][I_NUM_INPUT]);
+
 #endif

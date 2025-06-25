@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_extraction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:30:02 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/25 02:33:10 by fernando         ###   ########.fr       */
+/*   Updated: 2025/06/25 16:10:51 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 	while (ctx->word_type == W_SPACE || ctx->word_type == W_SARED)
 	{
 		ctx->i++;
-		ctx->word_type = matrix[ctx->word_type][get_token_type(str[ctx->i])];
+		update_word_type(str, ctx, matrix);
 	}
 }
 
@@ -56,13 +56,13 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 		ctx->previous_word_type = ctx->word_type;
 		start = ctx->i;
 		ctx->i++;
-		ctx->word_type = matrix[ctx->word_type][get_token_type(str[ctx->i])];
+		update_word_type(str, ctx, matrix);
 		if (ctx->word_type == W_REDAP || ctx->word_type == W_HRDOC)
 		{
 			ctx->here_doc = 1;
 			ctx->previous_word_type = ctx->word_type;
 			ctx->i++;
-			ctx->word_type = matrix[ctx->word_type][get_token_type(str[ctx->i])];
+			update_word_type(str, ctx, matrix);
 		}
 		result = ft_substr(str, start, ctx->i - start);
 		return (result);
@@ -87,7 +87,7 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 	{
 		ctx->previous_word_type = ctx->word_type;
 		ctx->i++;
-		ctx->word_type = matrix[ctx->word_type][get_token_type(str[ctx->i])];
+		update_word_type(str, ctx, matrix);
 	}
 	if (ctx->word_type == W_EOFDQ || ctx->word_type == W_EOFSQ)
 		result = ft_substr(str, start + 1, ctx->i - start - 1);
@@ -96,7 +96,7 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 	if (ctx->word_type == W_EOFDQ || ctx->word_type == W_EOFSQ)
 	{
 		ctx->i++;
-		ctx->word_type = matrix[ctx->word_type][get_token_type(str[ctx->i])];
+		update_word_type(str, ctx, matrix);
 	}
 	return (result);
 }
