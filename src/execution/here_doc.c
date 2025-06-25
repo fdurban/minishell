@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/25 13:54:49 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/25 16:27:47 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,20 +51,25 @@ void	process_heredoc_input(char *limiter, int fd, int type, t_shell *shell)
 {
 	char	*buf;
 	size_t	lim_len;
+	char	*tmp;
 
 	lim_len = ft_strlen(limiter);
 	while (1)
 	{
 		write(1, "heredoc> ", 9);
 		buf = get_next_line(STDIN_FILENO);
-		if (type == W_STNDR && ft_strncmp(buf, limiter, lim_len))
-			buf = expand_token(buf, shell);
 		if (!buf)
 			break ;
 		if (!ft_strncmp(limiter, buf, lim_len) && buf[lim_len] == '\n')
 		{
 			free(buf);
 			break ;
+		}
+		if (type == W_STNDR && ft_strncmp(buf, limiter, lim_len))
+		{
+			tmp = expand_token(buf, shell);
+			free(buf);
+			buf = tmp;
 		}
 		write(fd, buf, ft_strlen(buf));
 		free(buf);
