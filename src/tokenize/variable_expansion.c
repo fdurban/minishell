@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   variable_expansion.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/24 13:49:04 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/25 02:21:33 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,6 @@ static int	get_var_name_length(const char *s, int start)
 	while (ft_isalnum(s[start + length]) || s[start + length] == '_')
 		length++;
 	return (length);
-}
-
-static char	*extract_var_name(const char *s, int start, int len)
-{
-	return (ft_substr(s, start, len));
 }
 
 static char	*get_var_value(const char *var_name, t_shell *shell)
@@ -76,7 +71,7 @@ char	*append_variable(char *result, int *i, char *word,
 		return (new_result);
 	}
 	{
-		var_name = extract_var_name(word, start, len);
+		var_name = ft_substr(word, start, len);
 		value = get_var_value(var_name, shell);
 		new_result = ft_strjoin(result, value);
 		free(result);
@@ -86,7 +81,6 @@ char	*append_variable(char *result, int *i, char *word,
 		return (new_result);
 	}
 }
-
 
 char	*expand_token(char *word, t_shell *shell)
 {

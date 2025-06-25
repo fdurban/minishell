@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 18:21:01 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/25 02:48:35 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ int								ft_strcmp(const char *s1, const char *s2);
 
 int								create_heredoc_file(t_pipex *pipex);
 char							*create_heredoc_filename(void);
-void							process_heredoc_input(char *limiter, int type,
-									int fd, t_shell *shell);
+void							process_heredoc_input(char *limiter, int fd,
+									int type, t_shell *shell);
 void							finalize_heredoc(t_pipex *pipex);
 void							handle_heredoc(char *limiter, int type,
 									t_pipex *pipex, t_shell *shell);

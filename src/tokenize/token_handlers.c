@@ -3,21 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   token_handlers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:37:15 by fernando          #+#    #+#             */
-/*   Updated: 2025/06/24 14:04:15 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/25 02:23:13 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 void	handle_token_expansion(t_word_type previous_word_type,
-		t_command_part **command_node, t_shell *shell)
+		t_command_part **command_node, t_shell *shell, t_tokenizer_ctx *ctx)
 {
 	char	*expanded;
 
-	if (previous_word_type == W_STNDR || previous_word_type == W_DOUBQ)
+	if ((previous_word_type == W_STNDR
+			|| previous_word_type == W_DOUBQ) && !ctx->here_doc)
 	{
 		expanded = expand_token((*command_node)->value, shell);
 		free((*command_node)->value);

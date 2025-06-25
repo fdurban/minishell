@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_extraction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:30:02 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/19 13:39:24 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/25 02:33:10 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 		ctx->word_type = matrix[ctx->word_type][get_token_type(str[ctx->i])];
 		if (ctx->word_type == W_REDAP || ctx->word_type == W_HRDOC)
 		{
+			ctx->here_doc = 1;
 			ctx->previous_word_type = ctx->word_type;
 			ctx->i++;
 			ctx->word_type = matrix[ctx->word_type][get_token_type(str[ctx->i])];
@@ -78,9 +79,11 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 
 	start = ctx->i;
 	if ((ctx->word_type == W_DOUBQ || ctx->word_type == W_SINGQ)
-	&& (ctx->previous_word_type == W_EOSTD || ctx->previous_word_type == W_EOSTS))
+		&& (ctx->previous_word_type == W_EOSTD
+			|| ctx->previous_word_type == W_EOSTS))
 		start = ctx->i - 1;
-	while (ctx->word_type == W_DOUBQ || ctx->word_type == W_SINGQ || ctx->word_type == W_STNDR)
+	while (ctx->word_type == W_DOUBQ
+		|| ctx->word_type == W_SINGQ || ctx->word_type == W_STNDR)
 	{
 		ctx->previous_word_type = ctx->word_type;
 		ctx->i++;
@@ -95,8 +98,6 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 		ctx->i++;
 		ctx->word_type = matrix[ctx->word_type][get_token_type(str[ctx->i])];
 	}
-	if (!result)
-		printf("Error\n");
 	return (result);
 }
 
@@ -116,20 +117,3 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 	else
 		return (NULL);
 }
-
-// printf("---------------(extract append o hrdoc)------------------------\n");
-// checkposition(*word_type, str, *i);
-// checkinput(get_token_type(str[*i]));
-
-// printf("value of extracted result when redirect is %s\n", result);
-// printf("---------------------------------------------------------------\n");
-
-// printf("---------------(extract_word)------------------------\n");
-// checkposition(ctx->word_type, str, ctx->i);
-// checkinput(get_token_type(str[ctx->i]));
-// printf("---------------(extract redirect)------------------------\n");
-// checkposition(ctx->word_type, str, ctx->i);
-// checkinput(get_token_type(str[ctx->i]));
-// printf("-------------(skip space or sared)----------------\n");
-// checkposition(ctx->word_type, str, ctx->i);
-// checkinput(get_token_type(str[ctx->i]));

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/24 13:50:48 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/06/25 02:47:18 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_command_part
 typedef struct s_tokenizer_ctx
 {
 	int						i;
+	int						here_doc;
 	t_word_type				word_type;
 	t_word_type				previous_word_type;
 	char					*command_token;
@@ -84,7 +85,8 @@ t_command_part				*create_command_node(char *value, t_word_type type);
 void						add_command_part_to_list(t_command_part **lst,
 								t_command_part *new);
 void						handle_token_join(t_tokenizer_ctx *ctx);
-void						handle_token_expansion(t_word_type previous_word_type,
-								t_command_part **command_node, t_shell *shell);
-
+void						handle_token_expansion(
+								t_word_type previous_word_type,
+								t_command_part **command_node,
+								t_shell *shell, t_tokenizer_ctx *ctx);
 #endif
