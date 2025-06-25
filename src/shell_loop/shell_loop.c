@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 12:28:48 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/25 15:55:27 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,13 @@ void	shell_loop(t_shell *shell)
 	{
 		g_signal_state = 1;
 		input = get_user_input(shell->env);
-		g_signal_state = 0;
+		if (g_signal_state == 3)
+		{
+			shell->exit_status = 130;
+			g_signal_state = 0;
+		}
+		else
+			g_signal_state = 0;
 		if (!input)
 			break ;
 		if (*input == '\0')
