@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 10:58:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/23 18:03:13 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/26 11:20:22 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,32 @@ char	*handle_dot_paths(const char *arg, t_shell *shell)
 	else if (strcmp(arg, "..") == 0)
 		return (handle_double_dot(shell));
 	return (NULL);
+}
+
+char	*collapse_slashes(const char *path)
+{
+	int		i;
+	int		j;
+	char	*collapsed;
+
+	i = 0;
+	j = 0;
+	collapsed = malloc(ft_strlen(path) + 1);
+	if (!collapsed)
+		return (NULL);
+	while (path[i])
+	{
+		collapsed[j++] = path[i];
+		if (path[i] == '/')
+		{
+			while (path[i] == '/')
+				i++;
+		}
+		else
+			i++;
+	}
+	while (j > 1 && collapsed[j - 1] == '/')
+		j--;
+	collapsed[j] = '\0';
+	return (collapsed);
 }

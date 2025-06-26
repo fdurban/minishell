@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 10:04:20 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/26 11:19:58 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,19 +59,24 @@ static char	*get_abs_path(const char *arg, t_shell *shell)
 	char	*abs_path;
 	char	*pwd;
 	char	*special;
+	char	*normalized;
 
 	special = handle_dot_paths(arg, shell);
 	if (special)
 		return (special);
-	if (arg[0] == '/')
-		abs_path = duplicate_str(arg);
+	normalized = collapse_slashes(arg);
+	if (!normalized)
+		return (NULL);
+	if (normalized[0] == '/')
+		abs_path = duplicate_str(normalized);
 	else
 	{
 		pwd = get_env_var(shell->env, "PWD");
 		if (!pwd)
 			return (NULL);
-		abs_path = join_paths(pwd, arg);
+		abs_path = join_paths(pwd, normalized);
 	}
+	free(normalized);
 	return (abs_path);
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/25 19:37:53 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/06/26 11:41:31 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ char	*create_heredoc_filename(void)
 	size_t		total_len;
 	static int	counter;
 
-	counter = 0;
 	num_str = ft_itoa(counter++);
 	if (!num_str)
 		return (NULL);
@@ -91,6 +90,12 @@ void	handle_heredoc(char *limiter, int type, t_pipex *pipex, t_shell *shell)
 {
 	pid_t	pid;
 
+	if (pipex->heredoc_filename)
+	{
+		unlink(pipex->heredoc_filename);
+		free(pipex->heredoc_filename);
+		pipex->heredoc_filename = NULL;
+	}
 	pipex->heredoc_filename = create_heredoc_filename();
 	pid = fork();
 	if (pid == -1)

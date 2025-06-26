@@ -106,7 +106,7 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 {
 	t_command_part	**token;
 	const int		matrix[W_TOTAL][I_NUM_INPUT] = {
-	{W_START, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W_ERROR},
+	{W_START, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W_ERROR},
 	{W_SPACE, W_STNDR, W___END, W_EOSTS, W_EOSTD, W_REDIN, W_REDOU, W___END},
 	{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ, W_SINGQ},
 	{W_DOUBQ, W_DOUBQ, W_ERROR, W_DOUBQ, W_EOFDQ, W_DOUBQ, W_DOUBQ, W_DOUBQ},
