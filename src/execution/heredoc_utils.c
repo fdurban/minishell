@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 19:36:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/25 19:38:48 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/01 19:57:08 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	heredoc_child(char *limiter, int type, t_pipex *pipex, t_shell *shell)
 {
 	int	fd;
 
+	set_signal_handlers(SHELL_HEREDOC);
 	signal(SIGINT, SIG_DFL);
 	g_signal_state = 2;
 	fd = create_heredoc_file(pipex);

@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/25 19:37:16 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/01 19:58:35 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void							safe_close_fd(int *fd);
 void							handle_redirections(t_pipex *px,
 									t_shell *shell);
 void							handle_redirection_error(char *file);
-void							init_signal_handlers(void);
+void							set_signal_handlers(int mode);
 void							free_token_matrix(t_command_part **matrix);
 int								count_args(t_command_part *p);
 char							**build_argv(t_command_part *p, int argc);

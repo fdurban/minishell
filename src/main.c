@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:11:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/23 13:50:39 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/01 19:59:32 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	main(int argc, char **argv, char **envp)
 		fprintf(stderr, "Failed to copy environment\n");
 		return (1);
 	}
-	init_signal_handlers();
 	shell_loop(&shell);
 	free_env(shell.env);
 	rl_clear_history();

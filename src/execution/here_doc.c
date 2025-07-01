@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/26 11:41:31 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/01 20:19:38 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,10 @@ void	process_heredoc_input(char *limiter, int fd, int type, t_shell *shell)
 		write(1, "heredoc> ", 9);
 		buf = get_next_line(STDIN_FILENO);
 		if (!buf)
+		{
+			write(1, "\n", 1);
 			break ;
+		}
 		if (!ft_strncmp(limiter, buf, lim_len) && buf[lim_len] == '\n')
 		{
 			free(buf);
@@ -98,10 +101,12 @@ void	handle_heredoc(char *limiter, int type, t_pipex *pipex, t_shell *shell)
 	}
 	pipex->heredoc_filename = create_heredoc_filename();
 	pid = fork();
+	shell->state = SHELL_HEREDOC;
 	if (pid == -1)
 		handle_error("heredoc: fork failed");
 	if (pid == 0)
 		heredoc_child(limiter, type, pipex, shell);
 	else
 		heredoc_parent(pipex, shell);
+	shell->state = SHELL_MAIN;
 }

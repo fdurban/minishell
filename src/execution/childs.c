@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   childs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:35:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 14:03:08 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/01 19:57:32 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ void	create_child_process(t_pipex *px, t_shell *shell)
 		if (!px->cmd_args || !px->cmd_args[px->idx])
 			exit(1);
 		close_pipes(px);
+		set_signal_handlers(SHELL_EXEC);
 		execute_command(px, shell);
 	}
 	else if (px->cmd_count > 1)

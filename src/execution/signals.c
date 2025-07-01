@@ -6,48 +6,53 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 18:48:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/25 19:21:47 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/01 20:12:09 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-#include <readline/readline.h>
-#include <signal.h>
-#include <stdio.h>
+#include <sys/ioctl.h>
 
 volatile sig_atomic_t	g_signal_state = 0;
 
-void	sigint_handler(int sig)
+void	sigint_prompt_handler(int sig)
 {
 	(void)sig;
-	if (g_signal_state == 1)
-	{
-		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-		g_signal_state = 3;
-	}
-	else if (g_signal_state == 2)
-	{
-		write(1, "\n", 1);
-		close(STDIN_FILENO);
-	}
-	else if (g_signal_state == 3)
-	{
-		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-	else
-	{
-		write(1, "\n", 1);
-	}
+	g_signal_state = SIGINT;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }
 
-void	init_signal_handlers(void)
+void	sigint_heredoc_handler(int sig)
 {
-	signal(SIGINT, sigint_handler);
-	signal(SIGQUIT, SIG_IGN);
+	(void)sig;
+	write(1, "\n", 1);
+	close(STDIN_FILENO);
+}
+
+void	sigint_exec_handler(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+}
+
+void	set_signal_handlers(int mode)
+{
+	if (mode == SHELL_MAIN)
+	{
+		signal(SIGINT, sigint_prompt_handler);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	else if (mode == SHELL_HEREDOC)
+	{
+		signal(SIGINT, sigint_heredoc_handler);
+		signal(SIGQUIT, SIG_IGN);
+	}
+	else if (mode == SHELL_EXEC)
+	{
+		signal(SIGINT, sigint_exec_handler);
+		signal(SIGQUIT, SIG_IGN);
+	}
 }

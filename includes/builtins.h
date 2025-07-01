@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 18:04:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/26 11:20:11 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/01 18:55:56 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,18 @@
 # include <stdio.h>
 # include <string.h>
 
+typedef enum e_shell_state
+{
+	SHELL_MAIN,
+	SHELL_HEREDOC,
+	SHELL_EXEC
+}					t_shell_state;
+
 typedef struct s_shell
 {
 	t_env			*env;
 	int				exit_status;
+	t_shell_state	state;
 }					t_shell;
 
 typedef int			(*t_builtin_fn)(char **args, t_shell *shell);
