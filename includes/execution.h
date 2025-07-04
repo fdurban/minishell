@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 13:16:21 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/01 19:58:35 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/04 12:45:53 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ typedef struct s_pipex
 	t_pid						pid;
 	t_pid						*pids;
 	t_command_part				**cmd_segs;
-	char						*heredoc_filename;
+	char						**heredoc_filenames;
 	int							heredoc_interrupted;
 }								t_pipex;
 
@@ -63,16 +63,15 @@ void							execute_child_command(t_pipex *pipex,
 									t_env *envp);
 int								ft_strcmp(const char *s1, const char *s2);
 
-int								create_heredoc_file(t_pipex *pipex);
 char							*create_heredoc_filename(void);
 void							process_heredoc_input(char *limiter, int fd,
 									int type, t_shell *shell);
-void							finalize_heredoc(t_pipex *pipex);
 void							handle_heredoc(char *limiter, int type,
-									t_pipex *pipex, t_shell *shell);
-void							heredoc_parent(t_pipex *pipex, t_shell *shell);
+									t_pipex *pipex, t_shell *shell, int i);
 void							heredoc_child(char *limiter, int type,
-									t_pipex *pipex, t_shell *shell);
+									char *filename, t_shell *shell);
+void							heredoc_parent(char *filename, t_shell *shell,
+									t_pipex *pipex, int i);
 
 void							parse_paths(t_pipex *pipex, t_shell *shell);
 void							create_child_process(t_pipex *pipex,

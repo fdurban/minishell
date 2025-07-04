@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/01 20:19:38 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:10:27 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,11 @@
 char	*create_heredoc_filename(void)
 {
 	char		*num_str;
-	static char	*filename;
+	char		*filename;
 	size_t		total_len;
 	static int	counter;
 
+	counter = 0;
 	num_str = ft_itoa(counter++);
 	if (!num_str)
 		return (NULL);
@@ -33,17 +34,6 @@ char	*create_heredoc_filename(void)
 	ft_strlcat(filename, num_str, total_len);
 	free(num_str);
 	return (filename);
-}
-
-int	create_heredoc_file(t_pipex *pipex)
-{
-	int	fd;
-
-	fd = open(pipex->heredoc_filename, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (fd < 0)
-		handle_error(ERR_HEREDOC);
-	free(pipex->heredoc_filename);
-	return (fd);
 }
 
 void	process_heredoc_input(char *limiter, int fd, int type, t_shell *shell)
@@ -78,35 +68,21 @@ void	process_heredoc_input(char *limiter, int fd, int type, t_shell *shell)
 	}
 }
 
-void	finalize_heredoc(t_pipex *pipex)
-{
-	pipex->in_fd = open(pipex->heredoc_filename, O_RDONLY);
-	if (pipex->in_fd < 0)
-	{
-		unlink(pipex->heredoc_filename);
-		free(pipex->heredoc_filename);
-		handle_error(ERR_HEREDOC);
-	}
-}
-
-void	handle_heredoc(char *limiter, int type, t_pipex *pipex, t_shell *shell)
+void	handle_heredoc(char *limiter, int type, t_pipex *pipex, t_shell *shell,
+		int i)
 {
 	pid_t	pid;
+	char	*filename;
 
-	if (pipex->heredoc_filename)
-	{
-		unlink(pipex->heredoc_filename);
-		free(pipex->heredoc_filename);
-		pipex->heredoc_filename = NULL;
-	}
-	pipex->heredoc_filename = create_heredoc_filename();
+	filename = create_heredoc_filename();
+	pipex->heredoc_filenames[i] = filename;
 	pid = fork();
 	shell->state = SHELL_HEREDOC;
 	if (pid == -1)
 		handle_error("heredoc: fork failed");
 	if (pid == 0)
-		heredoc_child(limiter, type, pipex, shell);
+		heredoc_child(limiter, type, filename, shell);
 	else
-		heredoc_parent(pipex, shell);
+		heredoc_parent(filename, shell, pipex, i);
 	shell->state = SHELL_MAIN;
 }

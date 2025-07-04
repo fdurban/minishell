@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:43:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 20:59:02 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/04 13:02:50 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	process_segment(t_pipex *px, t_command_part *seg, int i, t_shell *shell)
 	while (p)
 	{
 		if (p->type == W_HRDOC && p->next != NULL)
-			handle_heredoc(p->next->value, p->next->type, px, shell);
+			handle_heredoc(p->next->value, p->next->type, px, shell, i);
 		if ((p->type == W_REDIN || p->type == W_REDOU || p->type == W_REDAP)
 			&& p->next)
 			p = p->next;
@@ -53,10 +53,12 @@ void	parse_cmds_from_tokens(t_pipex *px, t_command_part **segs,
 	j = 0;
 	px->cmd_args = malloc(sizeof(char **) * (cmd_count + 1));
 	px->cmd_segs = malloc(sizeof(t_command_part *) * (cmd_count + 1));
-	if (!px->cmd_args || !px->cmd_segs)
-		handle_error("malloc cmd_args or cmd_segs");
+	px->heredoc_filenames = malloc(sizeof(char *) * (cmd_count + 1));
+	if (!px->cmd_args || !px->cmd_segs || !px->heredoc_filenames)
+		handle_error("malloc failed in parse_cmds_from_tokens");
 	while (i < cmd_count)
 	{
+		px->heredoc_filenames[i] = NULL;
 		process_segment(px, segs[i], j, shell);
 		if (px->cmd_args[j] && px->cmd_args[j][0])
 			px->cmd_segs[j++] = segs[i];
