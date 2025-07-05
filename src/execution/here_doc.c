@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/04 13:10:27 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/05 10:08:43 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ char	*create_heredoc_filename(void)
 	size_t		total_len;
 	static int	counter;
 
-	counter = 0;
 	num_str = ft_itoa(counter++);
 	if (!num_str)
 		return (NULL);
