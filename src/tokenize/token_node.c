@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 19:32:26 by fernando          #+#    #+#             */
-/*   Updated: 2025/06/04 17:57:56 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/10 16:58:42 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,6 @@ t_command_part	*create_command_node(char *value, t_word_type type)
 	new->value = ft_strdup(value);
 	new->type = type;
 	new->next = NULL;
+	new->needs_retokenize = 0;
 	return (new);
 }

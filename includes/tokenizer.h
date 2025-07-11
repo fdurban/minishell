@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/25 16:12:42 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/10 23:48:09 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_command_part
 	char					*value;
 	t_word_type				type;
 	struct s_command_part	*next;
+	int						needs_retokenize;
 }							t_command_part;
 
 typedef struct s_tokenizer_ctx
@@ -79,10 +80,8 @@ t_command_part				*create_command_node(char *value, t_word_type type);
 void						add_command_part_to_list(t_command_part **lst,
 								t_command_part *new);
 void						handle_token_join(t_tokenizer_ctx *ctx);
-void						handle_token_expansion(
-								t_word_type previous_word_type,
-								t_command_part **command_node,
-								t_shell *shell, t_tokenizer_ctx *ctx);
+void						handle_token_expansion(t_tokenizer_ctx *ctx,
+								t_shell *shell);
 int							validate_command_syntax(char *valid_command,
 								const int matrix[W_TOTAL][I_NUM_INPUT]);
 int							count_segments(const char *cmd,
@@ -99,5 +98,7 @@ int							should_add_command_node(int prev_type,
 void						update_word_type(const char *str,
 								t_tokenizer_ctx *ctx,
 								const int matrix[W_TOTAL][I_NUM_INPUT]);
+void						print_values(t_command_part **results);
+void						checkposition(t_word_type word_type, char *valid_command, int i);
 
 #endif

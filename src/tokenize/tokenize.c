@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:25:55 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/25 14:42:49 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/11 15:29:07 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,7 @@ static void	process_token(const int matrix[W_TOTAL][I_NUM_INPUT],
 				ctx->previous_word_type);
 		free(ctx->command_token);
 		ctx->command_token = NULL;
-		handle_token_expansion(ctx->previous_word_type, &ctx->command_node,
-			shell, ctx);
+		handle_token_expansion(ctx, shell);
 		handle_token_join(ctx);
 	}
 }
@@ -102,6 +101,49 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT],
 	return (results);
 }
 
+void retokenize(t_command_part **array, t_shell *shell)
+{
+	int i = 0;
+
+	while (array[i])
+	{
+		t_command_part **lst = &array[i];
+		t_command_part *tmp = *lst;
+		t_command_part *prev = NULL;
+
+		while (tmp)
+		{
+			if (tmp->needs_retokenize)
+			{
+				t_command_part **new_tokens = tokenize(tmp->value, shell);
+				t_command_part *new_list = *new_tokens;
+				t_command_part *next = tmp->next;
+
+				t_command_part *last = new_list;
+				while (last && last->next)
+					last = last->next;
+
+				if (prev)
+					prev->next = new_list;
+				else
+					*lst = new_list;
+
+				if (last)
+					last->next = next;
+
+				free(tmp->value);
+				free(tmp);
+				tmp = next;
+				continue;
+			}
+			prev = tmp;
+			tmp = tmp->next;
+		}
+
+		i++;
+	}
+}
+
 t_command_part	**tokenize(char *valid_command, t_shell *shell)
 {
 	t_command_part	**token;
@@ -126,5 +168,7 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 	if (validate_command_syntax(valid_command, matrix))
 		return (NULL);
 	token = split_and_tokenize(matrix, valid_command, shell);
+	//print_values(token);	
+	retokenize(token, shell);
 	return (token);
 }
