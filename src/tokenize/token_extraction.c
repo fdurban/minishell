@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:30:02 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/25 16:10:51 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/14 13:48:05 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,20 +71,27 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 		return (NULL);
 }
 
+static int	calc_start(t_tokenizer_ctx *ctx)
+{
+	if ((ctx->word_type == W_DOUBQ || ctx->word_type == W_SINGQ)
+		&& (ctx->previous_word_type == W_EOSTD
+			|| ctx->previous_word_type == W_EOSTS))
+		return (ctx->i - 1);
+	return (ctx->i);
+}
+
 char	*extract_word(char *str,
 const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 {
 	int		start;
 	char	*result;
 
-	start = ctx->i;
-	if ((ctx->word_type == W_DOUBQ || ctx->word_type == W_SINGQ)
-		&& (ctx->previous_word_type == W_EOSTD
-			|| ctx->previous_word_type == W_EOSTS))
-		start = ctx->i - 1;
+	start = calc_start(ctx);
 	while (ctx->word_type == W_DOUBQ
 		|| ctx->word_type == W_SINGQ || ctx->word_type == W_STNDR)
 	{
+		if (ctx->word_type == W_STNDR && str[ctx->i] == '=')
+			ctx->is_assign = 1;
 		ctx->previous_word_type = ctx->word_type;
 		ctx->i++;
 		update_word_type(str, ctx, matrix);
