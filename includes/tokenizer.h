@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/11 21:46:24 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/14 13:28:07 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ int							should_add_command_node(int prev_type,
 void						update_word_type(const char *str,
 								t_tokenizer_ctx *ctx,
 								const int matrix[W_TOTAL][I_NUM_INPUT]);
-void						print_values(t_command_part **results);
-void						checkposition(t_word_type word_type, char *valid_command, int i);
+void						retokenize(t_command_part **array, t_shell *shell);
 
 #endif

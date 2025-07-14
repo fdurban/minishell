@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_extraction.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:30:02 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/12 18:00:24 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/14 13:48:05 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,17 +71,22 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 		return (NULL);
 }
 
+static int	calc_start(t_tokenizer_ctx *ctx)
+{
+	if ((ctx->word_type == W_DOUBQ || ctx->word_type == W_SINGQ)
+		&& (ctx->previous_word_type == W_EOSTD
+			|| ctx->previous_word_type == W_EOSTS))
+		return (ctx->i - 1);
+	return (ctx->i);
+}
+
 char	*extract_word(char *str,
 const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 {
 	int		start;
 	char	*result;
 
-	start = ctx->i;
-	if ((ctx->word_type == W_DOUBQ || ctx->word_type == W_SINGQ)
-		&& (ctx->previous_word_type == W_EOSTD
-			|| ctx->previous_word_type == W_EOSTS))
-		start = ctx->i - 1;
+	start = calc_start(ctx);
 	while (ctx->word_type == W_DOUBQ
 		|| ctx->word_type == W_SINGQ || ctx->word_type == W_STNDR)
 	{
