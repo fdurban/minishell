@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:25:55 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/11 15:29:07 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/12 18:06:00 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 	ctx.partial_token = NULL;
 	ctx.lst = NULL;
 	ctx.here_doc = 0;
+	ctx.is_assign = 0;
 	while (ctx.word_type != W___END)
 	{
 		ctx.previous_word_type = ctx.word_type;
@@ -101,10 +102,11 @@ t_command_part	**split_and_tokenize(const int matrix[W_TOTAL][I_NUM_INPUT],
 	return (results);
 }
 
-void retokenize(t_command_part **array, t_shell *shell)
+void	retokenize(t_command_part **array, t_shell *shell)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	while (array[i])
 	{
 		t_command_part **lst = &array[i];
@@ -168,7 +170,7 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 	if (validate_command_syntax(valid_command, matrix))
 		return (NULL);
 	token = split_and_tokenize(matrix, valid_command, shell);
-	//print_values(token);	
+	print_values(token);	
 	retokenize(token, shell);
 	return (token);
 }

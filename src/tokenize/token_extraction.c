@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:30:02 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/11 15:29:28 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/12 18:00:24 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 {
 	while (ctx->word_type == W_SPACE || ctx->word_type == W_SARED)
 	{
-		//checkposition(ctx->word_type, str, ctx->i);
 		ctx->i++;
 		update_word_type(str, ctx, matrix);
 	}
@@ -66,7 +65,6 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 			update_word_type(str, ctx, matrix);
 		}
 		result = ft_substr(str, start, ctx->i - start);
-		//checkposition(ctx->word_type, str, ctx->i);
 		return (result);
 	}
 	else
@@ -87,7 +85,8 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 	while (ctx->word_type == W_DOUBQ
 		|| ctx->word_type == W_SINGQ || ctx->word_type == W_STNDR)
 	{
-		//checkposition(ctx->word_type, str, ctx->i);
+		if (ctx->word_type == W_STNDR && str[ctx->i] == '=')
+			ctx->is_assign = 1;
 		ctx->previous_word_type = ctx->word_type;
 		ctx->i++;
 		update_word_type(str, ctx, matrix);

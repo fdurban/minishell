@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/10 23:48:09 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/11 21:46:24 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ typedef struct s_tokenizer_ctx
 	t_command_part			*command_node;
 	char					*partial_token;
 	t_command_part			*lst;
+	int						is_assign;
 }							t_tokenizer_ctx;
 
 t_command_part				**tokenize(char *valid_command, t_shell *shell);

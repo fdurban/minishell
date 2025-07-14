@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:37:15 by fernando          #+#    #+#             */
-/*   Updated: 2025/07/10 23:46:29 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/12 17:59:02 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@ void	handle_token_expansion(t_tokenizer_ctx *ctx, t_shell *shell)
 	{
 		expanded = expand_token(ctx->command_node->value, shell);
 		free(ctx->command_node->value);
-		ctx->command_node->needs_retokenize = 1;
+		if (!ctx->is_assign && ft_strchr(expanded, ' '))
+			ctx->command_node->needs_retokenize = 1;
+		ctx->is_assign = 0;
 		ctx->command_node->value = expanded;
 	}
 }
