@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/01 20:11:51 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/14 12:58:17 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ char	*get_hostname(t_env *env)
 	char	*start;
 	char	*end;
 	char	*hostname;
+	char	*dot;
 
 	sessionmanager = get_env_var(env, "SESSION_MANAGER");
 	if (!sessionmanager)
@@ -27,6 +28,9 @@ char	*get_hostname(t_env *env)
 	if (!start || !end || end <= start)
 		return (ft_strdup(""));
 	hostname = ft_substr(start + 1, 0, (end - start) - 1);
+	dot = ft_strchr(hostname, '.');
+	if (dot)
+		*dot = '\0';
 	return (hostname);
 }
 
@@ -38,6 +42,12 @@ char	*get_current_pwd(t_env *env)
 
 	home = get_env_var(env, "HOME");
 	pwd = get_env_var(env, "PWD");
+	if (!pwd)
+	{
+		pwd = getcwd(NULL, 0);
+		if (!pwd)
+			perror("getcwd");
+	}
 	currentpwd = NULL;
 	if (home && pwd && ft_strncmp(home, pwd, ft_strlen(home)) == 0)
 		currentpwd = ft_strjoin("~", pwd + ft_strlen(home));

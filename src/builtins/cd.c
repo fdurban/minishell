@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/26 11:19:58 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/14 12:49:50 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,11 @@ static char	*get_abs_path(const char *arg, t_shell *shell)
 	{
 		pwd = get_env_var(shell->env, "PWD");
 		if (!pwd)
-			return (NULL);
+		{
+			pwd = getcwd(NULL, 0);
+			if (!pwd)
+				perror("getcwd");
+		}
 		abs_path = join_paths(pwd, normalized);
 	}
 	free(normalized);
