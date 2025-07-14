@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/14 12:58:17 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/14 15:08:38 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ char	*build_prompt(t_env *env)
 void	shell_loop(t_shell *shell)
 {
 	char	*input;
+	int		action;
 
 	while (1)
 	{
@@ -108,20 +109,11 @@ void	shell_loop(t_shell *shell)
 		set_signal_handlers(SHELL_MAIN);
 		g_signal_state = 0;
 		input = get_user_input(shell->env);
-		if (g_signal_state == SIGINT)
-		{
-			shell->exit_status = 130;
-			g_signal_state = 0;
-			if (!input)
-				continue ;
-		}
-		if (!input)
-			break ;
-		if (*input == '\0')
-		{
-			free(input);
+		action = should_continue_after_input(input, shell);
+		if (action == 1)
 			continue ;
-		}
+		if (action == 0)
+			break ;
 		shell->state = SHELL_EXEC;
 		set_signal_handlers(shell->state);
 		process_command_line(input, shell);

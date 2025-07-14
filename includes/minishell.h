@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 12:32:27 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/14 15:09:01 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@
 # include "../libft/get_next_line/get_next_line.h"
 # include "../libft/printf/ft_printf.h"
 # include "../libft/standard/libft.h"
+# include <linux/limits.h>
 # include <stdio.h>
 # include <string.h>
 

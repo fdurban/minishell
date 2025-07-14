@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 10:58:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/26 11:20:22 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/14 14:53:57 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,25 @@
 
 static char	*handle_single_dot(t_shell *shell)
 {
-	char	*pwd;
+	char	cwd[PATH_MAX];
 
-	pwd = get_env_var(shell->env, "PWD");
-	if (!pwd)
+	(void)shell;
+	if (!getcwd(cwd, sizeof(cwd)))
 		return (NULL);
-	return (ft_strdup(pwd));
+	return (ft_strdup(cwd));
 }
 
 static char	*handle_double_dot(t_shell *shell)
 {
-	char	*pwd;
+	char	cwd[PATH_MAX];
 	char	*new_pwd;
 	char	*last_slash;
 	size_t	len;
 
-	pwd = get_env_var(shell->env, "PWD");
-	if (!pwd)
+	(void)shell;
+	if (!getcwd(cwd, sizeof(cwd)))
 		return (NULL);
-	new_pwd = ft_strdup(pwd);
+	new_pwd = ft_strdup(cwd);
 	if (!new_pwd)
 		return (NULL);
 	len = ft_strlen(new_pwd);
@@ -51,6 +51,7 @@ static char	*handle_double_dot(t_shell *shell)
 
 char	*handle_dot_paths(const char *arg, t_shell *shell)
 {
+	(void)shell;
 	if (strcmp(arg, ".") == 0)
 		return (handle_single_dot(shell));
 	else if (strcmp(arg, "..") == 0)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 19:36:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/04 12:43:46 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/14 15:41:39 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,7 @@ void	heredoc_parent(char *filename, t_shell *shell, t_pipex *pipex, int i)
 		pipex->heredoc_interrupted = 1;
 	}
 	else
-	{
 		pipex->in_fd = fd;
-	}
 }
 
 void	heredoc_child(char *limiter, int type, char *filename, t_shell *shell)

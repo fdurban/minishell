@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/14 12:49:50 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/14 14:59:33 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,9 +57,9 @@ static char	*join_paths(const char *base, const char *relative)
 static char	*get_abs_path(const char *arg, t_shell *shell)
 {
 	char	*abs_path;
-	char	*pwd;
 	char	*special;
 	char	*normalized;
+	char	cwd[PATH_MAX];
 
 	special = handle_dot_paths(arg, shell);
 	if (special)
@@ -71,14 +71,13 @@ static char	*get_abs_path(const char *arg, t_shell *shell)
 		abs_path = duplicate_str(normalized);
 	else
 	{
-		pwd = get_env_var(shell->env, "PWD");
-		if (!pwd)
+		if (!getcwd(cwd, sizeof(cwd)))
 		{
-			pwd = getcwd(NULL, 0);
-			if (!pwd)
-				perror("getcwd");
+			free(normalized);
+			perror("getcwd");
+			return (NULL);
 		}
-		abs_path = join_paths(pwd, normalized);
+		abs_path = join_paths(cwd, normalized);
 	}
 	free(normalized);
 	return (abs_path);
@@ -87,6 +86,7 @@ static char	*get_abs_path(const char *arg, t_shell *shell)
 static int	change_directory(const char *arg, t_shell *shell)
 {
 	char	*path;
+	char	cwd[PATH_MAX];
 
 	path = get_abs_path(arg, shell);
 	if (!path)
@@ -99,7 +99,8 @@ static int	change_directory(const char *arg, t_shell *shell)
 	}
 	if (chdir(path) == 0)
 	{
-		update_env_field(shell->env, "PWD", path);
+		if (getcwd(cwd, sizeof(cwd)))
+			update_env_field(shell->env, "PWD", cwd);
 		free(path);
 		return (1);
 	}

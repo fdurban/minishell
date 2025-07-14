@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/05 10:08:43 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/14 15:55:29 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,28 +35,31 @@ char	*create_heredoc_filename(void)
 	return (filename);
 }
 
+static int	is_heredoc_delimiter(const char *limiter, const char *buf)
+{
+	size_t	lim_len;
+
+	lim_len = ft_strlen(limiter);
+	return (!ft_strncmp(limiter, buf, lim_len) && buf[lim_len] == '\n');
+}
+
 void	process_heredoc_input(char *limiter, int fd, int type, t_shell *shell)
 {
 	char	*buf;
-	size_t	lim_len;
 	char	*tmp;
 
-	lim_len = ft_strlen(limiter);
 	while (1)
 	{
 		write(1, "heredoc> ", 9);
 		buf = get_next_line(STDIN_FILENO);
-		if (!buf)
+		if (!buf || is_heredoc_delimiter(limiter, buf))
 		{
-			write(1, "\n", 1);
-			break ;
-		}
-		if (!ft_strncmp(limiter, buf, lim_len) && buf[lim_len] == '\n')
-		{
+			if (!buf)
+				write(1, "\n", 1);
 			free(buf);
 			break ;
 		}
-		if (type == W_STNDR && ft_strncmp(buf, limiter, lim_len))
+		if (type == W_STNDR && ft_strncmp(buf, limiter, ft_strlen(limiter)))
 		{
 			tmp = expand_token(buf, shell);
 			free(buf);
@@ -67,7 +70,7 @@ void	process_heredoc_input(char *limiter, int fd, int type, t_shell *shell)
 	}
 }
 
-void	handle_heredoc(char *limiter, int type, t_pipex *pipex, t_shell *shell,
+void	handle_heredoc(t_command_part *redir, t_pipex *pipex, t_shell *shell,
 		int i)
 {
 	pid_t	pid;
@@ -80,7 +83,7 @@ void	handle_heredoc(char *limiter, int type, t_pipex *pipex, t_shell *shell,
 	if (pid == -1)
 		handle_error("heredoc: fork failed");
 	if (pid == 0)
-		heredoc_child(limiter, type, filename, shell);
+		heredoc_child(redir->next->value, redir->next->type, filename, shell);
 	else
 		heredoc_parent(filename, shell, pipex, i);
 	shell->state = SHELL_MAIN;
