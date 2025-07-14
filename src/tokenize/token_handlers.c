@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handlers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:37:15 by fernando          #+#    #+#             */
-/*   Updated: 2025/07/14 14:54:31 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/14 20:23:54 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,6 @@ static void	create_node_from_partial(t_tokenizer_ctx *ctx)
 
 void	handle_token_join(t_tokenizer_ctx *ctx)
 {
-	t_command_part	*joined_node;
-
-	joined_node = NULL;
 	if (should_accumulate_token(ctx->previous_word_type))
 		accumulate_partial_token(ctx);
 	if (should_create_node_from_partial(ctx->word_type, ctx->partial_token))
