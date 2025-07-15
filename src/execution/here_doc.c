@@ -5,11 +5,9 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: Invalid date        by                   #+#    #+#             */
-/*   Updated: 2025/07/15 16:18:25 by igngonza         ###   ########.fr       */
+/*   Created: 2025/07/15 16:26:48 by igngonza          #+#    #+#             */
+/*   Updated: 2025/07/15 16:32:14 by igngonza         ###   ########.fr       */
 /*                                                                            */
-/* ************************************************************************** */
-
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
@@ -53,6 +51,7 @@ void	process_heredoc_input(char *limiter, int fd, int type, t_shell *shell)
 	char	*buf;
 	size_t	lim_len;
 
+	lim_len = ft_strlen(limiter);
 	while (1)
 	{
 		write(1, "heredoc> ", 9);

@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/15 16:20:47 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/15 17:14:19 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@ static char	*get_abs_path(const char *arg, t_shell *shell)
 	char	cwd[PATH_MAX];
 	char	*special;
 	char	*normalized;
-	char	cwd[PATH_MAX];
 
 	special = handle_dot_paths(arg, shell);
 	if (special)
@@ -90,27 +89,19 @@ static int	change_directory(const char *arg, t_shell *shell)
 	char	cwd[PATH_MAX];
 
 	path = get_abs_path(arg, shell);
-	if (!path)
+	if (!path || chdir(path) != 0)
 	{
 		ft_putstr_fd("cd: ", STDERR_FILENO);
 		ft_putstr_fd((char *)arg, STDERR_FILENO);
 		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 		shell->exit_status = 1;
+		free(path);
 		return (0);
 	}
-	if (chdir(path) == 0)
-	{
-		if (getcwd(cwd, sizeof(cwd)))
-			update_env_field(shell->env, "PWD", cwd);
-		free(path);
-		return (1);
-	}
-	ft_putstr_fd("cd: ", STDERR_FILENO);
-	ft_putstr_fd((char *)arg, STDERR_FILENO);
-	ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-	shell->exit_status = 1;
+	if (getcwd(cwd, sizeof(cwd)) && get_env_var(shell->env, "PWD"))
+		update_env_field(shell->env, "PWD", cwd);
 	free(path);
-	return (0);
+	return (1);
 }
 
 int	builtin_cd(char **argv, t_shell *shell)

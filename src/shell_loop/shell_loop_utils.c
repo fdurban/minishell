@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:11:33 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/15 16:19:47 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/15 16:54:26 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,24 @@ char	*get_current_pwd(t_env *env)
 	char	*home;
 	char	*pwd;
 	char	*currentpwd;
+	char	*cwd;
 
 	home = get_env_var(env, "HOME");
 	pwd = get_env_var(env, "PWD");
 	if (!pwd)
 	{
-		pwd = getcwd(NULL, 0);
-		if (!pwd)
-			perror("getcwd");
+		cwd = getcwd(NULL, 0);
+		if (home && ft_strncmp(home, cwd, ft_strlen(home)) == 0)
+			currentpwd = ft_strjoin("~", cwd + ft_strlen(home));
+		else
+			currentpwd = ft_strdup(cwd);
+		free(cwd);
+		return (currentpwd);
 	}
-	currentpwd = NULL;
-	if (home && pwd && ft_strncmp(home, pwd, ft_strlen(home)) == 0)
+	if (home && ft_strncmp(home, pwd, ft_strlen(home)) == 0)
 		currentpwd = ft_strjoin("~", pwd + ft_strlen(home));
-	else if (pwd)
-		currentpwd = ft_strdup(pwd);
 	else
-		currentpwd = ft_strdup("");
+		currentpwd = ft_strdup(pwd);
 	return (currentpwd);
 }
 
@@ -100,23 +102,4 @@ void	process_command_line(char *input, t_shell *shell)
 		return ;
 	shell->exit_status = execution(tok, shell);
 	free_token_matrix(tok);
-}
-
-int	should_continue_after_input(char *input, t_shell *shell)
-{
-	if (g_signal_state == SIGINT)
-	{
-		shell->exit_status = 130;
-		g_signal_state = 0;
-		if (!input)
-			return (1);
-	}
-	if (!input)
-		return (0);
-	if (*input == '\0')
-	{
-		free(input);
-		return (1);
-	}
-	return (-1);
 }
