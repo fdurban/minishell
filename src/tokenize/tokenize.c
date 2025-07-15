@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:25:55 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/25 14:42:49 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/14 13:36:40 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,7 @@ static void	process_token(const int matrix[W_TOTAL][I_NUM_INPUT],
 				ctx->previous_word_type);
 		free(ctx->command_token);
 		ctx->command_token = NULL;
-		handle_token_expansion(ctx->previous_word_type, &ctx->command_node,
-			shell, ctx);
+		handle_token_expansion(ctx, shell);
 		handle_token_join(ctx);
 	}
 }
@@ -66,6 +65,7 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 	ctx.partial_token = NULL;
 	ctx.lst = NULL;
 	ctx.here_doc = 0;
+	ctx.is_assign = 0;
 	while (ctx.word_type != W___END)
 	{
 		ctx.previous_word_type = ctx.word_type;
@@ -126,5 +126,6 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 	if (validate_command_syntax(valid_command, matrix))
 		return (NULL);
 	token = split_and_tokenize(matrix, valid_command, shell);
+	retokenize(token, shell);
 	return (token);
 }
