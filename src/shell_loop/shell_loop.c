@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   shell_loop.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakul <yakul@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/14 12:58:17 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/15 11:01:45 by yakul            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,73 +34,42 @@ char	*get_hostname(t_env *env)
 	return (hostname);
 }
 
-char	*get_current_pwd(t_env *env)
+static int	handle_signal_interrupt(char *input, t_shell *shell)
 {
-	char	*home;
-	char	*pwd;
-	char	*currentpwd;
-
-	home = get_env_var(env, "HOME");
-	pwd = get_env_var(env, "PWD");
-	if (!pwd)
+	if (g_signal_state == SIGINT)
 	{
-		pwd = getcwd(NULL, 0);
-		if (!pwd)
-			perror("getcwd");
+		shell->exit_status = 130;
+		g_signal_state = 0;
+		if (!input)
+			return (1);
 	}
-	currentpwd = NULL;
-	if (home && pwd && ft_strncmp(home, pwd, ft_strlen(home)) == 0)
-		currentpwd = ft_strjoin("~", pwd + ft_strlen(home));
-	else if (pwd)
-		currentpwd = ft_strdup(pwd);
-	else
-		currentpwd = ft_strdup("");
-	return (currentpwd);
+	return (0);
 }
 
-char	*build_user_prompt(t_env *env, char *hostname, char *currentpwd)
+static int	handle_null_or_empty_input(char *input)
 {
-	char	*username;
-	char	*tmp;
-	char	*tmp2;
-	char	*prompt;
-
-	username = get_env_var(env, "USER");
-	if (!username)
-		username = "";
-	tmp = ft_strjoin(username, "@");
-	tmp2 = ft_strjoin(tmp, hostname);
-	free(tmp);
-	tmp = ft_strjoin(tmp2, ":");
-	free(tmp2);
-	tmp2 = ft_strjoin(tmp, currentpwd);
-	free(tmp);
-	prompt = ft_strjoin(tmp2, "$ ");
-	free(tmp2);
-	return (prompt);
+	if (!input)
+		return (1);
+	if (*input == '\0')
+	{
+		free(input);
+		return (2);
+	}
+	return (0);
 }
 
-char	*build_prompt(t_env *env)
+static void	run_command(char *input, t_shell *shell)
 {
-	char	*hostname;
-	char	*currentpwd;
-	char	*prompt;
-
-	hostname = get_hostname(env);
-	currentpwd = get_current_pwd(env);
-	if (!hostname)
-		hostname = ft_strjoin("", "");
-	if (!currentpwd)
-		currentpwd = ft_strjoin("", "");
-	prompt = build_user_prompt(env, hostname, currentpwd);
-	free(hostname);
-	free(currentpwd);
-	return (prompt);
+	shell->state = SHELL_EXEC;
+	set_signal_handlers(SHELL_EXEC);
+	process_command_line(input, shell);
+	free(input);
 }
 
 void	shell_loop(t_shell *shell)
 {
 	char	*input;
+	int		result;
 
 	while (1)
 	{
@@ -108,23 +77,13 @@ void	shell_loop(t_shell *shell)
 		set_signal_handlers(SHELL_MAIN);
 		g_signal_state = 0;
 		input = get_user_input(shell->env);
-		if (g_signal_state == SIGINT)
-		{
-			shell->exit_status = 130;
-			g_signal_state = 0;
-			if (!input)
-				continue ;
-		}
-		if (!input)
-			break ;
-		if (*input == '\0')
-		{
-			free(input);
+		if (handle_signal_interrupt(input, shell))
 			continue ;
-		}
-		shell->state = SHELL_EXEC;
-		set_signal_handlers(shell->state);
-		process_command_line(input, shell);
-		free(input);
+		result = handle_null_or_empty_input(input);
+		if (result == 1)
+			break ;
+		if (result == 2)
+			continue ;
+		run_command(input, shell);
 	}
 }
