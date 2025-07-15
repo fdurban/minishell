@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: yakul <yakul@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:41:35 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/25 19:33:04 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/15 13:39:08 by yakul            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	init_pipex(t_pipex *px)
 	ft_bzero(px, sizeof(t_pipex));
 	px->in_fd = -1;
 	px->out_fd = -1;
-	px->here_doc = 0;
+	px->heredoc_count = 0;
 	px->heredoc_interrupted = 0;
 }
 
@@ -25,7 +25,6 @@ int	handle_empty_command(t_pipex *px, t_shell *shell)
 {
 	if (px->cmd_count == 0)
 	{
-		cleanup_pipex(px);
 		shell->exit_status = 0;
 		return (1);
 	}

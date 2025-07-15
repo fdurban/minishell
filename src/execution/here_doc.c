@@ -5,85 +5,78 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/24 10:24:37 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/14 15:55:29 by igngonza         ###   ########.fr       */
+/*   Created: Invalid date        by                   #+#    #+#             */
+/*   Updated: 2025/07/15 16:18:25 by igngonza         ###   ########.fr       */
 /*                                                                            */
+/* ************************************************************************** */
+
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-char	*create_heredoc_filename(void)
+static int	is_delimiter(char *buf, char *limiter, size_t lim_len)
 {
-	char		*num_str;
-	char		*filename;
-	size_t		total_len;
-	static int	counter;
-
-	num_str = ft_itoa(counter++);
-	if (!num_str)
-		return (NULL);
-	total_len = ft_strlen(".heredoc_") + ft_strlen(num_str) + 1;
-	filename = malloc(total_len);
-	if (!filename)
-	{
-		free(num_str);
-		return (NULL);
-	}
-	ft_strlcpy(filename, ".heredoc_", total_len);
-	ft_strlcat(filename, num_str, total_len);
-	free(num_str);
-	return (filename);
+	return (!ft_strncmp(limiter, buf, lim_len) && buf[lim_len] == '\n');
 }
 
-static int	is_heredoc_delimiter(const char *limiter, const char *buf)
+static int	should_continue_heredoc(char *buf, char *limiter, size_t lim_len)
 {
-	size_t	lim_len;
+	if (!buf)
+	{
+		write(1, "\n", 1);
+		return (0);
+	}
+	if (is_delimiter(buf, limiter, lim_len))
+	{
+		free(buf);
+		return (0);
+	}
+	return (1);
+}
 
-	lim_len = ft_strlen(limiter);
-	return (!ft_strncmp(limiter, buf, lim_len) && buf[lim_len] == '\n');
+static void	expand_and_write(char *buf, int fd, int type, t_shell *shell)
+{
+	char	*tmp;
+
+	if (type == W_STNDR)
+	{
+		tmp = expand_token(buf, shell);
+		free(buf);
+		buf = tmp;
+	}
+	write(fd, buf, ft_strlen(buf));
+	free(buf);
 }
 
 void	process_heredoc_input(char *limiter, int fd, int type, t_shell *shell)
 {
 	char	*buf;
-	char	*tmp;
+	size_t	lim_len;
 
 	while (1)
 	{
 		write(1, "heredoc> ", 9);
 		buf = get_next_line(STDIN_FILENO);
-		if (!buf || is_heredoc_delimiter(limiter, buf))
-		{
-			if (!buf)
-				write(1, "\n", 1);
-			free(buf);
+		if (!should_continue_heredoc(buf, limiter, lim_len))
 			break ;
-		}
-		if (type == W_STNDR && ft_strncmp(buf, limiter, ft_strlen(limiter)))
-		{
-			tmp = expand_token(buf, shell);
-			free(buf);
-			buf = tmp;
-		}
-		write(fd, buf, ft_strlen(buf));
-		free(buf);
+		expand_and_write(buf, fd, type, shell);
 	}
 }
 
-void	handle_heredoc(t_command_part *redir, t_pipex *pipex, t_shell *shell,
-		int i)
+void	handle_heredoc(t_command_part *p, t_pipex *pipex, t_shell *shell, int i)
 {
 	pid_t	pid;
 	char	*filename;
 
 	filename = create_heredoc_filename();
+	pipex->heredoc_count++;
 	pipex->heredoc_filenames[i] = filename;
 	pid = fork();
 	shell->state = SHELL_HEREDOC;
 	if (pid == -1)
 		handle_error("heredoc: fork failed");
 	if (pid == 0)
-		heredoc_child(redir->next->value, redir->next->type, filename, shell);
+		heredoc_child(p->value, p->type, filename, shell);
 	else
 		heredoc_parent(filename, shell, pipex, i);
 	shell->state = SHELL_MAIN;

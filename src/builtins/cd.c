@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/14 14:59:33 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/15 16:20:47 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ static char	*join_paths(const char *base, const char *relative)
 static char	*get_abs_path(const char *arg, t_shell *shell)
 {
 	char	*abs_path;
+	char	cwd[PATH_MAX];
 	char	*special;
 	char	*normalized;
 	char	cwd[PATH_MAX];
