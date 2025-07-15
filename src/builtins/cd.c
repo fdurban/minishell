@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakul <yakul@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/14 12:49:50 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/15 10:01:03 by yakul            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static char	*join_paths(const char *base, const char *relative)
 static char	*get_abs_path(const char *arg, t_shell *shell)
 {
 	char	*abs_path;
-	char	*pwd;
+	char	cwd[PATH_MAX];
 	char	*special;
 	char	*normalized;
 
@@ -71,14 +71,13 @@ static char	*get_abs_path(const char *arg, t_shell *shell)
 		abs_path = duplicate_str(normalized);
 	else
 	{
-		pwd = get_env_var(shell->env, "PWD");
-		if (!pwd)
+		if (!getcwd(cwd, sizeof(cwd)))
 		{
-			pwd = getcwd(NULL, 0);
-			if (!pwd)
-				perror("getcwd");
+			free(normalized);
+			perror("getcwd");
+			return (NULL);
 		}
-		abs_path = join_paths(pwd, normalized);
+		abs_path = join_paths(cwd, normalized);
 	}
 	free(normalized);
 	return (abs_path);

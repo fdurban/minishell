@@ -3,40 +3,60 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakul <yakul@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 11:42:16 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/14 12:28:54 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/15 10:02:08 by yakul            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	builtin_pwd(char **args, t_shell *shell)
+char	*get_current_directory(void)
 {
-	int		length;
-	int		i;
-	char	*pwd;
+	char	*cwd;
 
-	(void)args;
-	i = 0;
-	pwd = get_env_var(shell->env, "PWD");
-	if (!pwd)
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
 	{
-		pwd = getcwd(NULL, 0);
-		if (!pwd)
-		{
-			perror("getcwd");
-			return (1);
-		}
+		perror("getcwd");
+		return (NULL);
 	}
-	length = ft_strlen(pwd);
+	return (cwd);
+}
+
+void	print_directory(const char *directory)
+{
+	int	i;
+	int	length;
+
+	i = 0;
+	length = ft_strlen(directory);
 	while (i < length)
 	{
-		write(1, &pwd[i], 1);
+		write(1, &directory[i], 1);
 		i++;
 	}
 	write(1, "\n", 1);
-	free(pwd);
+}
+
+int	builtin_pwd(char **args, t_shell *shell)
+{
+	char	*pwd;
+	char	*allocated_pwd;
+
+	(void)args;
+	pwd = get_env_var(shell->env, "PWD");
+	allocated_pwd = NULL;
+	if (!pwd)
+	{
+		allocated_pwd = get_current_directory();
+		if (!allocated_pwd)
+			return (1);
+		pwd = allocated_pwd;
+	}
+	print_directory(pwd);
+	if (allocated_pwd)
+		free(allocated_pwd);
 	return (0);
 }
