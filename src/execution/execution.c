@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: yakul <yakul@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/22 12:10:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/25 19:28:41 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/15 13:38:38 by yakul            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,10 @@ int	execution(t_command_part **cmd_segs, t_shell *shell)
 		return (130);
 	}
 	if (handle_empty_command(&px, shell))
+	{
+		cleanup_pipex(&px);
 		return (0);
+	}
 	parse_paths(&px, shell);
 	if (handle_single_builtin(&px, shell))
 		return (shell->exit_status);

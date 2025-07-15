@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: yakul <yakul@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 10:21:47 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/04 12:59:46 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/15 13:39:48 by yakul            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	cleanup_heredoc(t_pipex *pipex)
 	if (!pipex || !pipex->heredoc_filenames)
 		return ;
 	i = 0;
-	while (i < pipex->cmd_count)
+	while (i < pipex->heredoc_count)
 	{
 		if (pipex->heredoc_filenames[i])
 		{

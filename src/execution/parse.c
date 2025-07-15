@@ -6,7 +6,7 @@
 /*   By: yakul <yakul@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/09 11:43:55 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/15 10:45:53 by yakul            ###   ########.fr       */
+/*   Updated: 2025/07/15 15:38:01 by yakul            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	process_segment(t_pipex *px, t_command_part *seg, int i, t_shell *shell)
 	while (p)
 	{
 		if (p->type == W_HRDOC && p->next != NULL)
-			handle_heredoc(p->next->value, p->next->type, px, shell, i);
+			handle_heredoc(p->next, px, shell, i);
 		if ((p->type == W_REDIN || p->type == W_REDOU || p->type == W_REDAP)
 			&& p->next)
 			p = p->next;

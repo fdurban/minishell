@@ -3,14 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: yakul <yakul@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 19:36:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/04 12:43:46 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/15 15:35:29 by yakul            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+char	*create_heredoc_filename(void)
+{
+	char		*num_str;
+	char		*filename;
+	size_t		total_len;
+	static int	counter;
+
+	num_str = ft_itoa(counter++);
+	if (!num_str)
+		return (NULL);
+	total_len = ft_strlen(".heredoc_") + ft_strlen(num_str) + 1;
+	filename = malloc(total_len);
+	if (!filename)
+	{
+		free(num_str);
+		return (NULL);
+	}
+	ft_strlcpy(filename, ".heredoc_", total_len);
+	ft_strlcat(filename, num_str, total_len);
+	free(num_str);
+	return (filename);
+}
 
 void	heredoc_parent(char *filename, t_shell *shell, t_pipex *pipex, int i)
 {
