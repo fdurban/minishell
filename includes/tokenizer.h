@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/15 17:21:19 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/15 18:08:26 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,12 @@ void						free_command_part_list(t_command_part *lst);
 int							should_accumulate_token(int prev_type);
 int							should_create_node_from_partial(int type,
 								char *partial);
-int							should_add_command_node(int prev_type,
-								int type, char *partial);
+int							should_add_command_node(int prev_type, int type,
+								char *partial);
 void						update_word_type(const char *str,
 								t_tokenizer_ctx *ctx,
 								const int matrix[W_TOTAL][I_NUM_INPUT]);
 void						retokenize(t_command_part **array, t_shell *shell);
-static int					calc_start(t_tokenizer_ctx *ctx);
+int							calc_start(t_tokenizer_ctx *ctx);
 
 #endif
