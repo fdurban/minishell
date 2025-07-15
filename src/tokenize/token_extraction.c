@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:30:02 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/14 13:48:05 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/15 17:20:53 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,15 +69,6 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 	}
 	else
 		return (NULL);
-}
-
-static int	calc_start(t_tokenizer_ctx *ctx)
-{
-	if ((ctx->word_type == W_DOUBQ || ctx->word_type == W_SINGQ)
-		&& (ctx->previous_word_type == W_EOSTD
-			|| ctx->previous_word_type == W_EOSTS))
-		return (ctx->i - 1);
-	return (ctx->i);
 }
 
 char	*extract_word(char *str,

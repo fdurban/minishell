@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 15:49:23 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/25 16:12:29 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/15 17:21:00 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,13 @@ int	should_add_command_node(int prev_type, int type, char *partial)
 	return ((prev_type == W_REDAP || prev_type == W_HRDOC
 			|| prev_type == W_REDIN || prev_type == W_REDOU
 			|| type == W___END) && !partial);
+}
+
+static int	calc_start(t_tokenizer_ctx *ctx)
+{
+	if ((ctx->word_type == W_DOUBQ || ctx->word_type == W_SINGQ)
+		&& (ctx->previous_word_type == W_EOSTD
+			|| ctx->previous_word_type == W_EOSTS))
+		return (ctx->i - 1);
+	return (ctx->i);
 }

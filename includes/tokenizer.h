@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/14 13:28:07 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/15 17:21:19 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,5 +100,6 @@ void						update_word_type(const char *str,
 								t_tokenizer_ctx *ctx,
 								const int matrix[W_TOTAL][I_NUM_INPUT]);
 void						retokenize(t_command_part **array, t_shell *shell);
+static int					calc_start(t_tokenizer_ctx *ctx);
 
 #endif
