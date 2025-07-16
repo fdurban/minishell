@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 10:26:24 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 10:05:16 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/16 12:41:12 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,12 @@ static void	process_export_with_value(char *arg, t_shell *shell)
 
 static void	process_export_without_value(char *arg, t_shell *shell)
 {
-	char	*new_var;
+	char	*existing_var;
 
-	if (!get_env_var(shell->env, arg))
-	{
-		new_var = ft_strdup(arg);
-		if (!new_var)
-			return ;
-		append_env_field(shell->env, new_var);
-	}
+	existing_var = get_env_var(shell->env, arg);
+	if (existing_var)
+		return ;
+	update_env_field(shell->env, arg, NULL);
 }
 
 int	builtin_export(char **args, t_shell *shell)
