@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:11:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/01 19:59:32 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/16 13:57:23 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,5 @@ int	main(int argc, char **argv, char **envp)
 	shell_loop(&shell);
 	free_env(shell.env);
 	rl_clear_history();
-	return (shell.exit_status);
+	exit(shell.exit_status);
 }

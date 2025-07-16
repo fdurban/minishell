@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/13 12:11:33 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/15 16:54:26 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/16 13:44:59 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,7 @@ char	*get_user_input(t_env *env)
 	prompt = build_prompt(env);
 	input = readline(prompt);
 	free(prompt);
-	if (!input && g_signal_state != 3)
-		printf("exit\n");
-	else if (input && *input && g_signal_state != 3)
+	if (input && *input && g_signal_state != SIGQUIT)
 		add_history(input);
 	return (input);
 }

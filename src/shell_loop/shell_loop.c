@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:20:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/15 16:20:25 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/16 15:18:15 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,12 @@ char	*get_hostname(t_env *env)
 
 static int	handle_signal_interrupt(char *input, t_shell *shell)
 {
+	if (!input)
+	{
+		shell->exit_status = 130;
+		g_signal_state = 0;
+		return (0);
+	}
 	if (g_signal_state == SIGINT)
 	{
 		shell->exit_status = 130;
@@ -74,14 +80,17 @@ void	shell_loop(t_shell *shell)
 	while (1)
 	{
 		shell->state = SHELL_MAIN;
-		set_signal_handlers(SHELL_MAIN);
 		g_signal_state = 0;
+		set_signal_handlers(SHELL_MAIN);
 		input = get_user_input(shell->env);
 		if (handle_signal_interrupt(input, shell))
 			continue ;
 		result = handle_null_or_empty_input(input);
 		if (result == 1)
+		{
+			printf("exit\n");
 			break ;
+		}
 		if (result == 2)
 			continue ;
 		run_command(input, shell);
