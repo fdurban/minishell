@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/15 17:21:19 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/16 16:51:43 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef enum e_word_type
 	W_EOSTS,
 	W___END,
 	W_ERROR,
+	W_EPIPE,
 	W_TOTAL
 }							t_word_type;
 
