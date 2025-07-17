@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   variable_expansion.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/17 16:27:22 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/17 18:20:41 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,18 +27,16 @@ char	*append_prefix(char *result, char *word_value, int start, int end)
 
 static int	get_var_name_length(const char *s, int start)
 {
-	int	length;
-
 	if (s[start] == '?')
 		return (1);
 	if (!ft_isalpha(s[start]) && s[start] != '_')
-		return (1);  // No es un inicio válido de variable
-
-	length = 1;
+		return (1);  // <- Aquí pones 0 en lugar de 1
+	int	length = 1;
 	while (ft_isalnum(s[start + length]) || s[start + length] == '_')
 		length++;
 	return (length);
 }
+
 
 static char	*get_var_value(const char *var_name, t_shell *shell)
 {
@@ -66,21 +64,18 @@ char	*append_variable(char *result, int *i, char *word,
 
 	start = *i + 1;
 	len = get_var_name_length(word, start);
-	if (len == 0)
+	if (!ft_isalpha(word[start]) && word[start] != '_' && word[start] != '?')
 	{
+		// No es una variable válida, tratamos $ como literal
 		new_result = ft_strjoin(result, "$");
 		free(result);
 		*i = start;
 		return (new_result);
 	}
 	{
-		printf("Valor del largo de word en append variable es %d\n", len);
 		var_name = ft_substr(word, start, len);
 		value = get_var_value(var_name, shell);
 		new_result = ft_strjoin(result, value);
-		printf("Valor de var_name %s\n", var_name);
-		printf("Valor de value %s\n", value);
-		printf("Valor de new_result %s\n", new_result);
 		free(result);
 		free(var_name);
 		free(value);
