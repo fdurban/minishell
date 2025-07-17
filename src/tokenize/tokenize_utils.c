@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 19:03:53 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/17 17:44:11 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/17 18:00:49 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,17 +38,13 @@ int	validate_command_syntax(char *valid_command,
 
 	i = 0;
 	state = W_START;
-	//input = get_token_type(valid_command[i]);
-	//state = matrix[state][input];
 	while (state != W___END)
 	{
-		//printf("El valor de input por comando es de %d\n", input);
-		//printf("El valor de estaado por comando es de %d\n", state);
-		checkposition(state, valid_command, i);
 		if (is_pipe_at_end(valid_command, i))
-			return (1);
+		return (1);
 		input = get_token_type(valid_command[i]);
 		state = matrix[state][input];
+		//checkposition(state, valid_command, i);
 		if (state == W_ERROR)
 		{
 			printf("Syntax Error\n");
