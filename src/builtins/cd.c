@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/15 17:14:19 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/17 12:45:14 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ static int	change_directory(const char *arg, t_shell *shell)
 {
 	char	*path;
 	char	cwd[PATH_MAX];
+	char	*oldwd;
+	char	*copy_oldwd;
 
 	path = get_abs_path(arg, shell);
 	if (!path || chdir(path) != 0)
@@ -99,7 +101,19 @@ static int	change_directory(const char *arg, t_shell *shell)
 		return (0);
 	}
 	if (getcwd(cwd, sizeof(cwd)) && get_env_var(shell->env, "PWD"))
+	{
+		oldwd = get_env_var(shell->env, "PWD");
+		if (oldwd)
+		{
+			copy_oldwd = ft_strdup(oldwd);
+			if (copy_oldwd)
+			{
+				update_env_field(shell->env, "OLDPWD", copy_oldwd);
+				free(copy_oldwd);
+			}
+		}
 		update_env_field(shell->env, "PWD", cwd);
+	}
 	free(path);
 	return (1);
 }
