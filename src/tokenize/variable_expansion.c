@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   variable_expansion.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/25 02:21:33 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/17 16:27:22 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,12 @@ static int	get_var_name_length(const char *s, int start)
 {
 	int	length;
 
-	length = 0;
 	if (s[start] == '?')
 		return (1);
+	if (!ft_isalpha(s[start]) && s[start] != '_')
+		return (1);  // No es un inicio válido de variable
+
+	length = 1;
 	while (ft_isalnum(s[start + length]) || s[start + length] == '_')
 		length++;
 	return (length);
@@ -71,9 +74,13 @@ char	*append_variable(char *result, int *i, char *word,
 		return (new_result);
 	}
 	{
+		printf("Valor del largo de word en append variable es %d\n", len);
 		var_name = ft_substr(word, start, len);
 		value = get_var_value(var_name, shell);
 		new_result = ft_strjoin(result, value);
+		printf("Valor de var_name %s\n", var_name);
+		printf("Valor de value %s\n", value);
+		printf("Valor de new_result %s\n", new_result);
 		free(result);
 		free(var_name);
 		free(value);
