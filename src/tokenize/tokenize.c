@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:25:55 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/17 02:19:45 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/17 17:36:41 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 	{W_SPACE, W_STNDR, W___END, W_SINGQ, W_DOUBQ, W_REDIN, W_REDOU, W_EPIPE},	//W_EOFST
 	{W_DOUBQ, W_DOUBQ, W_ERROR, W_EOFDQ, W_EOFDQ, W_DOUBQ, W_DOUBQ, W_ERROR},	//W_EOSTD
 	{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ, W_ERROR},	//W_EOSTS
+	{W_SPACE, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR, W_ERROR},	//W_EPIPE
 	};
 	//probar ls |"" | ls
 	if (validate_command_syntax(valid_command, matrix))

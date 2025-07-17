@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/17 01:57:03 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/17 17:35:29 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,9 @@ typedef enum e_word_type
 	W_EOFST,
 	W_EOSTD,
 	W_EOSTS,
+	W_EPIPE,
 	W___END,
 	W_ERROR,
-	W_EPIPE,
 	W_TOTAL
 }							t_word_type;
 
@@ -101,6 +101,7 @@ void						update_word_type(const char *str,
 								t_tokenizer_ctx *ctx,
 								const int matrix[W_TOTAL][I_NUM_INPUT]);
 void						retokenize(t_command_part **array, t_shell *shell);
-int					calc_start(t_tokenizer_ctx *ctx);
+int							calc_start(t_tokenizer_ctx *ctx);
+void						checkposition(t_word_type word_type, char *valid_command, int i);
 
 #endif
