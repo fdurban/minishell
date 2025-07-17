@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 12:29:56 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/26 12:27:39 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/17 11:52:22 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	is_valid_n_flag(const char *s)
 {
 	int	i;
 
-	if (s[0] != '-')
+	if (s[0] != '-' || s[1] == '\0')
 		return (0);
 	i = 1;
 	while (s[i])
