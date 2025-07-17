@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 15:49:23 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/15 18:08:48 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/17 19:55:58 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,15 @@ int	should_accumulate_token(int prev_type)
 int	should_create_node_from_partial(int type, char *partial)
 {
 	return ((type == W_SPACE || type == W_SARED || type == W_REDIN
-			|| type == W_REDOU || type == W___END) && partial);
+			|| type == W_REDOU || type == W___END || type == W_EPIPE)
+		&& partial);
 }
 
 int	should_add_command_node(int prev_type, int type, char *partial)
 {
 	return ((prev_type == W_REDAP || prev_type == W_HRDOC
-			|| prev_type == W_REDIN || prev_type == W_REDOU || type == W___END)
-		&& !partial);
+			|| prev_type == W_REDIN || prev_type == W_REDOU || type == W___END
+			|| type == W_EPIPE) && !partial);
 }
 
 int	calc_start(t_tokenizer_ctx *ctx)

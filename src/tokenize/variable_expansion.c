@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/06/25 02:21:33 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/17 18:20:41 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,15 +27,16 @@ char	*append_prefix(char *result, char *word_value, int start, int end)
 
 static int	get_var_name_length(const char *s, int start)
 {
-	int	length;
-
-	length = 0;
 	if (s[start] == '?')
 		return (1);
+	if (!ft_isalpha(s[start]) && s[start] != '_')
+		return (1);  // <- Aquí pones 0 en lugar de 1
+	int	length = 1;
 	while (ft_isalnum(s[start + length]) || s[start + length] == '_')
 		length++;
 	return (length);
 }
+
 
 static char	*get_var_value(const char *var_name, t_shell *shell)
 {
@@ -63,8 +64,9 @@ char	*append_variable(char *result, int *i, char *word,
 
 	start = *i + 1;
 	len = get_var_name_length(word, start);
-	if (len == 0)
+	if (!ft_isalpha(word[start]) && word[start] != '_' && word[start] != '?')
 	{
+		// No es una variable válida, tratamos $ como literal
 		new_result = ft_strjoin(result, "$");
 		free(result);
 		*i = start;
