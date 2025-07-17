@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/17 12:45:14 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/17 17:12:54 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,6 @@ static int	change_directory(const char *arg, t_shell *shell)
 {
 	char	*path;
 	char	cwd[PATH_MAX];
-	char	*oldwd;
-	char	*copy_oldwd;
 
 	path = get_abs_path(arg, shell);
 	if (!path || chdir(path) != 0)
@@ -100,20 +98,30 @@ static int	change_directory(const char *arg, t_shell *shell)
 		free(path);
 		return (0);
 	}
-	if (getcwd(cwd, sizeof(cwd)) && get_env_var(shell->env, "PWD"))
+	if (shell->pwd)
 	{
-		oldwd = get_env_var(shell->env, "PWD");
-		if (oldwd)
-		{
-			copy_oldwd = ft_strdup(oldwd);
-			if (copy_oldwd)
-			{
-				update_env_field(shell->env, "OLDPWD", copy_oldwd);
-				free(copy_oldwd);
-			}
-		}
-		update_env_field(shell->env, "PWD", cwd);
+		free(shell->oldpwd);
+		shell->oldpwd = ft_strdup(shell->pwd);
+		free(shell->pwd);
+		shell->pwd = NULL;
 	}
+	else
+	{
+		free(shell->oldpwd);
+		shell->oldpwd = NULL;
+	}
+	if (getcwd(cwd, sizeof(cwd)))
+		shell->pwd = ft_strdup(cwd);
+	else
+	{
+		ft_putstr_fd("cd: warning: getcwd failed\n", STDERR_FILENO);
+		shell->pwd = ft_strdup("");
+	}
+	if (get_env_var(shell->env, "OLDPWD") && shell->oldpwd)
+		update_env_field(shell->env, "OLDPWD", shell->oldpwd);
+	if (get_env_var(shell->env, "PWD") && shell->pwd)
+		update_env_field(shell->env, "PWD", shell->pwd);
+	shell->exit_status = 0;
 	free(path);
 	return (1);
 }

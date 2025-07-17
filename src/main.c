@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:11:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/16 13:57:23 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/17 14:47:58 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	shell.exit_status = 0;
 	shell.env = copy_env(envp);
+	shell.pwd = getcwd(NULL, 0);
+	shell.oldpwd = NULL;
 	if (!shell.env)
 	{
 		fprintf(stderr, "Failed to copy environment\n");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 18:04:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/01 18:55:56 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/17 16:23:50 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ typedef struct s_shell
 {
 	t_env			*env;
 	int				exit_status;
+	char			*pwd;
+	char			*oldpwd;
 	t_shell_state	state;
 }					t_shell;
 
