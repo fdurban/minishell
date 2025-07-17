@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 19:03:53 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/25 14:44:38 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/17 01:39:12 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	count_segments(const char *cmd, const int matrix[W_TOTAL][I_NUM_INPUT])
 		input = get_token_type(cmd[i]);
 		state = matrix[state][input];
 		i++;
-		if (state == W___END)
+		if (state == W_EPIPE)
 			count++;
 	}
 	return (count);
@@ -93,7 +93,7 @@ void	fill_segments(char **segments, char *cmd,
 		input = get_token_type(cmd[i]);
 		state = matrix[state][input];
 		i++;
-		if (state == W___END || cmd[i] == '\0')
+		if (state == W___END || cmd[i] == '\0' || state == W_EPIPE)
 		{
 			segments[segment_index++] = ft_substr(cmd, start, i - start);
 			start = i;
