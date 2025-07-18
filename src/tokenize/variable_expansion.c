@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   variable_expansion.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/17 18:20:41 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/18 18:48:41 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,25 @@ char	*append_prefix(char *result, char *word_value, int start, int end)
 	char	*tmp;
 
 	prefix = ft_substr(word_value, start, end - start);
+	printf("El valor de prefix es %s\n", prefix);
 	tmp = ft_strjoin(result, prefix);
 	free(prefix);
 	free(result);
 	return (tmp);
 }
 
-static int	get_var_name_length(const char *s, int start)
+static int	get_var_name_length(const char *s, int *start)
 {
-	if (s[start] == '?')
+	int	length;
+	length = 0;
+	printf("EL VALOR DE S es %s\n", s);
+	if (s[*start] == '?')
 		return (1);
-	if (!ft_isalpha(s[start]) && s[start] != '_')
-		return (1);  // <- Aquí pones 0 en lugar de 1
-	int	length = 1;
-	while (ft_isalnum(s[start + length]) || s[start + length] == '_')
+	while (s[*start + length] != '\0' && s[*start + length] != ' ')
+	{
+		printf("A\n");
 		length++;
+	}
 	return (length);
 }
 
@@ -45,6 +49,8 @@ static char	*get_var_value(const char *var_name, t_shell *shell)
 
 	if (ft_strcmp(var_name, "?") == 0)
 		return (ft_itoa(shell->exit_status));
+	if (ft_strcmp(var_name, "?") == 0)
+		return ("/");
 	env_val = get_env_var(shell->env, var_name);
 	if (env_val != NULL)
 		value = ft_strdup(env_val);
@@ -53,8 +59,7 @@ static char	*get_var_value(const char *var_name, t_shell *shell)
 	return (value);
 }
 
-char	*append_variable(char *result, int *i, char *word,
-		t_shell *shell)
+char	*append_variable(char *result, int *i, char *word, t_shell *shell)
 {
 	int		start;
 	int		len;
@@ -62,26 +67,28 @@ char	*append_variable(char *result, int *i, char *word,
 	char	*var_name;
 	char	*value;
 
+	printf("Valor de i en append_variable (antes) %d\n", *i);
 	start = *i + 1;
-	len = get_var_name_length(word, start);
-	if (!ft_isalpha(word[start]) && word[start] != '_' && word[start] != '?')
+	len = get_var_name_length(word, &start);
+	printf("valor de length es %d\n", len);
+	printf("l vallor de word[start] es %c\n", word[start]);
+	if ((!ft_isalpha(word[start]) && word[start] != '_' && word[start] != '?' && word[start] == '"'))
 	{
-		// No es una variable válida, tratamos $ como literal
+		printf("ENTRAAAA con result de %s\n", result);
 		new_result = ft_strjoin(result, "$");
 		free(result);
-		*i = start;
+		*i += 1;
 		return (new_result);
 	}
-	{
-		var_name = ft_substr(word, start, len);
-		value = get_var_value(var_name, shell);
-		new_result = ft_strjoin(result, value);
-		free(result);
-		free(var_name);
-		free(value);
-		*i = start + len;
-		return (new_result);
-	}
+	var_name = ft_substr(word, start, len);
+	value = get_var_value(var_name, shell);
+	new_result = ft_strjoin(result, value);
+	free(result);
+	free(var_name);
+	free(value);
+	*i = start + len;
+	printf("Valor de i en append_variable (despues) %d\n", *i);
+	return (new_result);
 }
 
 char	*expand_token(char *word, t_shell *shell)
@@ -94,6 +101,8 @@ char	*expand_token(char *word, t_shell *shell)
 	result = ft_strdup("");
 	while (word[i] != '\0')
 	{
+		printf("Valor de word %s\n", word);
+		printf("Valor de i en expand_token (antes) %d\n", i);
 		start = i;
 		while (word[i] && word[i] != '$')
 			i++;
@@ -102,6 +111,8 @@ char	*expand_token(char *word, t_shell *shell)
 			result = append_variable(result, &i, word, shell);
 		if (!result)
 			result = ft_strjoin(result, "\n");
+		printf("Valor de i en expand_token (despues) %d\n", i);
 	}
+	printf("VALOR DE RESULT TOTAL %s\n", result);
 	return (result);
 }
