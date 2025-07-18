@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yakul <yakul@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 20:10:39 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/15 16:21:09 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/18 12:22:27 by yakul            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,6 @@
 # include <stdio.h>
 # include <string.h>
 
-extern volatile sig_atomic_t	g_signal_state;
+extern sig_atomic_t	g_signal_state;
 
 #endif

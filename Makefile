@@ -20,7 +20,7 @@ SRC_DIR = ./src
 SRC_FILES = $(SRC_DIR)/main.c
 
 ENV_DIR  = $(SRC_DIR)/env
-ENV_FILES = $(ENV_DIR)/env.c $(ENV_DIR)/env_utils.c 
+ENV_FILES = $(ENV_DIR)/env.c $(ENV_DIR)/env_utils.c
 
 EXE_DIR  = $(SRC_DIR)/execution
 EXE_FILES = $(EXE_DIR)/cleanup.c $(EXE_DIR)/errors.c $(EXE_DIR)/exec.c \
@@ -30,7 +30,7 @@ EXE_FILES = $(EXE_DIR)/cleanup.c $(EXE_DIR)/errors.c $(EXE_DIR)/exec.c \
 						$(EXE_DIR)/argv_builder.c $(EXE_DIR)/childs_utils.c
 
 LOOP_DIR  = $(SRC_DIR)/shell_loop
-LOOP_FILES = $(LOOP_DIR)/shell_loop.c $(ENV_DIR)/shell_loop_utils.c 
+LOOP_FILES = $(LOOP_DIR)/shell_loop.c $(ENV_DIR)/shell_loop_utils.c
 
 TOKEN_DIR = $(SRC_DIR)/tokenize
 TOKEN_FILES = $(TOKEN_DIR)/tokenize.c $(TOKEN_DIR)/tokenize_utils.c \
@@ -42,7 +42,8 @@ BUILTINS_DIR = $(SRC_DIR)/builtins
 BUILTINS_FILES = $(BUILTINS_DIR)/unset.c $(BUILTINS_DIR)/pwd.c $(BUILTINS_DIR)/export_print.c \
                  $(BUILTINS_DIR)/export.c $(BUILTINS_DIR)/exit.c $(BUILTINS_DIR)/env_builtin.c \
                  $(BUILTINS_DIR)/echo.c $(BUILTINS_DIR)/cd_utils.c $(BUILTINS_DIR)/cd.c \
-                 $(BUILTINS_DIR)/builtin_dispatch.c
+                 $(BUILTINS_DIR)/builtin_dispatch.c  $(BUILTINS_DIR)/cd_double_dot_utils.c \
+								 $(BUILTINS_DIR)/cd_operands.c
 
 OBJ_DIR = ./obj
 SRC_OBJ = $(SRC_FILES:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

@@ -3,50 +3,54 @@
 /*                                                        :::      ::::::::   */
 /*   cd_utils.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 10:58:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/15 16:13:34 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/18 17:56:16 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+char	*get_abs_path(const char *arg, t_shell *shell)
+{
+	char	*special;
+	char	*normalized;
+	char	*abs_path;
+
+	if (ft_strcmp(arg, "-") == 0)
+		return (handle_dash(shell));
+	if (ft_strcmp(arg, "~") == 0)
+		return (handle_tilde(shell));
+	special = handle_dot_paths(arg, shell);
+	if (special)
+		return (special);
+	normalized = collapse_slashes(arg);
+	if (!normalized)
+		return (NULL);
+	abs_path = resolve_normal_path(normalized, shell);
+	free(normalized);
+	return (abs_path);
+}
+
 static char	*handle_single_dot(t_shell *shell)
 {
 	char	cwd[PATH_MAX];
+	char	*env_pwd;
 
-	(void)shell;
 	if (!getcwd(cwd, sizeof(cwd)))
-		return (NULL);
-	return (ft_strdup(cwd));
-}
-
-static char	*handle_double_dot(t_shell *shell)
-{
-	char	cwd[PATH_MAX];
-	char	*new_pwd;
-	char	*last_slash;
-	size_t	len;
-
-	(void)shell;
-	if (!getcwd(cwd, sizeof(cwd)))
-		return (NULL);
-	new_pwd = ft_strdup(cwd);
-	if (!new_pwd)
-		return (NULL);
-	len = ft_strlen(new_pwd);
-	if (len > 1 && new_pwd[len - 1] == '/')
-		new_pwd[len - 1] = '\0';
-	last_slash = ft_strrchr(new_pwd, '/');
-	if (last_slash)
-		*last_slash = '\0';
-	if (ft_strlen(new_pwd) == 0)
 	{
-		free(new_pwd);
-		new_pwd = ft_strdup("/");
+		if (shell->pwd && ft_strlen(shell->pwd) > 0)
+			return (ft_strdup(shell->pwd));
+		else
+		{
+			env_pwd = get_env_var(shell->env, "PWD");
+			if (env_pwd)
+				return (ft_strdup(env_pwd));
+			return (NULL);
+		}
 	}
-	return (new_pwd);
+	return (ft_strdup(cwd));
 }
 
 char	*handle_dot_paths(const char *arg, t_shell *shell)

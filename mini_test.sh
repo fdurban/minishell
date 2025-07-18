@@ -5,7 +5,7 @@ tmux new-session -d -s my_session
 
 # Divide la ventana en dos paneles (uno a la izquierda y otro a la derecha)
 tmux split-window -h
-tmux send-keys -t my_session:0.0 'bash' C-m
+tmux send-keys -t my_session:0.0 'bash --norc --noprofile' C-m
 tmux send-keys -t my_session:0.1 'make' C-m
 tmux send-keys -t my_session:0.1 './minishell' C-m
 tmux send-keys -t my_session:0.0 'clear' C-m

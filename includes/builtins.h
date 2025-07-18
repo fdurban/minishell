@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 18:04:03 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/17 16:23:50 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/18 17:58:25 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int					is_builtin(const char *cmd);
 int					builtin_echo(char **args, t_shell *shell);
 int					builtin_cd(char **argv, t_shell *shell);
 char				*handle_dot_paths(const char *arg, t_shell *shell);
+char				*handle_double_dot(t_shell *shell);
 int					builtin_pwd(char **args, t_shell *shell);
 int					builtin_export(char **args, t_shell *shell);
 void				print_exported_env(t_env *env);
@@ -54,5 +55,11 @@ int					builtin_unset(char **args, t_shell *shell);
 int					builtin_env(char **args, t_shell *shell);
 int					builtin_exit(char **args, t_shell *shell);
 char				*collapse_slashes(const char *path);
-
+char				*resolve_normal_path(const char *normalized,
+						t_shell *shell);
+char				*handle_tilde(t_shell *shell);
+char				*handle_dash(t_shell *shell);
+char				*duplicate_str(const char *s);
+char				*join_paths(const char *base, const char *relative);
+char				*get_abs_path(const char *arg, t_shell *shell);
 #endif

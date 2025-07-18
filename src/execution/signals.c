@@ -6,14 +6,14 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 18:48:08 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/01 20:12:09 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/18 17:38:54 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 #include <sys/ioctl.h>
 
-volatile sig_atomic_t	g_signal_state = 0;
+sig_atomic_t	g_signal_state = 0;
 
 void	sigint_prompt_handler(int sig)
 {

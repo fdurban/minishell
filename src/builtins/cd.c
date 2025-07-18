@@ -3,101 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 11:56:30 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/17 17:12:54 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/18 17:59:25 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static char	*duplicate_str(const char *s)
+static int	handle_cd_error(const char *arg, char *path, t_shell *shell)
 {
-	size_t	len;
-	size_t	i;
-	char	*dup;
-
-	len = ft_strlen(s);
-	dup = malloc(len + 1);
-	if (!dup)
-		return (NULL);
-	i = 0;
-	while (i < len)
-	{
-		dup[i] = s[i];
-		i++;
-	}
-	dup[i] = '\0';
-	return (dup);
+	ft_putstr_fd("cd: ", STDERR_FILENO);
+	ft_putstr_fd((char *)arg, STDERR_FILENO);
+	ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
+	shell->exit_status = 1;
+	free(path);
+	return (0);
 }
 
-static char	*join_paths(const char *base, const char *relative)
+static void	update_pwd_and_oldpwd(t_shell *shell)
 {
-	size_t	base_len;
-	size_t	rel_len;
-	char	*full_path;
-	char	*dest;
-
-	base_len = ft_strlen(base);
-	rel_len = ft_strlen(relative);
-	full_path = malloc(base_len + rel_len + 2);
-	if (!full_path)
-		return (NULL);
-	dest = full_path;
-	while (*base)
-		*dest++ = *base++;
-	*dest++ = '/';
-	while (*relative)
-		*dest++ = *relative++;
-	*dest = '\0';
-	return (full_path);
-}
-
-static char	*get_abs_path(const char *arg, t_shell *shell)
-{
-	char	*abs_path;
-	char	cwd[PATH_MAX];
-	char	*special;
-	char	*normalized;
-
-	special = handle_dot_paths(arg, shell);
-	if (special)
-		return (special);
-	normalized = collapse_slashes(arg);
-	if (!normalized)
-		return (NULL);
-	if (normalized[0] == '/')
-		abs_path = duplicate_str(normalized);
-	else
-	{
-		if (!getcwd(cwd, sizeof(cwd)))
-		{
-			free(normalized);
-			perror("getcwd");
-			return (NULL);
-		}
-		abs_path = join_paths(cwd, normalized);
-	}
-	free(normalized);
-	return (abs_path);
-}
-
-static int	change_directory(const char *arg, t_shell *shell)
-{
-	char	*path;
 	char	cwd[PATH_MAX];
 
-	path = get_abs_path(arg, shell);
-	if (!path || chdir(path) != 0)
-	{
-		ft_putstr_fd("cd: ", STDERR_FILENO);
-		ft_putstr_fd((char *)arg, STDERR_FILENO);
-		ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-		shell->exit_status = 1;
-		free(path);
-		return (0);
-	}
 	if (shell->pwd)
 	{
 		free(shell->oldpwd);
@@ -117,10 +45,25 @@ static int	change_directory(const char *arg, t_shell *shell)
 		ft_putstr_fd("cd: warning: getcwd failed\n", STDERR_FILENO);
 		shell->pwd = ft_strdup("");
 	}
+}
+
+static void	update_env_pwd_vars(t_shell *shell)
+{
 	if (get_env_var(shell->env, "OLDPWD") && shell->oldpwd)
 		update_env_field(shell->env, "OLDPWD", shell->oldpwd);
 	if (get_env_var(shell->env, "PWD") && shell->pwd)
 		update_env_field(shell->env, "PWD", shell->pwd);
+}
+
+int	change_directory(const char *arg, t_shell *shell)
+{
+	char	*path;
+
+	path = get_abs_path(arg, shell);
+	if (!path || chdir(path) != 0)
+		return (handle_cd_error(arg, path, shell));
+	update_pwd_and_oldpwd(shell);
+	update_env_pwd_vars(shell);
 	shell->exit_status = 0;
 	free(path);
 	return (1);
