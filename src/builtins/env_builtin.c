@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_builtin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 15:31:10 by igngonza          #+#    #+#             */
-/*   Updated: 2025/06/24 10:05:09 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/19 13:56:26 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	builtin_env(char **args, t_shell *shell)
 	while (i < shell->env->count)
 	{
 		if (ft_strchr(shell->env->vars[i], '='))
-			printf("%s\n", shell->env->vars[i]);
+			ft_printf("%s\n", shell->env->vars[i]);
 		i++;
 	}
 	return (0);
