@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/19 11:47:07 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/19 12:20:03 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,16 @@ char	*append_prefix(char *result, char *word_value, int start, int end)
 static int	get_var_name_length(const char *s, int *start)
 {
 	int	length;
+
 	length = 0;
 	if (s[*start] == '?' || s[*start] == '-' || s[*start] == '$')
 		return (1);
-	// if (!ft_isalpha(s[*start]) && s[*start] != '_')
-	// 	return (0);
 	while (s[*start + length] != '\0' && s[*start + length] != ' ')
 	{
 		length++;
 	}
 	return (length);
 }
-
 
 static char	*get_var_value(const char *var_name, t_shell *shell)
 {
@@ -59,7 +57,6 @@ static char	*get_var_value(const char *var_name, t_shell *shell)
 	return (value);
 }
 
-
 char	*append_variable(char *result, int *i, char *word, t_shell *shell)
 {
 	int		start;
@@ -70,8 +67,8 @@ char	*append_variable(char *result, int *i, char *word, t_shell *shell)
 
 	start = *i + 1;
 	len = get_var_name_length(word, &start);
-	char next = word[*i + 1];
-	if (next == '\0' || next == ' ' || next == '/' || next == '+' || next == '\'')
+	if (word[*i + 1] == '\0' || word[*i + 1] == ' ' || word[*i + 1] == '/'
+		|| word[*i + 1] == '+' || word[*i + 1] == '\'')
 	{
 		new_result = ft_strjoin(result, "$");
 		free(result);
@@ -84,7 +81,7 @@ char	*append_variable(char *result, int *i, char *word, t_shell *shell)
 	free(result);
 	free(var_name);
 	free(value);
-		*i = start + len;
+	*i = start + len;
 	return (new_result);
 }
 
