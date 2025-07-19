@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   retokenize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 13:18:05 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/14 15:09:15 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/19 01:17:37 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ static void	process_retokenize_block(
 	t_command_part	*new_list;
 
 	new_tokens = tokenize((*tmp_ptr)->value, shell);
+	print_values(new_tokens);
 	new_list = *new_tokens;
 	next = (*tmp_ptr)->next;
 	insert_retokenized(lst, *prev_ptr, new_list, next);
@@ -72,7 +73,9 @@ void	retokenize(t_command_part **array, t_shell *shell)
 		while (tmp)
 		{
 			if (tmp->needs_retokenize)
+			{
 				process_retokenize_block(lst, &tmp, &prev, shell);
+			}
 			else
 			{
 				prev = tmp;

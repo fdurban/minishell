@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handlers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:37:15 by fernando          #+#    #+#             */
-/*   Updated: 2025/07/15 14:56:48 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/19 02:03:31 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,30 @@
 void	handle_token_expansion(t_tokenizer_ctx *ctx, t_shell *shell)
 {
 	char	*expanded;
+	char	*original;
 
 	if ((ctx->previous_word_type == W_STNDR
 			|| ctx->previous_word_type == W_DOUBQ)
 		&& !ctx->here_doc
 		&& ft_strchr(ctx->command_node->value, '$'))
 	{
+		original = ft_strdup(ctx->command_node->value);
+		if (!original)
+			return ;
 		expanded = expand_token(ctx->command_node->value, shell);
 		free(ctx->command_node->value);
 		ctx->command_node->value = expanded;
-		if (!expanded || expanded[0] == '\0' || ft_strcmp(expanded, "$") == 0)
+		if (!expanded || !*expanded || ctx->is_assign)
 			ctx->command_node->needs_retokenize = 0;
-		else if (!ctx->is_assign && ctx->previous_word_type != W_DOUBQ)
+		else if (ft_strcmp(original, expanded) == 0)
+			ctx->command_node->needs_retokenize = 0;
+		else if (ft_strchr(expanded, ' ') || ft_strchr(expanded, '<')
+			|| ft_strchr(expanded, '>') || ft_strchr(expanded, '|'))
 			ctx->command_node->needs_retokenize = 1;
+		else
+			ctx->command_node->needs_retokenize = 0;
 		ctx->is_assign = 0;
+		free(original);
 	}
 }
 

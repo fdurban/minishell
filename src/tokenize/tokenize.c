@@ -6,7 +6,7 @@
 /*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:25:55 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/17 18:37:31 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/19 01:17:48 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 	ctx.lst = NULL;
 	ctx.here_doc = 0;
 	ctx.is_assign = 0;
-	while (ctx.word_type != W___END)
+	while (ctx.word_type != W___END && ctx.word_type != W_EPIPE)
 	{
 		ctx.previous_word_type = ctx.word_type;
 		ctx.word_type = get_next_word_type(matrix, valid_command, &ctx.i,
