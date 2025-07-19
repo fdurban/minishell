@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:25:55 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/18 17:01:24 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/19 01:17:48 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,7 @@ static void	process_token(const int matrix[W_TOTAL][I_NUM_INPUT],
 		|| ctx->word_type == W_SPACE || ctx->word_type == W_REDIN
 		|| ctx->word_type == W_REDOU)
 	{
-		//printf("valor de ctx->i es de %d\n", ctx->i);
 		ctx->command_token = extract_token_value(valid_command, matrix, ctx);
-		//printf("valor de ctx->i es de %d\n", ctx->i);
 	}
 	if (ctx->command_token)
 	{
@@ -50,9 +48,7 @@ static void	process_token(const int matrix[W_TOTAL][I_NUM_INPUT],
 				ctx->previous_word_type);
 		free(ctx->command_token);
 		ctx->command_token = NULL;
-		//printf("valor de ctx->i (handle_token_expansion) es de %d\n", ctx->i);
 		handle_token_expansion(ctx, shell);
-		//printf("valor de ctx->i (handle_token_expansion) es de %d\n", ctx->i);
 		handle_token_join(ctx);
 	}
 }
@@ -70,7 +66,7 @@ t_command_part	*tokenize_pipe_segment(const int matrix[W_TOTAL][I_NUM_INPUT],
 	ctx.lst = NULL;
 	ctx.here_doc = 0;
 	ctx.is_assign = 0;
-	while (ctx.word_type != W___END)
+	while (ctx.word_type != W___END && ctx.word_type != W_EPIPE)
 	{
 		ctx.previous_word_type = ctx.word_type;
 		ctx.word_type = get_next_word_type(matrix, valid_command, &ctx.i,

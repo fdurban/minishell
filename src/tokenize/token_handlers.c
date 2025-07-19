@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handlers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:37:15 by fernando          #+#    #+#             */
-/*   Updated: 2025/07/18 18:06:11 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/19 02:03:31 by fernando         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,30 @@
 void	handle_token_expansion(t_tokenizer_ctx *ctx, t_shell *shell)
 {
 	char	*expanded;
+	char	*original;
 
 	if ((ctx->previous_word_type == W_STNDR
 			|| ctx->previous_word_type == W_DOUBQ)
 		&& !ctx->here_doc
 		&& ft_strchr(ctx->command_node->value, '$'))
 	{
+		original = ft_strdup(ctx->command_node->value);
+		if (!original)
+			return ;
 		expanded = expand_token(ctx->command_node->value, shell);
 		free(ctx->command_node->value);
 		ctx->command_node->value = expanded;
-		printf("Valor de ctx->is assign es %d\n", ctx->is_assign);
-		if (ctx->is_assign && expanded[ctx->i] == '$' && (ft_isalpha(expanded[ctx-> i + 1]) || expanded[ctx->i] == '_' || expanded[ctx->i] == '?'))
+		if (!expanded || !*expanded || ctx->is_assign)
+			ctx->command_node->needs_retokenize = 0;
+		else if (ft_strcmp(original, expanded) == 0)
+			ctx->command_node->needs_retokenize = 0;
+		else if (ft_strchr(expanded, ' ') || ft_strchr(expanded, '<')
+			|| ft_strchr(expanded, '>') || ft_strchr(expanded, '|'))
 			ctx->command_node->needs_retokenize = 1;
-		else if (!expanded || expanded[0] == '\0' || ft_strcmp(expanded, "$") == 0 || ft_strcmp(expanded, "$/") == 0 )
+		else
 			ctx->command_node->needs_retokenize = 0;
 		ctx->is_assign = 0;
+		free(original);
 	}
 }
 
