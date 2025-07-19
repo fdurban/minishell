@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/12 19:03:53 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/19 12:12:46 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/19 12:28:05 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	validate_command_syntax(char *valid_command,
 	while (state != W___END)
 	{
 		if (is_pipe_at_end(valid_command, i))
-		return (1);
+			return (1);
 		input = get_token_type(valid_command[i]);
 		state = matrix[state][input];
 		if (state == W_ERROR)

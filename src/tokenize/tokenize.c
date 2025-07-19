@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:25:55 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/19 12:13:42 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/19 12:27:17 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,6 +123,7 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 	{W_SINGQ, W_SINGQ, W_ERROR, W_EOFSQ, W_SINGQ, W_SINGQ, W_SINGQ, W_ERROR},
 	{W_START, W_STNDR, W_ERROR, W_SINGQ, W_DOUBQ, W_ERROR, W_ERROR, W_ERROR}
 	};
+
 	if (validate_command_syntax(valid_command, matrix))
 		return (NULL);
 	token = split_and_tokenize(matrix, valid_command, shell);

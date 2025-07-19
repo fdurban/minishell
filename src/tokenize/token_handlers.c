@@ -6,11 +6,25 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:37:15 by fernando          #+#    #+#             */
-/*   Updated: 2025/07/19 12:06:51 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/19 12:28:41 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+static int	needs_retokenize(t_tokenizer_ctx *ctx,
+char *original, char *expanded)
+{
+	if (!expanded || !*expanded || ctx->is_assign)
+		return (0);
+	if (ft_strcmp(original, expanded) == 0)
+		return (0);
+	if (ctx->previous_word_type != W_DOUBQ
+		&& (ft_strchr(expanded, ' ') || ft_strchr(expanded, '<')
+			|| ft_strchr(expanded, '>') || ft_strchr(expanded, '|')))
+		return (1);
+	return (0);
+}
 
 void	handle_token_expansion(t_tokenizer_ctx *ctx, t_shell *shell)
 {
@@ -28,16 +42,8 @@ void	handle_token_expansion(t_tokenizer_ctx *ctx, t_shell *shell)
 		expanded = expand_token(ctx->command_node->value, shell);
 		free(ctx->command_node->value);
 		ctx->command_node->value = expanded;
-		if (!expanded || !*expanded || ctx->is_assign)
-			ctx->command_node->needs_retokenize = 0;
-		else if (ft_strcmp(original, expanded) == 0)
-			ctx->command_node->needs_retokenize = 0;
-		else if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '<')
-			|| ft_strchr(expanded, '>') || ft_strchr(expanded, '|'))
-			&& ctx->previous_word_type != W_DOUBQ)
-			ctx->command_node->needs_retokenize = 1;
-		else
-			ctx->command_node->needs_retokenize = 0;
+		ctx->command_node->needs_retokenize = needs_retokenize(ctx,
+				original, expanded);
 		ctx->is_assign = 0;
 		free(original);
 	}
