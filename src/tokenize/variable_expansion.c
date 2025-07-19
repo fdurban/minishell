@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   variable_expansion.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/19 12:20:03 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/19 12:36:53 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,19 +42,26 @@ static int	get_var_name_length(const char *s, int *start)
 static char	*get_var_value(const char *var_name, t_shell *shell)
 {
 	char	*env_val;
-	char	*value;
-	char	cwd[PATH_MAX];
 
 	if (ft_strcmp(var_name, "?") == 0)
 		return (ft_itoa(shell->exit_status));
-	env_val = get_env_var(shell->env, var_name);
-	if ((ft_strcmp(var_name, "PWD") == 0 || ft_strcmp(var_name, "OLDPWD") == 0) && !env_val)
-		env_val = ft_strdup(getcwd(cwd, sizeof(cwd)));
-	if (env_val != NULL)
-		value = ft_strdup(env_val);
+	if (ft_strcmp(var_name, "PWD") == 0)
+	{
+		env_val = get_env_var(shell->env, "PWD");
+		if (!env_val && shell->pwd)
+			return (ft_strdup(shell->pwd));
+	}
+	else if (ft_strcmp(var_name, "OLDPWD") == 0)
+	{
+		env_val = get_env_var(shell->env, "OLDPWD");
+		if (!env_val && shell->oldpwd)
+			return (ft_strdup(shell->oldpwd));
+	}
 	else
-		value = ft_strdup("");
-	return (value);
+		env_val = get_env_var(shell->env, var_name);
+	if (env_val)
+		return (ft_strdup(env_val));
+	return (ft_strdup(""));
 }
 
 char	*append_variable(char *result, int *i, char *word, t_shell *shell)

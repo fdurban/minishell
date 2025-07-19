@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/23 13:22:28 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/18 21:07:21 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/19 12:35:06 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,5 @@ void						update_word_type(const char *str,
 								const int matrix[W_TOTAL][I_NUM_INPUT]);
 void						retokenize(t_command_part **array, t_shell *shell);
 int							calc_start(t_tokenizer_ctx *ctx);
-void						checkposition(t_word_type word_type,
-								char *valid_command, int i);
-								void	print_values(t_command_part **results);
 
 #endif

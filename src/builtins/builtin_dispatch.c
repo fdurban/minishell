@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_dispatch.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: igngonza <igngonza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 12:32:46 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/19 09:53:42 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/19 12:35:40 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 static t_builtin	*get_builtins(void)
 {
 	static t_builtin	builtins[] = {{"echo", builtin_echo}, {"cd",
-			builtin_cd}, {"pwd", builtin_pwd}, {"export", builtin_export},
-			{"unset", builtin_unset}, {"env", builtin_env}, {"exit",
-			builtin_exit}, {NULL, NULL}};
+		builtin_cd}, {"pwd", builtin_pwd}, {"export", builtin_export},
+	{"unset", builtin_unset}, {"env", builtin_env}, {"exit",
+		builtin_exit}, {NULL, NULL}};
 
 	return (builtins);
 }
