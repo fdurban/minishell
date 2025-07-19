@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:37:15 by fernando          #+#    #+#             */
-/*   Updated: 2025/07/19 12:28:41 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/19 13:58:05 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@ char *original, char *expanded)
 	if (!expanded || !*expanded || ctx->is_assign)
 		return (0);
 	if (ft_strcmp(original, expanded) == 0)
+		return (0);
+	if (ft_strcmp(expanded, ">>") == 0 || ft_strcmp(expanded, ">") == 0
+		|| ft_strcmp(expanded, "<<") == 0
+		|| ft_strcmp(expanded, "<") == 0)
 		return (0);
 	if (ctx->previous_word_type != W_DOUBQ
 		&& (ft_strchr(expanded, ' ') || ft_strchr(expanded, '<')
