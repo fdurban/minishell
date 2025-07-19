@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_handlers.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 17:37:15 by fernando          #+#    #+#             */
-/*   Updated: 2025/07/19 02:03:31 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/19 12:06:51 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ void	handle_token_expansion(t_tokenizer_ctx *ctx, t_shell *shell)
 			ctx->command_node->needs_retokenize = 0;
 		else if (ft_strcmp(original, expanded) == 0)
 			ctx->command_node->needs_retokenize = 0;
-		else if (ft_strchr(expanded, ' ') || ft_strchr(expanded, '<')
+		else if ((ft_strchr(expanded, ' ') || ft_strchr(expanded, '<')
 			|| ft_strchr(expanded, '>') || ft_strchr(expanded, '|'))
+			&& ctx->previous_word_type != W_DOUBQ)
 			ctx->command_node->needs_retokenize = 1;
 		else
 			ctx->command_node->needs_retokenize = 0;

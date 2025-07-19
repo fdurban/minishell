@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   variable_expansion.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 16:45:03 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/19 02:52:28 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/19 11:47:07 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,6 @@ char	*append_variable(char *result, int *i, char *word, t_shell *shell)
 	start = *i + 1;
 	len = get_var_name_length(word, &start);
 	char next = word[*i + 1];
-	printf("El valor de len es de %d\n", len);
-	printf("El valor de word es de %s\n", word);
 	if (next == '\0' || next == ' ' || next == '/' || next == '+' || next == '\'')
 	{
 		new_result = ft_strjoin(result, "$");
