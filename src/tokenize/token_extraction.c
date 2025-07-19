@@ -6,7 +6,7 @@
 /*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/15 13:30:02 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/15 17:20:53 by fdurban-         ###   ########.fr       */
+/*   Updated: 2025/07/19 12:09:12 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 {
 	while (ctx->word_type == W_SPACE || ctx->word_type == W_SARED)
 	{
+		//checkposition(ctx->word_type, str, ctx->i);
 		ctx->i++;
 		update_word_type(str, ctx, matrix);
 	}
@@ -53,12 +54,14 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 	start = 0;
 	if (ctx->word_type == W_REDIN || ctx->word_type == W_REDOU)
 	{
+		//checkposition(ctx->word_type, str, ctx->i);
 		ctx->previous_word_type = ctx->word_type;
 		start = ctx->i;
 		ctx->i++;
 		update_word_type(str, ctx, matrix);
 		if (ctx->word_type == W_REDAP || ctx->word_type == W_HRDOC)
 		{
+			//checkposition(ctx->word_type, str, ctx->i);
 			ctx->here_doc = 1;
 			ctx->previous_word_type = ctx->word_type;
 			ctx->i++;
@@ -81,6 +84,7 @@ const int matrix[W_TOTAL][I_NUM_INPUT], t_tokenizer_ctx *ctx)
 	while (ctx->word_type == W_DOUBQ
 		|| ctx->word_type == W_SINGQ || ctx->word_type == W_STNDR)
 	{
+		//checkposition(ctx->word_type, str, ctx->i);
 		if (ctx->word_type == W_STNDR && str[ctx->i] == '=')
 			ctx->is_assign = 1;
 		ctx->previous_word_type = ctx->word_type;

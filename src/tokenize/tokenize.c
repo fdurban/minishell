@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fernando <fernando@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fdurban- <fdurban-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:25:55 by fdurban-          #+#    #+#             */
-/*   Updated: 2025/07/19 01:17:48 by fernando         ###   ########.fr       */
+/*   Updated: 2025/07/19 12:07:22 by fdurban-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,5 +129,6 @@ t_command_part	**tokenize(char *valid_command, t_shell *shell)
 		return (NULL);
 	token = split_and_tokenize(matrix, valid_command, shell);
 	retokenize(token, shell);
+	//print_values(token);
 	return (token);
 }
