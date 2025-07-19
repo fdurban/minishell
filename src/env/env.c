@@ -33,7 +33,7 @@ t_env	*copy_env(char **envp)
 	i = 0;
 	while (i < count)
 	{
-		env->vars[i] = strdup(envp[i]);
+		env->vars[i] = ft_strdup(envp[i]);
 		i++;
 	}
 	env->vars[count] = NULL;
@@ -48,11 +48,11 @@ char	*get_env_var(t_env *env, const char *key)
 
 	if (!env || !key)
 		return (NULL);
-	key_len = strlen(key);
+	key_len = ft_strlen(key);
 	i = 0;
 	while (i < env->count)
 	{
-		if (strncmp(env->vars[i], key, key_len) == 0
+		if (ft_strncmp(env->vars[i], key, key_len) == 0
 			&& env->vars[i][key_len] == '=')
 			return (env->vars[i] + key_len + 1);
 		i++;

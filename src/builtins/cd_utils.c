@@ -6,7 +6,7 @@
 /*   By: igngonza <igngonza@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/14 10:58:38 by igngonza          #+#    #+#             */
-/*   Updated: 2025/07/18 17:56:16 by igngonza         ###   ########.fr       */
+/*   Updated: 2025/07/19 09:44:37 by igngonza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ static char	*handle_single_dot(t_shell *shell)
 char	*handle_dot_paths(const char *arg, t_shell *shell)
 {
 	(void)shell;
-	if (strcmp(arg, ".") == 0)
+	if (ft_strcmp(arg, ".") == 0)
 		return (handle_single_dot(shell));
-	else if (strcmp(arg, "..") == 0)
+	else if (ft_strcmp(arg, "..") == 0)
 		return (handle_double_dot(shell));
 	return (NULL);
 }
